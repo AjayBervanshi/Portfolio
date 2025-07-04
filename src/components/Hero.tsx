@@ -1,10 +1,19 @@
 
 import { Button } from "@/components/ui/button";
-import { User, Download, ExternalLink } from "lucide-react";
+import { User, Download, ExternalLink, Linkedin } from "lucide-react";
 
 export const Hero = () => {
+  const handleLinkedInClick = () => {
+    window.open("https://www.linkedin.com/in/ajay-bervanshi", "_blank");
+  };
+
+  const handleDownloadResume = () => {
+    // You can replace this with actual resume download logic
+    console.log("Download resume");
+  };
+
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden px-6 pt-16">
       {/* Geometric Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-32 h-32 border-2 border-yellow-400/30 rotate-45 animate-pulse"></div>
@@ -35,30 +44,32 @@ export const Hero = () => {
         </h1>
         
         <h2 className="text-2xl md:text-3xl text-cyan-400 mb-6 font-light animate-fade-in">
-          Database Administrator
+          MS SQL Server Database Administrator
         </h2>
 
         <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in">
-          MS SQL Server DBA with expertise in performance tuning, HA/DR, 
-          backup strategies and automation using T-SQL & PowerShell.
+          Experienced Database Administrator specializing in SQL Server performance optimization, 
+          high availability solutions, disaster recovery, and database security with 3+ years of expertise.
         </p>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
           <Button 
             size="lg" 
+            onClick={handleDownloadResume}
             className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             <Download className="mr-2" size={20} />
-            Get my Work
+            Download Resume
           </Button>
           <Button 
             variant="outline" 
             size="lg"
+            onClick={handleLinkedInClick}
             className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
-            <ExternalLink className="mr-2" size={20} />
-            Learn More
+            <Linkedin className="mr-2" size={20} />
+            LinkedIn Profile
           </Button>
         </div>
       </div>
