@@ -6,71 +6,46 @@ import { CalendarDays, MapPin, Building, TrendingUp } from "lucide-react";
 export const Experience = () => {
   const experiences = [
     {
-      title: "MS SQL Server Database Administrator",
+      title: "MS SQL Database Administrator",
       company: "Wipro Limited",
-      duration: "Jan 2023 - Present",
-      period: "1 year 11 months",
+      duration: "July 2022 - Present",
+      period: "2+ years",
       location: "Remote, India",
       type: "Full-time",
       responsibilities: [
-        "Managed and maintained SQL Server instances across multiple environments (Dev, Test, UAT, Production)",
-        "Implemented high availability solutions using AlwaysOn Availability Groups and Failover Clustering",
-        "Optimized database performance through index tuning, query optimization, and resource monitoring",
-        "Automated backup and recovery processes, reducing manual intervention by 85%",
-        "Developed PowerShell scripts for routine maintenance tasks and monitoring",
-        "Implemented security best practices including TDE, Always Encrypted, and audit policies",
-        "Collaborated with development teams for database design and performance troubleshooting",
-        "Reduced average query response time by 40% through performance tuning initiatives"
+        "Administered and maintained MS SQL Server databases, ensuring 99.9% uptime for critical banking applications",
+        "Monitored database performance, identified bottlenecks, and implemented optimization techniques to enhance efficiency",
+        "Implemented database replication, clustering, and mirroring for high availability and disaster recovery",
+        "Conducted quarterly disaster recovery drills to validate backup and failover processes, ensuring data recoverability",
+        "Managed database security, including user accounts and permissions, to protect sensitive data and maintain compliance",
+        "Collaborated with development teams to align database configurations with application performance needs",
+        "Developed and maintained scripts using PowerShell for automation of routine tasks and database monitoring"
       ],
-      technologies: ["SQL Server 2019", "T-SQL", "PowerShell", "SSMS", "Azure Data Studio", "SSIS", "SSRS"],
+      technologies: ["SQL Server 2016/2019/2022", "T-SQL", "PowerShell", "SSMS", "SQL Profiler", "Performance Monitor"],
       achievements: [
-        "Reduced database downtime by 95% through proactive monitoring",
-        "Improved backup efficiency by 60% using compression and optimization",
-        "Successfully migrated 15+ databases to newer SQL Server versions"
+        "Enhanced query performance by 20% through indexing and optimization strategies",
+        "Reduced recovery time by 25% by streamlining backup and failover processes",
+        "Automated 40% of maintenance tasks using PowerShell scripting, saving significant manual effort",
+        "Identified and resolved capacity issues, leading to improved system responsiveness"
       ]
     },
     {
-      title: "Database Administrator (Junior)",
-      company: "Wipro Limited",
-      duration: "Jul 2021 - Dec 2022",
-      period: "1 year 6 months",
-      location: "Pune, India",
-      type: "Full-time",
-      responsibilities: [
-        "Assisted senior DBAs in daily database maintenance and monitoring activities",
-        "Performed database backups, restores, and basic troubleshooting",
-        "Monitored database performance and generated reports on system health",
-        "Participated in database migration and upgrade projects",
-        "Created and maintained documentation for database procedures",
-        "Supported development teams with database-related queries and issues"
-      ],
-      technologies: ["SQL Server 2016/2017", "T-SQL", "SSMS", "Windows Server"],
-      achievements: [
-        "Completed SQL Server certification training",
-        "Automated 10+ routine maintenance tasks",
-        "Maintained 99.5% database uptime during tenure"
-      ]
-    },
-    {
-      title: "Frontend Web Developer (Intern)",
-      company: "Sukhiasoft Solutions",
-      duration: "Oct 2020 - Apr 2021",
-      period: "6 months",
+      title: "Front End Web Developer - Intern",
+      company: "Sankalpsoft Solution",
+      duration: "September 2021 - October 2021",
+      period: "2 months",
       location: "Remote, India",
       type: "Internship",
       responsibilities: [
-        "Developed responsive web interfaces using HTML5, CSS3, and JavaScript",
-        "Created dynamic content management system interfaces",
-        "Integrated frontend applications with backend databases",
-        "Collaborated with design team to implement UI/UX requirements",
-        "Performed cross-browser testing and optimization",
-        "Maintained code documentation and version control using Git"
+        "Designed a user-friendly dynamic web interface for a café, enhancing customer interaction",
+        "Developed a digital business card using HTML and CSS, showcasing a modern and professional design",
+        "Built a secure blood donation camp registration form with database integration for efficient data management"
       ],
-      technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap", "Git", "MySQL"],
+      technologies: ["HTML5", "CSS3", "JavaScript", "Database Integration"],
       achievements: [
-        "Successfully delivered 5+ web projects",
-        "Improved website loading speed by 30%",
-        "Received positive feedback for code quality and delivery"
+        "Successfully delivered user-friendly web interfaces",
+        "Created responsive and modern designs",
+        "Implemented secure database integration"
       ]
     }
   ];

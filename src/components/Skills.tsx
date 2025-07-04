@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Database, Server, Shield, Code, Cloud, Settings } from "lucide-react";
+import { Database, Server, Shield, Code, Settings, Users } from "lucide-react";
 
 export const Skills = () => {
   const skillCategories = [
@@ -9,37 +9,36 @@ export const Skills = () => {
       title: "Database Management",
       icon: Database,
       skills: [
-        { name: "SQL Server Administration", level: "Expert" },
+        { name: "SQL Server Administration (2016/2019/2022)", level: "Expert" },
         { name: "T-SQL Development", level: "Expert" },
-        { name: "Database Design", level: "Advanced" },
-        { name: "Performance Tuning", level: "Advanced" },
+        { name: "Database Performance Tuning", level: "Advanced" },
         { name: "Query Optimization", level: "Advanced" },
-        { name: "Index Management", level: "Advanced" },
-        { name: "Backup & Recovery", level: "Expert" }
+        { name: "Backup & Recovery Planning", level: "Expert" },
+        { name: "Database Health Monitoring", level: "Advanced" }
       ]
     },
     {
       title: "High Availability & DR",
       icon: Server,
       skills: [
-        { name: "AlwaysOn Availability Groups", level: "Advanced" },
-        { name: "Failover Clustering", level: "Advanced" },
+        { name: "Database Clustering", level: "Advanced" },
+        { name: "Database Replication", level: "Advanced" },
         { name: "Database Mirroring", level: "Advanced" },
-        { name: "Log Shipping", level: "Intermediate" },
-        { name: "Replication", level: "Intermediate" },
-        { name: "Disaster Recovery Planning", level: "Advanced" }
+        { name: "Disaster Recovery Planning", level: "Advanced" },
+        { name: "Failover Processes", level: "Advanced" },
+        { name: "HA/DR Solutions", level: "Advanced" }
       ]
     },
     {
       title: "Security & Compliance",
       icon: Shield,
       skills: [
-        { name: "Database Security", level: "Advanced" },
-        { name: "Always Encrypted", level: "Intermediate" },
-        { name: "Transparent Data Encryption", level: "Advanced" },
-        { name: "Row Level Security", level: "Intermediate" },
-        { name: "Auditing & Compliance", level: "Advanced" },
-        { name: "User Access Management", level: "Advanced" }
+        { name: "User Authentication & Access Control", level: "Advanced" },
+        { name: "Security Policies Implementation", level: "Advanced" },
+        { name: "Data Encryption", level: "Advanced" },
+        { name: "GDPR Compliance", level: "Advanced" },
+        { name: "PCI DSS Compliance", level: "Advanced" },
+        { name: "Database Security Management", level: "Advanced" }
       ]
     },
     {
@@ -47,34 +46,30 @@ export const Skills = () => {
       icon: Code,
       skills: [
         { name: "T-SQL Scripting", level: "Expert" },
-        { name: "PowerShell", level: "Advanced" },
-        { name: "SQL Server Agent Jobs", level: "Advanced" },
-        { name: "Maintenance Plans", level: "Advanced" },
-        { name: "SSIS (ETL)", level: "Intermediate" },
-        { name: "SSRS (Reporting)", level: "Intermediate" }
+        { name: "PowerShell Scripting", level: "Advanced" },
+        { name: "Automated Monitoring Scripts", level: "Advanced" },
+        { name: "Database Maintenance Automation", level: "Advanced" },
+        { name: "Routine Task Automation", level: "Advanced" }
       ]
     },
     {
-      title: "Cloud & Modern Platforms",
-      icon: Cloud,
-      skills: [
-        { name: "Azure SQL Database", level: "Intermediate" },
-        { name: "Azure SQL Managed Instance", level: "Beginner" },
-        { name: "AWS RDS", level: "Beginner" },
-        { name: "Docker Containers", level: "Beginner" },
-        { name: "Kubernetes", level: "Beginner" }
-      ]
-    },
-    {
-      title: "Tools & Technologies",
+      title: "Tools & Platforms",
       icon: Settings,
       skills: [
-        { name: "SQL Server Management Studio", level: "Expert" },
-        { name: "Azure Data Studio", level: "Advanced" },
-        { name: "SQL Server Profiler", level: "Advanced" },
-        { name: "Extended Events", level: "Advanced" },
+        { name: "SQL Server Management Studio (SSMS)", level: "Expert" },
+        { name: "SQL Profiler", level: "Advanced" },
         { name: "Performance Monitor", level: "Advanced" },
-        { name: "Git Version Control", level: "Intermediate" }
+        { name: "Azure SQL", level: "Intermediate" }
+      ]
+    },
+    {
+      title: "Soft Skills",
+      icon: Users,
+      skills: [
+        { name: "Analytical Problem-Solving", level: "Expert" },
+        { name: "Effective Communication", level: "Advanced" },
+        { name: "Collaboration & Teamwork", level: "Advanced" },
+        { name: "Attention to Detail", level: "Expert" }
       ]
     }
   ];
@@ -134,10 +129,10 @@ export const Skills = () => {
           <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
             <h3 className="text-white font-medium mb-3 text-center">Skill Levels</h3>
             <div className="flex flex-wrap gap-2 justify-center">
-              <Badge className="bg-green-600 text-white">Expert (5+ years)</Badge>
-              <Badge className="bg-blue-600 text-white">Advanced (3-5 years)</Badge>
-              <Badge className="bg-yellow-600 text-white">Intermediate (1-3 years)</Badge>
-              <Badge className="bg-orange-600 text-white">Beginner (&lt;1 year)</Badge>
+              <Badge className="bg-green-600 text-white">Expert</Badge>
+              <Badge className="bg-blue-600 text-white">Advanced</Badge>
+              <Badge className="bg-yellow-600 text-white">Intermediate</Badge>
+              <Badge className="bg-orange-600 text-white">Beginner</Badge>
             </div>
           </div>
         </div>

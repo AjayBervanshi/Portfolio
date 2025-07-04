@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Calendar, Mail, Linkedin, Award, Target } from "lucide-react";
+import { MapPin, Calendar, Mail, Linkedin, Award, Target, Phone } from "lucide-react";
 
 export const About = () => {
   const handleLinkedInClick = () => {
@@ -22,28 +22,27 @@ export const About = () => {
               </div>
               
               <p className="text-slate-300 text-lg leading-relaxed mb-6">
-                Passionate MS SQL Server Database Administrator with over 3 years of hands-on experience 
-                in enterprise database management. Currently pursuing M.Tech in Computer Science while 
-                working full-time at Wipro Limited.
+                I am an MS SQL Server Database Administrator with over 3 years of experience specializing 
+                in database management, performance optimization, and security. My core competencies include 
+                query optimization, backup and recovery strategies, database security management, and 
+                automation using T-SQL and PowerShell.
               </p>
               
               <p className="text-slate-300 text-lg leading-relaxed mb-6">
-                Specialized in database performance optimization, implementing high availability solutions, 
-                disaster recovery planning, and automating routine database maintenance tasks using T-SQL 
-                and PowerShell scripting.
+                I have successfully implemented high availability and disaster recovery solutions, 
+                collaborated with development teams to optimize database structures, and resolved 
+                complex performance issues. Known for my problem-solving skills, attention to detail, 
+                and proactive approach, I strive consistently to enhance operational efficiency.
               </p>
 
               <div className="flex items-center mb-4">
                 <Target className="text-cyan-400 mr-3" size={20} />
-                <h4 className="text-lg font-semibold text-white">Core Expertise</h4>
+                <h4 className="text-lg font-semibold text-white">Career Goal</h4>
               </div>
-              <ul className="text-slate-300 space-y-2">
-                <li>• SQL Server Administration (2016, 2017, 2019, 2022)</li>
-                <li>• Performance Tuning & Query Optimization</li>
-                <li>• High Availability & Disaster Recovery (AlwaysOn, Clustering)</li>
-                <li>• Database Security & Compliance</li>
-                <li>• Automation with T-SQL & PowerShell</li>
-              </ul>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                My career goal is to continue growing as a database administrator, driving innovation 
+                and automation to support organizational success while ensuring data integrity and availability.
+              </p>
             </CardContent>
           </Card>
 
@@ -73,7 +72,15 @@ export const About = () => {
                   <Mail className="text-cyan-400 flex-shrink-0" size={20} />
                   <div>
                     <p className="font-medium">Email</p>
-                    <p className="break-all">ajaybervanshi@gmail.com</p>
+                    <p className="break-all">ajay.bervanshi@gmail.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3 text-slate-300">
+                  <Phone className="text-cyan-400 flex-shrink-0" size={20} />
+                  <div>
+                    <p className="font-medium">Phone</p>
+                    <p>7620085260</p>
                   </div>
                 </div>
                 
@@ -92,11 +99,13 @@ export const About = () => {
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-700">
-                <h4 className="text-lg font-semibold text-white mb-4">Current Focus</h4>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  Currently expanding expertise in cloud database solutions, Azure SQL Database, 
-                  and exploring modern data platform architectures while completing my Master's degree.
-                </p>
+                <h4 className="text-lg font-semibold text-white mb-4">Key Achievements</h4>
+                <ul className="text-slate-300 text-sm space-y-2">
+                  <li>• 99.9% uptime for critical banking applications</li>
+                  <li>• 20% improvement in query performance</li>
+                  <li>• 25% reduction in recovery time</li>
+                  <li>• 40% automation of maintenance tasks</li>
+                </ul>
               </div>
             </CardContent>
           </Card>

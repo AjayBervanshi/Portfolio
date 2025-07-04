@@ -48,8 +48,8 @@ export const Hero = () => {
         </h2>
 
         <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in">
-          Experienced Database Administrator specializing in SQL Server performance optimization, 
-          high availability solutions, disaster recovery, and database security with 3+ years of expertise.
+          Experienced Database Administrator with 3+ years of expertise in SQL Server management, 
+          performance optimization, high availability solutions, and database security for critical banking applications.
         </p>
 
         {/* Action Buttons */}
