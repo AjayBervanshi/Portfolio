@@ -8,8 +8,18 @@ export const Hero = () => {
   };
 
   const handleDownloadResume = () => {
-    // You can replace this with actual resume download logic
-    console.log("Download resume");
+    // Create a link element and trigger download
+    const link = document.createElement('a');
+    link.href = '/resume-ajay-bervanshi.pdf'; // You'll need to add this file to the public folder
+    link.download = 'Ajay_Bervanshi_Resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Fallback: open a new tab with a message if file doesn't exist
+    setTimeout(() => {
+      console.log("Resume download initiated. Please ensure resume-ajay-bervanshi.pdf is in the public folder.");
+    }, 100);
   };
 
   return (
@@ -72,6 +82,11 @@ export const Hero = () => {
             LinkedIn Profile
           </Button>
         </div>
+
+        {/* Note for resume */}
+        <p className="text-xs text-slate-400 mt-4 animate-fade-in">
+          Note: Add your resume file as 'resume-ajay-bervanshi.pdf' in the public folder for download to work
+        </p>
       </div>
     </section>
   );

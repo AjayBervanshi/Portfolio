@@ -16,10 +16,31 @@ export const Contact = () => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Message sent successfully! I'll get back to you soon.");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setIsSubmitting(true);
+
+    // Simulate sending email (you can integrate with EmailJS, Formspree, or similar service)
+    try {
+      // Create mailto link as fallback
+      const mailtoLink = `mailto:ajay.bervanshi@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
+      
+      // Open mail client
+      window.location.href = mailtoLink;
+      
+      // Show success message
+      toast.success("Email client opened! Your message is ready to send.");
+      
+      // Reset form
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      
+    } catch (error) {
+      toast.error("Failed to open email client. Please send email manually to ajay.bervanshi@gmail.com");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -79,10 +100,10 @@ export const Contact = () => {
                     <div>
                       <p className="font-medium text-white">Phone</p>
                       <a 
-                        href="tel:+917829834546" 
+                        href="tel:+917620085260" 
                         className="text-cyan-400 hover:text-cyan-300 transition-colors"
                       >
-                        +91 7829 834546
+                        +91 7620 085260
                       </a>
                     </div>
                   </div>
@@ -184,11 +205,16 @@ export const Contact = () => {
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  disabled={isSubmitting}
+                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="mr-2" size={18} />
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
+                
+                <p className="text-xs text-slate-400 text-center">
+                  This will open your email client with the message pre-filled
+                </p>
               </form>
             </CardContent>
           </Card>
