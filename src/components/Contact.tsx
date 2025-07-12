@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Send, Linkedin, Github } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -22,22 +22,35 @@ export const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate sending email (you can integrate with EmailJS, Formspree, or similar service)
     try {
-      // Create mailto link as fallback
-      const mailtoLink = `mailto:ajay.bervanshi@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
+      console.log("Submitting contact form:", formData);
+
+      const response = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        }
+      });
+
+      console.log("Supabase function response:", response);
+
+      if (response.error) {
+        throw new Error(response.error.message || "Failed to send email");
+      }
+
+      if (response.data?.success) {
+        toast.success("Message sent successfully! I'll get back to you soon.");
+        // Reset form
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        throw new Error(response.data?.error || "Failed to send email");
+      }
       
-      // Open mail client
-      window.location.href = mailtoLink;
-      
-      // Show success message
-      toast.success("Email client opened! Your message is ready to send.");
-      
-      // Reset form
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      
-    } catch (error) {
-      toast.error("Failed to open email client. Please send email manually to ajay.bervanshi@gmail.com");
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      toast.error("Failed to send message. Please try again or contact me directly at ajay.bervanshi@gmail.com");
     } finally {
       setIsSubmitting(false);
     }
@@ -213,7 +226,7 @@ export const Contact = () => {
                 </Button>
                 
                 <p className="text-xs text-slate-400 text-center">
-                  This will open your email client with the message pre-filled
+                  Your message will be sent directly to my email inbox
                 </p>
               </form>
             </CardContent>
