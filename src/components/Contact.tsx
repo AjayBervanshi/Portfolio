@@ -7,8 +7,11 @@ import { Mail, Phone, MapPin, Send, Linkedin, Github } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useVisitorTracking } from "@/hooks/useVisitorTracking";
+import emailjs from '@emailjs/browser';
 
 export const Contact = () => {
+  const visitorId = useVisitorTracking();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,30 +26,56 @@ export const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("Submitting contact form:", formData);
-
-      const response = await supabase.functions.invoke('send-contact-email', {
-        body: {
+      // Save message to database
+      const { error: dbError } = await supabase
+        .from('messages')
+        .insert({
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
-          message: formData.message
+          message: formData.message,
+          visitor_id: visitorId
+        });
+
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw new Error('Failed to save message');
+      }
+
+      // Initialize EmailJS (only needs to be done once)
+      emailjs.init('q1t8I2K8_6lZ0zCE_');
+
+      // Send email to you using EmailJS
+      await emailjs.send(
+        'service_8r5xpqh', // EmailJS service ID
+        'template_1e5nql7', // EmailJS template ID  
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to_email: 'ajay.bervanshi@gmail.com'
         }
-      });
+      );
 
-      console.log("Supabase function response:", response);
-
-      if (response.error) {
-        throw new Error(response.error.message || "Failed to send email");
+      // Send confirmation email to sender
+      try {
+        await emailjs.send(
+          'service_8r5xpqh',
+          'template_confirm', // Confirmation template
+          {
+            to_name: formData.name,
+            to_email: formData.email,
+            subject: 'Thank you for contacting us'
+          }
+        );
+      } catch (confirmError) {
+        console.log('Confirmation email failed, but main email sent');
       }
 
-      if (response.data?.success) {
-        toast.success("Message sent successfully! I'll get back to you soon.");
-        // Reset form
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      } else {
-        throw new Error(response.data?.error || "Failed to send email");
-      }
+      toast.success("Message sent successfully! I'll get back to you soon.");
+      // Reset form
+      setFormData({ name: "", email: "", subject: "", message: "" });
       
     } catch (error: any) {
       console.error("Error sending email:", error);
