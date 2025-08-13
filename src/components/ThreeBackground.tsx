@@ -1,114 +1,65 @@
-import { Canvas } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useRef, useMemo } from 'react';
-import * as THREE from 'three';
+import { useEffect, useRef } from 'react';
 
-function ParticleNetwork() {
-  const points = useRef<THREE.Points>(null);
-  const lines = useRef<THREE.LineSegments>(null);
-  
-  const particleCount = 100;
-  const maxDistance = 150;
-  
-  // Generate random particle positions
-  const particles = useMemo(() => {
-    const positions = new Float32Array(particleCount * 3);
-    const velocities = new Float32Array(particleCount * 3);
-    
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 800;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 600;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
-      
-      velocities[i * 3] = (Math.random() - 0.5) * 0.5;
-      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
-      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
-    }
-    
-    return { positions, velocities };
-  }, []);
-
-  // Animation loop
-  useFrame(() => {
-    if (!points.current || !lines.current) return;
-    
-    const positions = points.current.geometry.attributes.position.array as Float32Array;
-    const linePositions: number[] = [];
-    
-    // Update particle positions
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] += particles.velocities[i * 3];
-      positions[i * 3 + 1] += particles.velocities[i * 3 + 1];
-      positions[i * 3 + 2] += particles.velocities[i * 3 + 2];
-      
-      // Boundary checks
-      if (Math.abs(positions[i * 3]) > 400) particles.velocities[i * 3] *= -1;
-      if (Math.abs(positions[i * 3 + 1]) > 300) particles.velocities[i * 3 + 1] *= -1;
-      if (Math.abs(positions[i * 3 + 2]) > 100) particles.velocities[i * 3 + 2] *= -1;
-    }
-    
-    // Create connections between nearby particles
-    for (let i = 0; i < particleCount; i++) {
-      for (let j = i + 1; j < particleCount; j++) {
-        const dx = positions[i * 3] - positions[j * 3];
-        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        
-        if (distance < maxDistance) {
-          linePositions.push(
-            positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
-            positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]
-          );
-        }
-      }
-    }
-    
-    points.current.geometry.attributes.position.needsUpdate = true;
-    
-    // Update line geometry
-    if (linePositions.length > 0) {
-      lines.current.geometry.setFromPoints(
-        linePositions.reduce((acc, _, i) => {
-          if (i % 3 === 0) {
-            acc.push(new THREE.Vector3(linePositions[i], linePositions[i + 1], linePositions[i + 2]));
-          }
-          return acc;
-        }, [] as THREE.Vector3[])
-      );
-    }
-  });
-
-  return (
-    <>
-      <Points ref={points} positions={particles.positions} stride={3} frustumCulled={false}>
-        <PointMaterial 
-          transparent 
-          color="#6366f1" 
-          size={2} 
-          sizeAttenuation={true} 
-          depthWrite={false}
-          opacity={0.8}
-        />
-      </Points>
-      <lineSegments ref={lines}>
-        <bufferGeometry />
-        <lineBasicMaterial color="#6366f1" transparent opacity={0.2} />
-      </lineSegments>
-    </>
-  );
+declare global {
+  interface Window {
+    VANTA: any;
+    THREE: any;
+  }
 }
 
 export const ThreeBackground = () => {
+  const vantaRef = useRef<HTMLDivElement>(null);
+  const vantaEffect = useRef<any>(null);
+
+  useEffect(() => {
+    // Load Three.js
+    const threeScript = document.createElement('script');
+    threeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js';
+    threeScript.onload = () => {
+      // Load Vanta.js Birds after Three.js loads
+      const vantaScript = document.createElement('script');
+      vantaScript.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js';
+      vantaScript.onload = () => {
+        if (vantaRef.current && window.VANTA) {
+          vantaEffect.current = window.VANTA.BIRDS({
+            el: vantaRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            backgroundColor: 0x23153c,
+            color1: 0xff3f81,
+            color2: 0x6366f1,
+            colorMode: 'variance',
+            birdSize: 1.5,
+            wingSpan: 25,
+            speedLimit: 4,
+            separation: 20,
+            alignment: 20,
+            cohesion: 20,
+            quantity: 3
+          });
+        }
+      };
+      document.head.appendChild(vantaScript);
+    };
+    document.head.appendChild(threeScript);
+
+    return () => {
+      if (vantaEffect.current) {
+        vantaEffect.current.destroy();
+      }
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 -z-10">
-      <Canvas
-        camera={{ position: [0, 0, 200], fov: 75 }}
-        style={{ background: 'transparent' }}
-      >
-        <ParticleNetwork />
-      </Canvas>
-    </div>
+    <div 
+      ref={vantaRef} 
+      className="fixed inset-0 -z-10"
+      style={{ width: '100%', height: '100%' }}
+    />
   );
 };
