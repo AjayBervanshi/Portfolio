@@ -9,7 +9,7 @@ export const Experience = () => {
       title: "MS SQL Database Administrator",
       company: "Wipro Limited",
       duration: "July 2022 - Present",
-      period: "2+ years",
+      period: "3+ years",
       location: "Remote, India",
       type: "Full-time",
       responsibilities: [
