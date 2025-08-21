@@ -3,15 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Send, Linkedin, Github } from "lucide-react";
+import { Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useVisitorTracking } from "@/hooks/useVisitorTracking";
-import emailjs from '@emailjs/browser';
+import { ProfileCard } from "./ProfileCard";
 
 export const Contact = () => {
-  const visitorId = useVisitorTracking();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,13 +26,12 @@ export const Contact = () => {
     try {
       // Save message to database
       const { error: dbError } = await supabase
-        .from('messages')
+        .from('contact_messages')
         .insert({
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
           message: formData.message,
-          visitor_id: visitorId
         });
 
       if (dbError) {
@@ -42,43 +39,27 @@ export const Contact = () => {
         throw new Error('Failed to save message');
       }
 
-      // Initialize EmailJS (only needs to be done once)
-      emailjs.init('q1t8I2K8_6lZ0zCE_');
-
-      // Send email to you using EmailJS
-      await emailjs.send(
-        'service_8r5xpqh', // EmailJS service ID
-        'template_1e5nql7', // EmailJS template ID  
-        {
-          from_name: formData.name,
-          from_email: formData.email,
+      // Send emails via Supabase edge function
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
           subject: formData.subject,
           message: formData.message,
-          to_email: 'ajay.bervanshi@gmail.com'
         }
-      );
+      });
 
-      // Send confirmation email to sender
-      try {
-        await emailjs.send(
-          'service_8r5xpqh',
-          'template_confirm', // Confirmation template
-          {
-            to_name: formData.name,
-            to_email: formData.email,
-            subject: 'Thank you for contacting us'
-          }
-        );
-      } catch (confirmError) {
-        console.log('Confirmation email failed, but main email sent');
+      if (emailError) {
+        console.error('Email error:', emailError);
+        throw new Error('Failed to send emails');
       }
 
-      toast.success("Message sent successfully! I'll get back to you soon.");
+      toast.success("Message sent successfully! You'll receive a confirmation email, and I'll get back to you soon.");
       // Reset form
       setFormData({ name: "", email: "", subject: "", message: "" });
       
     } catch (error: unknown) {
-      console.error("Error sending email:", error);
+      console.error("Error sending message:", error);
       toast.error("Failed to send message. Please try again or contact me directly at ajay.bervanshi@gmail.com");
     } finally {
       setIsSubmitting(false);
@@ -92,96 +73,15 @@ export const Contact = () => {
     });
   };
 
-  const handleLinkedInClick = () => {
-    window.open("https://www.linkedin.com/in/ajay-bervanshi", "_blank");
-  };
-
   return (
     <section id="contact" className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-white text-center mb-16">Get In Touch</h2>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
+          {/* Profile Card */}
           <div>
-            <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm h-full">
-              <CardHeader>
-                <CardTitle className="text-2xl font-semibold text-cyan-400 mb-4">
-                  Let's Connect
-                </CardTitle>
-                <p className="text-slate-300 leading-relaxed">
-                  Interested in discussing database optimization strategies, SQL Server solutions, 
-                  or potential collaboration opportunities? I'd love to hear from you!
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4 text-slate-300 p-3 bg-slate-700/30 rounded-lg">
-                    <MapPin className="text-cyan-400 flex-shrink-0" size={20} />
-                    <div>
-                      <p className="font-medium text-white">Location</p>
-                      <p>Nagpur, Maharashtra, India</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-slate-300 p-3 bg-slate-700/30 rounded-lg">
-                    <Mail className="text-cyan-400 flex-shrink-0" size={20} />
-                    <div>
-                      <p className="font-medium text-white">Email</p>
-                      <a 
-                        href="mailto:ajay.bervanshi@gmail.com" 
-                        className="text-cyan-400 hover:text-cyan-300 transition-colors break-all"
-                      >
-                        ajay.bervanshi@gmail.com
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-slate-300 p-3 bg-slate-700/30 rounded-lg">
-                    <Phone className="text-cyan-400 flex-shrink-0" size={20} />
-                    <div>
-                      <p className="font-medium text-white">Phone</p>
-                      <a 
-                        href="tel:+917620085260" 
-                        className="text-cyan-400 hover:text-cyan-300 transition-colors"
-                      >
-                        +91 7620 085260
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-slate-300 p-3 bg-slate-700/30 rounded-lg">
-                    <Linkedin className="text-cyan-400 flex-shrink-0" size={20} />
-                    <div>
-                      <p className="font-medium text-white">LinkedIn</p>
-                      <button 
-                        onClick={handleLinkedInClick}
-                        className="text-cyan-400 hover:text-cyan-300 transition-colors"
-                      >
-                        Connect on LinkedIn
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-slate-700">
-                  <h4 className="text-lg font-semibold text-white mb-3">Professional Services</h4>
-                  <ul className="text-slate-300 text-sm space-y-2">
-                    <li>• Database Performance Optimization</li>
-                    <li>• SQL Server Health Assessments</li>
-                    <li>• High Availability Implementation</li>
-                    <li>• Database Migration Services</li>
-                    <li>• Custom Database Solutions</li>
-                  </ul>
-                </div>
-
-                <div className="pt-4 border-t border-slate-700">
-                  <p className="text-slate-400 text-sm">
-                    © 2024 Ajay Bervanshi. All rights reserved.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <ProfileCard />
           </div>
 
           {/* Contact Form */}
@@ -255,7 +155,7 @@ export const Contact = () => {
                 </Button>
                 
                 <p className="text-xs text-slate-400 text-center">
-                  Your message will be sent directly to my email inbox
+                  Your message will be sent to my email, and you'll receive a confirmation email
                 </p>
               </form>
             </CardContent>

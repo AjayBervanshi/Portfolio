@@ -49,9 +49,8 @@ export const ThreeBackground = () => {
             mouseEase: true, // Smooth mouse interaction
             // Auto-movement enhancements
             forceAnimate: true, // Force continuous animation
-            // Cursor reactivity
-            mouseControls: true, // Enhanced mouse control
-            touchControls: true, // Touch support
+            // Cursor reactivity enhanced
+            // Network movement
             // Network movement
             autoRotate: true, // Automatic rotation
             autoRotateSpeed: 0.5, // Slow rotation speed

@@ -35,33 +35,57 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Received contact form submission:", { name, email, subject });
 
-    // Send email to you (the recipient)
-    const emailResponse = await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>",
-      to: ["ajay.bervanshi@gmail.com"], // Your email
-      subject: `New Contact Form Message: ${subject}`,
+    // Send email to Ajay
+    const emailToAjay = await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>",
+      to: ["ajay.bervanshi@gmail.com"],
+      subject: `📩 New Message: ${subject}`,
       html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>From:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
+        <h2>Hello Ajay 👋</h2>
+        <p>You have received a new message from <strong>${name}</strong> (${email}).</p>
+        
+        <h3>Message:</h3>
         <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
           ${message.replace(/\n/g, '<br>')}
         </div>
-        <hr>
-        <p style="color: #666; font-size: 12px;">This email was sent from your portfolio contact form.</p>
+        
+        <hr style="margin: 20px 0;">
+        <p style="color: #666; font-size: 12px;">This email was sent automatically from your portfolio contact form.</p>
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Email to Ajay sent:", emailToAjay);
+
+    // Send thank you email to sender
+    const thankYouEmail = await resend.emails.send({
+      from: "Ajay Bervanshi <onboarding@resend.dev>",
+      to: [email],
+      subject: `✅ Thanks for reaching out, ${name}!`,
+      html: `
+        <h2>Hi ${name},</h2>
+        
+        <p>Thanks for contacting me! I have received your message:</p>
+        
+        <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #007acc;">
+          "${message.replace(/\n/g, '<br>')}"
+        </div>
+        
+        <p>I will get back to you shortly.</p>
+        
+        <p>Best regards,<br>
+        <strong>Ajay Bervanshi</strong><br>
+        MS SQL Database Administrator</p>
+      `,
+    });
+
+    console.log("Thank you email sent:", thankYouEmail);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Email sent successfully",
-        id: emailResponse.data?.id 
-      }), 
+        emailToAjay: emailToAjay.data?.id,
+        thankYouEmail: thankYouEmail.data?.id 
+      }),
       {
         status: 200,
         headers: {
