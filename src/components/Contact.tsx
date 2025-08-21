@@ -77,7 +77,7 @@ export const Contact = () => {
       // Reset form
       setFormData({ name: "", email: "", subject: "", message: "" });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error sending email:", error);
       toast.error("Failed to send message. Please try again or contact me directly at ajay.bervanshi@gmail.com");
     } finally {

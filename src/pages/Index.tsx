@@ -10,7 +10,7 @@ import { ThreeBackground } from "@/components/ThreeBackground";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-700 via-blue-800 to-slate-600 relative">
+    <div className="min-h-screen bg-transparent relative">
       <ThreeBackground />
       <Navigation />
       <Hero />

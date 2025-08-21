@@ -4,12 +4,46 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarDays, MapPin, Building, TrendingUp } from "lucide-react";
 
 export const Experience = () => {
+  // Calculate duration between two dates
+  const calculateDuration = (startDate: string, endDate?: string): string => {
+    const start = new Date(startDate);
+    const end = endDate ? new Date(endDate) : new Date();
+    
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 30) {
+      return `${diffDays} days`;
+    } else if (diffDays < 365) {
+      const months = Math.floor(diffDays / 30.44);
+      return `${months} month${months !== 1 ? 's' : ''}`;
+    } else {
+      const years = Math.floor(diffDays / 365.25);
+      const remainingMonths = Math.floor((diffDays % 365.25) / 30.44);
+      
+      if (remainingMonths === 0) {
+        return `${years} year${years !== 1 ? 's' : ''}`;
+      } else {
+        return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+      }
+    }
+  };
+
+  // Calculate total experience from career start
+  const calculateTotalExperience = (startDate: string): string => {
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - start.getTime());
+    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
+    return `${diffYears}+ years`;
+  };
+
   const experiences = [
     {
       title: "MS SQL Database Administrator",
       company: "Wipro Limited",
-      duration: "July 2022 - Present",
-      period: "3+ years",
+      startDate: "2022-07-01",
+      endDate: undefined, // undefined means "Present"
       location: "Remote, India",
       type: "Full-time",
       responsibilities: [
@@ -32,8 +66,8 @@ export const Experience = () => {
     {
       title: "Front End Web Developer - Intern",
       company: "Sankalpsoft Solution",
-      duration: "September 2021 - October 2021",
-      period: "2 months",
+      startDate: "2021-09-01",
+      endDate: "2021-10-31",
       location: "Remote, India",
       type: "Internship",
       responsibilities: [
@@ -59,6 +93,19 @@ export const Experience = () => {
       default:
         return "bg-slate-600";
     }
+  };
+
+  const formatDateRange = (startDate: string, endDate?: string): string => {
+    const start = new Date(startDate);
+    const startFormatted = start.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    
+    if (!endDate) {
+      return `${startFormatted} - Present`;
+    }
+    
+    const end = new Date(endDate);
+    const endFormatted = end.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return `${startFormatted} - ${endFormatted}`;
   };
 
   return (
@@ -89,8 +136,8 @@ export const Experience = () => {
                     <div className="flex items-center justify-end mb-2 text-slate-300">
                       <CalendarDays size={16} className="mr-2" />
                       <div>
-                        <span className="block">{exp.duration}</span>
-                        <span className="text-sm text-slate-400">({exp.period})</span>
+                        <span className="block">{formatDateRange(exp.startDate, exp.endDate)}</span>
+                        <span className="text-sm text-slate-400">({calculateDuration(exp.startDate, exp.endDate)})</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-end text-slate-300">
@@ -144,6 +191,21 @@ export const Experience = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Total Experience Summary */}
+        <div className="mt-12 text-center">
+          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm inline-block">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-center space-x-2">
+                <CalendarDays size={20} className="text-cyan-400" />
+                <span className="text-white font-semibold">Total Professional Experience:</span>
+                <span className="text-cyan-400 font-bold text-lg">
+                  {calculateTotalExperience('2022-07-01')}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

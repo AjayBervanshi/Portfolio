@@ -1,18 +1,18 @@
 
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Database, User, Briefcase, GraduationCap, Mail, Home } from "lucide-react";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   const navItems = [
-    { id: "home", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "skills", label: "Skills" },
-    { id: "experience", label: "Experience" },
-    { id: "education", label: "Education" },
-    { id: "contact", label: "Contact" },
+    { id: "home", label: "Home", icon: Home },
+    { id: "about", label: "About", icon: User },
+    { id: "skills", label: "Skills", icon: Database },
+    { id: "experience", label: "Experience", icon: Briefcase },
+    { id: "education", label: "Education", icon: GraduationCap },
+    { id: "contact", label: "Contact", icon: Mail },
   ];
 
   useEffect(() => {
@@ -42,52 +42,75 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="text-xl font-bold text-cyan-400">
-            Ajay Bervanshi
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-xl border-b border-cyan-500/30 shadow-2xl">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between h-20">
+          {/* Enhanced Logo */}
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+              <Database size={20} className="text-white" />
+            </div>
+            <div className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              Ajay Bervanshi
+            </div>
           </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          {/* Enhanced Desktop Menu */}
+          <div className="hidden lg:flex space-x-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`text-sm font-medium transition-colors duration-200 hover:text-cyan-400 ${
-                  activeSection === item.id ? "text-cyan-400" : "text-slate-300"
+                className={`group relative px-4 py-3 rounded-lg transition-all duration-300 hover:bg-slate-800/80 hover:scale-105 ${
+                  activeSection === item.id 
+                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" 
+                    : "text-slate-300 hover:text-cyan-400"
                 }`}
               >
-                {item.label}
+                <div className="flex items-center space-x-2">
+                  <item.icon size={16} className="opacity-80 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                </div>
+                {/* Active indicator */}
+                {activeSection === item.id && (
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full"></div>
+                )}
               </button>
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Enhanced Mobile Menu Button */}
           <button
-            className="md:hidden text-white"
+            className="lg:hidden p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-colors duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? (
+              <X size={24} className="text-cyan-400" />
+            ) : (
+              <Menu size={24} className="text-cyan-400" />
+            )}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Enhanced Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-700">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left py-2 text-sm font-medium transition-colors duration-200 hover:text-cyan-400 ${
-                  activeSection === item.id ? "text-cyan-400" : "text-slate-300"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          <div className="lg:hidden py-6 border-t border-cyan-500/30 bg-slate-900/98 backdrop-blur-xl">
+            <div className="grid grid-cols-2 gap-3">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`group flex items-center space-x-3 p-4 rounded-lg transition-all duration-200 hover:bg-slate-800/80 ${
+                    activeSection === item.id 
+                      ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" 
+                      : "text-slate-300 hover:text-cyan-400"
+                  }`}
+                >
+                  <item.icon size={18} className="opacity-80 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>

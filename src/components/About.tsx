@@ -7,6 +7,17 @@ export const About = () => {
     window.open("https://www.linkedin.com/in/ajay-bervanshi", "_blank");
   };
 
+  // Calculate years of experience dynamically from July 2022
+  const calculateExperience = () => {
+    const startDate = new Date('2022-07-01');
+    const currentDate = new Date();
+    const diffTime = Math.abs(currentDate.getTime() - startDate.getTime());
+    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
+    return diffYears;
+  };
+
+  const yearsOfExperience = calculateExperience();
+
   return (
     <section id="about" className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
@@ -14,7 +25,7 @@ export const About = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Main About Card */}
-          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-300 shadow-xl">
             <CardContent className="p-8">
               <div className="flex items-center mb-6">
                 <Award className="text-cyan-400 mr-3" size={24} />
@@ -22,7 +33,7 @@ export const About = () => {
               </div>
               
               <p className="text-slate-300 text-lg leading-relaxed mb-6">
-                I am an MS SQL Server Database Administrator with over 3 years of experience specializing 
+                I am an MS SQL Server Database Administrator with over {yearsOfExperience} years of experience specializing 
                 in database management, performance optimization, and security. My core competencies include 
                 query optimization, backup and recovery strategies, database security management, and 
                 automation using T-SQL and PowerShell.
@@ -47,7 +58,7 @@ export const About = () => {
           </Card>
 
           {/* Contact Information Card */}
-          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-300 shadow-xl">
             <CardContent className="p-8">
               <h3 className="text-xl font-semibold text-white mb-6">Contact Information</h3>
               
@@ -64,7 +75,7 @@ export const About = () => {
                   <Calendar className="text-cyan-400 flex-shrink-0" size={20} />
                   <div>
                     <p className="font-medium">Experience</p>
-                    <p>3+ Years in Database Administration</p>
+                    <p>{yearsOfExperience}+ Years in Database Administration</p>
                   </div>
                 </div>
                 
@@ -98,7 +109,7 @@ export const About = () => {
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-700">
+              <div className="mt-8 pt-6 border-t border-slate-600">
                 <h4 className="text-lg font-semibold text-white mb-4">Key Achievements</h4>
                 <ul className="text-slate-300 text-sm space-y-2">
                   <li>• 99.9% uptime for critical banking applications</li>
