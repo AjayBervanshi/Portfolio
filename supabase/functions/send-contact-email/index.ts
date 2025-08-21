@@ -38,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to Ajay
     const emailToAjay = await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
-      to: ["ajay.bervanshi@gmail.com"],
+      to: ["badboy1002661@gmail.com"], // Using verified email for testing
       subject: `📩 New Message: ${subject}`,
       html: `
         <h2>Hello Ajay 👋</h2>
