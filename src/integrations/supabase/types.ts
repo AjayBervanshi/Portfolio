@@ -14,33 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      contact_messages: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          message: string
-          name: string
-          subject: string
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          message: string
-          name: string
-          subject: string
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          message?: string
-          name?: string
-          subject?: string
-        }
-        Relationships: []
-      }
       messages: {
         Row: {
           created_at: string
@@ -48,6 +21,7 @@ export type Database = {
           id: string
           message: string
           name: string
+          phone: string | null
           subject: string
           visitor_id: string | null
         }
@@ -57,6 +31,7 @@ export type Database = {
           id?: string
           message: string
           name: string
+          phone?: string | null
           subject: string
           visitor_id?: string | null
         }
@@ -66,6 +41,7 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+          phone?: string | null
           subject?: string
           visitor_id?: string | null
         }
@@ -75,6 +51,56 @@ export type Database = {
             columns: ["visitor_id"]
             isOneToOne: false
             referencedRelation: "visitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_logs: {
+        Row: {
+          channel: string
+          created_at: string
+          error: string | null
+          id: string
+          message_id: string | null
+          provider_message_id: string | null
+          provider_type: string
+          recipient_email: string | null
+          recipient_phone: string | null
+          recipient_type: string
+          status: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          message_id?: string | null
+          provider_message_id?: string | null
+          provider_type?: string
+          recipient_email?: string | null
+          recipient_phone?: string | null
+          recipient_type: string
+          status?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          message_id?: string | null
+          provider_message_id?: string | null
+          provider_type?: string
+          recipient_email?: string | null
+          recipient_phone?: string | null
+          recipient_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_logs_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
         ]

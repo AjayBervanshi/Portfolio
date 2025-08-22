@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ export const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: ""
   });
@@ -24,39 +26,29 @@ export const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // Save message to database
-      const { error: dbError } = await supabase
-        .from('contact_messages')
-        .insert({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-        });
-
-      if (dbError) {
-        console.error('Database error:', dbError);
-        throw new Error('Failed to save message');
-      }
-
-      // Send emails via Supabase edge function
-      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+      // Send notifications via Supabase edge function
+      const { data, error: emailError } = await supabase.functions.invoke('send-contact-email', {
         body: {
           name: formData.name,
           email: formData.email,
+          phone: formData.phone,
           subject: formData.subject,
           message: formData.message,
         }
       });
 
       if (emailError) {
-        console.error('Email error:', emailError);
-        throw new Error('Failed to send emails');
+        console.error('Notification error:', emailError);
+        throw new Error('Failed to send notifications');
       }
 
-      toast.success("Message sent successfully! You'll receive a confirmation email, and I'll get back to you soon.");
-      // Reset form
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      if (data?.success) {
+        toast.success("Message sent successfully! You'll receive a confirmation, and I'll get back to you soon.");
+        // Reset form
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      } else {
+        throw new Error(data?.error || 'Unknown error occurred');
+      }
       
     } catch (error: unknown) {
       console.error("Error sending message:", error);
@@ -121,6 +113,18 @@ export const Contact = () => {
                 </div>
                 
                 <div>
+                  <Label htmlFor="phone" className="text-slate-300">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="bg-slate-700 border-slate-600 text-white focus:border-cyan-400 mt-1"
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
+                
+                <div>
                   <Label htmlFor="subject" className="text-slate-300">Subject *</Label>
                   <Input
                     id="subject"
@@ -155,7 +159,7 @@ export const Contact = () => {
                 </Button>
                 
                 <p className="text-xs text-slate-400 text-center">
-                  Your message will be sent to my email, and you'll receive a confirmation email
+                  Your message will be sent via email and SMS notifications
                 </p>
               </form>
             </CardContent>
