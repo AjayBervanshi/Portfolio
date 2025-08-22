@@ -1,8 +1,12 @@
 
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import notificationapi from 'npm:notificationapi-node-server-sdk';
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+// Initialize NotificationAPI with your keys
+notificationapi.init(
+  'ef6raefq8m4ejrjs42m6kq32y1',
+  '59l1czomvfnm1g6bi9q41kdj2m6osppusbwkaddplosgj4dz29v3s3apt2'
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,57 +39,40 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Received contact form submission:", { name, email, subject });
 
-    // Send email to Ajay
-    const emailToAjay = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>",
-      to: ["badboy1002661@gmail.com"], // Using verified email for testing
-      subject: `📩 New Message: ${subject}`,
-      html: `
-        <h2>Hello Ajay 👋</h2>
-        <p>You have received a new message from <strong>${name}</strong> (${email}).</p>
-        
-        <h3>Message:</h3>
-        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
-          ${message.replace(/\n/g, '<br>')}
-        </div>
-        
-        <hr style="margin: 20px 0;">
-        <p style="color: #666; font-size: 12px;">This email was sent automatically from your portfolio contact form.</p>
-      `,
+    const parameters = {
+      name,
+      subject,
+      message,
+      email
+    };
+
+    // Send notification to USER
+    if (email) {
+      await notificationapi.send({
+        type: 'portfolio_contact_form_for_user',
+        to: {
+          id: email,
+          email: email
+        },
+        parameters
+      });
+      console.log("Notification sent to user:", email);
+    }
+
+    // Send notification to YOU (Ajay)
+    await notificationapi.send({
+      type: 'portfolio_contact_form_to_me',
+      to: {
+        id: 'ajay',
+        email: 'ajay.bervanshi@gmail.com',
+        number: '+917620085260'
+      },
+      parameters
     });
-
-    console.log("Email to Ajay sent:", emailToAjay);
-
-    // Send thank you email to sender
-    const thankYouEmail = await resend.emails.send({
-      from: "Ajay Bervanshi <onboarding@resend.dev>",
-      to: [email],
-      subject: `✅ Thanks for reaching out, ${name}!`,
-      html: `
-        <h2>Hi ${name},</h2>
-        
-        <p>Thanks for contacting me! I have received your message:</p>
-        
-        <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #007acc;">
-          "${message.replace(/\n/g, '<br>')}"
-        </div>
-        
-        <p>I will get back to you shortly.</p>
-        
-        <p>Best regards,<br>
-        <strong>Ajay Bervanshi</strong><br>
-        MS SQL Database Administrator</p>
-      `,
-    });
-
-    console.log("Thank you email sent:", thankYouEmail);
+    console.log("Notification sent to Ajay");
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        emailToAjay: emailToAjay.data?.id,
-        thankYouEmail: thankYouEmail.data?.id 
-      }),
+      JSON.stringify({ success: true }),
       {
         status: 200,
         headers: {
@@ -95,11 +82,11 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error: any) {
-    console.error("Error in send-contact-email function:", error);
+    console.error("Error sending notification:", error);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message || "Failed to send email" 
+        error: error.message || "Failed to send notification" 
       }),
       {
         status: 500,
