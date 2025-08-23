@@ -31,9 +31,9 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
     
-    /* Profile Avatar Gradient */
-    --profile-gradient-start: 308 100% 76%;
-    --profile-gradient-end: 239 71% 68%;
+    /* Profile Avatar Gradient - Tech blue theme to match background */
+    --profile-gradient-start: 194 100% 60%;
+    --profile-gradient-end: 217 91% 60%;
   }
 }
 
