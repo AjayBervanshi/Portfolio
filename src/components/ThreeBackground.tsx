@@ -30,9 +30,9 @@ export const ThreeBackground = () => {
             minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
-            // Tech blue theme for database admin
-            color: 0x00d4ff, // Cyber blue
-            backgroundColor: 0x0a0f1c, // Dark tech blue
+            // Purple to blue gradient theme
+            color: 0x5961F9, // Blue endpoint
+            backgroundColor: 0xEE9AE5, // Pink starting point
             // Enhanced network configuration
             points: 20, // More points for complex network
             maxDistance: 30, // Better connectivity

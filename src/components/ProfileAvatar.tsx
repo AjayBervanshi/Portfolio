@@ -11,7 +11,7 @@ const sizeClasses = {
   sm: "w-16 h-16",
   md: "w-24 h-24", 
   lg: "w-32 h-32",
-  xl: "w-40 h-40"
+  xl: "w-42 h-42"
 };
 
 const ringClasses = {
