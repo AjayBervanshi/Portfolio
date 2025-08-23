@@ -1,73 +1,177 @@
-# Welcome to your Lovable project
+# Ajay Bervanshi - Professional Portfolio
 
-## Project info
+A modern, responsive portfolio website showcasing Ajay Bervanshi's expertise as an MS SQL Server Database Administrator. Built with React, TypeScript, and modern web technologies.
 
-**URL**: https://lovable.dev/projects/28fefa16-dc12-4235-9392-49327b182b5a
+## 🚀 Features
 
-## How can I edit this code?
+- **Modern Design**: Clean, professional interface with smooth animations
+- **Responsive**: Optimized for all devices and screen sizes
+- **Interactive Background**: Dynamic Three.js network visualization
+- **Contact Form**: Integrated with Supabase for email and SMS notifications
+- **Performance Optimized**: Fast loading with code splitting and optimization
+- **SEO Friendly**: Proper meta tags and structured data
+- **Visitor Tracking**: Analytics integration for visitor insights
 
-There are several ways of editing your application.
+## 🛠️ Technologies Used
 
-**Use Lovable**
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **3D Graphics**: Three.js, Vanta.js for background effects
+- **Backend**: Supabase (Database, Edge Functions)
+- **Notifications**: NotificationAPI for email/SMS
+- **Deployment**: Vercel/Netlify ready
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/28fefa16-dc12-4235-9392-49327b182b5a) and start prompting.
+## 📋 Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 18+ and npm
+- Git
+- Supabase account
+- NotificationAPI account (for contact form)
 
-**Use your preferred IDE**
+## 🔧 Setup Instructions
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1. Clone the Repository
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+git clone <your-repo-url>
+cd Portfolio
+```
 
-Follow these steps:
+### 2. Install Dependencies
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 3. Environment Configuration
 
-# Step 3: Install the necessary dependencies.
-npm i
+Create a `.env` file in the root directory based on `env.example`:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+cp env.example .env
+```
+
+Fill in your environment variables:
+
+```env
+# Supabase Configuration
+VITE_SUPABASE_URL=your_supabase_url_here
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+
+# Notification API Configuration (for contact form)
+VITE_NOTIFICATION_API_PROJECT_ID=your_notification_api_project_id_here
+VITE_NOTIFICATION_API_SECRET_KEY=your_notification_api_secret_key_here
+
+# Contact Information
+VITE_CONTACT_EMAIL=your_contact_email_here
+VITE_CONTACT_PHONE=your_contact_phone_here
+
+# Development Configuration
+VITE_DEV_MODE=false
+```
+
+### 4. Supabase Setup
+
+1. Create a new Supabase project
+2. Set up the following tables:
+   - `messages` (for contact form submissions)
+   - `notification_logs` (for tracking notifications)
+   - `visitors` (for analytics)
+3. Deploy the edge function `send-contact-email`
+4. Set environment variables in Supabase dashboard
+
+### 5. Run Development Server
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🚀 Deployment
 
-**Use GitHub Codespaces**
+### Vercel Deployment
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-## What technologies are used for this project?
+### Netlify Deployment
 
-This project is built with:
+1. Connect your GitHub repository to Netlify
+2. Set environment variables in Netlify dashboard
+3. Build command: `npm run build`
+4. Publish directory: `dist`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🔒 Security Features
 
-## How can I deploy this project?
+- **Environment Variables**: All sensitive data stored in environment variables
+- **API Key Protection**: No hardcoded credentials in source code
+- **Input Validation**: Form validation and sanitization
+- **CORS Configuration**: Proper CORS headers for API endpoints
+- **Error Handling**: Comprehensive error handling without exposing sensitive data
 
-Simply open [Lovable](https://lovable.dev/projects/28fefa16-dc12-4235-9392-49327b182b5a) and click on Share -> Publish.
+## ⚡ Performance Optimizations
 
-## Can I connect a custom domain to my Lovable project?
+- **Code Splitting**: Automatic chunk splitting for better loading
+- **Image Optimization**: Optimized images with proper formats
+- **Lazy Loading**: Components loaded on demand
+- **Bundle Optimization**: Tree shaking and dead code elimination
+- **Caching**: Proper cache headers and strategies
 
-Yes, you can!
+## 🐛 Bug Fixes & Improvements
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Fixed Issues:
+- TypeScript strict mode compliance
+- ESLint warnings and errors
+- Missing useEffect dependencies
+- Proper error handling in async functions
+- Console.log cleanup (kept essential error logging)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Performance Improvements:
+- Optimized Vite configuration
+- Manual chunk splitting for better caching
+- Reduced bundle size
+- Improved loading performance
+
+### Security Enhancements:
+- Moved all API keys to environment variables
+- Updated .gitignore to exclude sensitive files
+- Secure error handling in edge functions
+- Input validation and sanitization
+
+## 📁 Project Structure
+
+```
+Portfolio/
+├── src/
+│   ├── components/          # React components
+│   ├── hooks/              # Custom React hooks
+│   ├── integrations/       # External service integrations
+│   ├── lib/               # Utility functions
+│   ├── pages/             # Page components
+│   └── ui/                # shadcn/ui components
+├── supabase/              # Supabase configuration and functions
+├── public/                # Static assets
+└── env.example           # Environment variables template
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 📞 Contact
+
+For questions or support, contact Ajay Bervanshi at ajay.bervanshi@gmail.com
+
+---
+
+**Note**: This portfolio is optimized for performance, security, and maintainability while preserving the original design and functionality.

@@ -20,10 +20,6 @@ export const Hero = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
-    setTimeout(() => {
-      console.log("Resume download initiated. Please ensure resume-ajay-bervanshi.pdf is in the public folder.");
-    }, 100);
   };
 
   // Calculate years of experience dynamically from July 4, 2022
@@ -43,7 +39,7 @@ export const Hero = () => {
         {/* Profile Avatar with tech effects */}
         <div className="mb-8 relative flex justify-center items-center">
           <ProfileAvatar size="xl" priority className="flex-shrink-0" />
-          <div className="absolute inset-0 w-44 h-44 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
+          <div className="absolute inset-0 w-36 h-36 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
         </div>
 
         {/* Main Title with tech styling */}

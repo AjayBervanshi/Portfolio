@@ -1,19 +1,19 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Menu, X, Database, User, Briefcase, GraduationCap, Mail, Home } from "lucide-react";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { id: "home", label: "Home", icon: Home },
     { id: "about", label: "About", icon: User },
     { id: "skills", label: "Skills", icon: Database },
     { id: "experience", label: "Experience", icon: Briefcase },
     { id: "education", label: "Education", icon: GraduationCap },
     { id: "contact", label: "Contact", icon: Mail },
-  ];
+  ], []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +31,7 @@ export const Navigation = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navItems]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);

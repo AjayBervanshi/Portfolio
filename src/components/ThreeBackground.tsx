@@ -2,14 +2,18 @@ import { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
-    VANTA: any;
-    THREE: any;
+    VANTA: {
+      NET: (config: Record<string, unknown>) => {
+        destroy: () => void;
+      };
+    };
+    THREE: typeof import('three');
   }
 }
 
 export const ThreeBackground = () => {
   const vantaRef = useRef<HTMLDivElement>(null);
-  const vantaEffect = useRef<any>(null);
+  const vantaEffect = useRef<{ destroy: () => void } | null>(null);
 
   useEffect(() => {
     // Load Three.js
