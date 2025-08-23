@@ -38,9 +38,9 @@ export const ProfileAvatar = ({ size = "md", className, priority = false }: Prof
       )}>
         <div className="w-full h-full rounded-full overflow-hidden bg-background">
           <AvatarImage 
-            src="/images/ajay-profile.png" 
+            src="/images/Profile_Pic.png" 
             alt="Ajay Bervanshi - MS SQL Database Administrator"
-            className="object-cover w-full h-full"
+            className="object-contain w-full h-full"
             loading={priority ? "eager" : "lazy"}
           />
           <AvatarFallback className="bg-gradient-to-br from-cyan-600 to-blue-600 text-white text-xl font-bold border-0">
