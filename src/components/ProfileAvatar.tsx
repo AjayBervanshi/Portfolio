@@ -11,7 +11,7 @@ const sizeClasses = {
   sm: "w-16 h-16",
   md: "w-24 h-24", 
   lg: "w-32 h-32",
-  xl: "w-40 h-40"
+  xl: "w-44 h-44"
 };
 
 const ringClasses = {
@@ -36,11 +36,11 @@ export const ProfileAvatar = ({ size = "md", className, priority = false }: Prof
         sizeClasses[size],
         ringClasses[size]
       )}>
-        <div className="w-full h-full rounded-full overflow-hidden bg-background">
+        <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-r from-[hsl(var(--profile-gradient-start))] to-[hsl(var(--profile-gradient-end))]">
           <AvatarImage 
             src="/images/Profile_Pic.png" 
             alt="Ajay Bervanshi - MS SQL Database Administrator"
-            className="object-contain w-full h-full"
+            className="object-contain w-full h-full scale-105"
             loading={priority ? "eager" : "lazy"}
           />
           <AvatarFallback className="bg-gradient-to-br from-cyan-600 to-blue-600 text-white text-xl font-bold border-0">

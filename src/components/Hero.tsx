@@ -41,9 +41,9 @@ export const Hero = () => {
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden px-6 pt-16">
       <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Profile Avatar with tech effects */}
-        <div className="mb-8 relative">
-          <ProfileAvatar size="xl" priority className="mx-auto" />
-          <div className="absolute inset-0 w-40 h-40 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
+        <div className="mb-8 relative flex justify-center items-center">
+          <ProfileAvatar size="xl" priority className="flex-shrink-0" />
+          <div className="absolute inset-0 w-44 h-44 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
         </div>
 
         {/* Main Title with tech styling */}
