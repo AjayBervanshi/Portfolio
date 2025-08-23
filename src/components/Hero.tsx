@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { User, Download, ExternalLink, Linkedin } from "lucide-react";
+import { Download, ExternalLink, Linkedin } from "lucide-react";
+import { ProfileAvatar } from "@/components/ProfileAvatar";
 
 export const Hero = () => {
   const handleLinkedInClick = () => {
@@ -41,10 +42,8 @@ export const Hero = () => {
       <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Profile Avatar with tech effects */}
         <div className="mb-8 relative">
-          <div className="w-32 h-32 mx-auto bg-slate-800 rounded-full flex items-center justify-center border-4 border-cyan-400/50 shadow-2xl backdrop-blur-sm">
-            <User size={48} className="text-cyan-400" />
-          </div>
-          <div className="absolute inset-0 w-32 h-32 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
+          <ProfileAvatar size="xl" priority className="mx-auto" />
+          <div className="absolute inset-0 w-40 h-40 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
         </div>
 
         {/* Main Title with tech styling */}

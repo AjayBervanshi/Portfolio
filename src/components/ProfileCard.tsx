@@ -1,23 +1,14 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Mail, Phone, Linkedin, Database, Server, BarChart3 } from "lucide-react";
+import { ProfileAvatar } from "@/components/ProfileAvatar";
 
 export const ProfileCard = () => {
   return (
     <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm w-full max-w-md mx-auto">
       <CardHeader className="text-center pb-4">
         <div className="flex justify-center mb-4">
-          <Avatar className="w-32 h-32 border-4 border-cyan-400/30">
-            <AvatarImage 
-              src="/placeholder.svg" 
-              alt="Ajay Bervanshi"
-              className="object-cover"
-            />
-            <AvatarFallback className="bg-gradient-to-br from-cyan-600 to-blue-600 text-white text-2xl font-bold">
-              AB
-            </AvatarFallback>
-          </Avatar>
+          <ProfileAvatar size="lg" />
         </div>
         
         <h1 className="text-2xl font-bold text-white mb-2">Ajay Bervanshi</h1>
