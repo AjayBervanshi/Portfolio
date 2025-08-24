@@ -28,7 +28,7 @@ if (!CONTACT_EMAIL || !CONTACT_PHONE) {
 notificationapi.init(NOTIFICATION_API_PROJECT_ID, NOTIFICATION_API_SECRET_KEY);
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://ssbrllliprffeegamygw.supabase.co",
+  "Access-Control-Allow-Origin": "*", // Allow all origins for now - consider restricting in production
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
