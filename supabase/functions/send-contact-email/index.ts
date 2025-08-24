@@ -27,8 +27,14 @@ if (!CONTACT_EMAIL || !CONTACT_PHONE) {
 // Initialize NotificationAPI with project credentials
 notificationapi.init(NOTIFICATION_API_PROJECT_ID, NOTIFICATION_API_SECRET_KEY);
 
+// Allowed origins for production security
+const ALLOWED_ORIGINS = [
+  "https://ssbrllliprffeegamygw.supabase.co",
+  "https://lovely-salamander-4c8859.netlify.app", // Update with your actual domain
+  "http://localhost:5173", // Development only
+];
+
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*", // Allow all origins for now - consider restricting in production
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
@@ -42,22 +48,73 @@ interface ContactFormData {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  // Origin-based CORS security
+  const origin = req.headers.get("origin");
+  const isAllowedOrigin = !origin || ALLOWED_ORIGINS.includes(origin);
+  const responseHeaders = {
+    ...corsHeaders,
+    "Access-Control-Allow-Origin": isAllowedOrigin ? (origin || "*") : "null",
+  };
+
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: responseHeaders });
+  }
+
+  // Security: Block requests from unauthorized origins
+  if (!isAllowedOrigin) {
+    console.log(`Blocked request from unauthorized origin: ${origin}`);
+    return new Response(
+      JSON.stringify({ error: "Unauthorized origin" }), 
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    );
   }
 
   if (req.method !== "POST") {
     return new Response("Method not allowed", { 
       status: 405, 
-      headers: corsHeaders 
+      headers: responseHeaders 
     });
   }
 
   try {
     const { name, email, phone, subject, message }: ContactFormData = await req.json();
 
-    console.log("Received contact form submission:", { name, email, phone, subject });
+    // Security: Basic bot detection
+    const userAgent = req.headers.get("user-agent") || "";
+    const isBot = /bot|crawl|spider|scrape/i.test(userAgent) || userAgent === "";
+    
+    if (isBot) {
+      console.log(`Blocked potential bot request: ${userAgent}`);
+      return new Response(
+        JSON.stringify({ error: "Automated requests not allowed" }), 
+        { status: 429, headers: responseHeaders }
+      );
+    }
+
+    // Security: Input validation and size limits
+    if (!name || !email || !subject || !message) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }), 
+        { status: 400, headers: responseHeaders }
+      );
+    }
+
+    if (message.length > 5000 || name.length > 100 || subject.length > 200) {
+      return new Response(
+        JSON.stringify({ error: "Input too long" }), 
+        { status: 400, headers: responseHeaders }
+      );
+    }
+    
+    // Reduced PII logging - only log submission attempt without sensitive data
+    console.log('Contact form submission attempt:', { 
+      nameLength: name.length, 
+      emailDomain: email.split('@')[1], 
+      hasPhone: !!phone,
+      subjectLength: subject.length,
+      messageLength: message.length 
+    });
 
     // Initialize Supabase client with service role for secure operations
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -92,7 +149,7 @@ const handler = async (req: Request): Promise<Response> => {
           status: 429,
           headers: { 
             "Content-Type": "application/json", 
-            ...corsHeaders 
+            ...responseHeaders 
           },
         }
       );
@@ -119,7 +176,7 @@ const handler = async (req: Request): Promise<Response> => {
           status: 400,
           headers: { 
             "Content-Type": "application/json", 
-            ...corsHeaders 
+            ...responseHeaders 
           },
         }
       );
@@ -238,23 +295,24 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: {
           "Content-Type": "application/json",
-          ...corsHeaders,
+          ...responseHeaders,
         },
       }
     );
 
   } catch (error: unknown) {
-    console.error("Error sending notification:", error);
+    // Security: Don't log full error details to prevent information leakage
+    console.error('Contact form processing error:', error instanceof Error ? error.message : 'Unknown error');
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error instanceof Error ? error.message : "Failed to send notification" 
+        error: "Failed to process contact form. Please try again later." 
       }),
       {
         status: 500,
         headers: { 
           "Content-Type": "application/json", 
-          ...corsHeaders 
+          ...responseHeaders 
         },
       }
     );
