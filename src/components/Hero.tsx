@@ -79,7 +79,7 @@ export const Hero = () => {
 
         {/* Location with tech styling */}
         <p className="text-sm text-slate-400 mt-6 animate-fade-in">
-          📍 Airoli, Mumbai, Maharashtra, India
+          📍 Nagpur, Maharashtra, India
         </p>
       </div>
     </section>
