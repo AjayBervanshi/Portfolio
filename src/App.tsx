@@ -11,8 +11,8 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 function App() {
-  // Track visitors (temporarily disabled for preview)
-  // useVisitorTracking();
+  // Track visitors
+  useVisitorTracking();
 
   return (
     <QueryClientProvider client={queryClient}>

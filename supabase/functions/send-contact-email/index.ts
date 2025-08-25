@@ -3,29 +3,11 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import notificationapi from 'npm:notificationapi-node-server-sdk';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// Environment variables for API credentials
-const NOTIFICATION_API_PROJECT_ID = Deno.env.get('NOTIFICATION_API_PROJECT_ID');
-const NOTIFICATION_API_SECRET_KEY = Deno.env.get('NOTIFICATION_API_SECRET_KEY');
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
-const CONTACT_EMAIL = Deno.env.get('CONTACT_EMAIL');
-const CONTACT_PHONE = Deno.env.get('CONTACT_PHONE');
-
-// Validate environment variables
-if (!NOTIFICATION_API_PROJECT_ID || !NOTIFICATION_API_SECRET_KEY) {
-  throw new Error('Missing required NotificationAPI environment variables');
-}
-
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error('Missing required Supabase environment variables');
-}
-
-if (!CONTACT_EMAIL || !CONTACT_PHONE) {
-  throw new Error('Missing required contact information environment variables');
-}
-
 // Initialize NotificationAPI with project credentials
-notificationapi.init(NOTIFICATION_API_PROJECT_ID, NOTIFICATION_API_SECRET_KEY);
+notificationapi.init(
+  'ef6raefq8m4ejrjs42m6kq32y1',
+  '59l1czomvfnm1g6bi9q41kdj2m6osppusbwkaddplosgj4dz29v3s3apt2'
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -60,7 +42,10 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received contact form submission:", { name, email, phone, subject });
 
     // Initialize Supabase client for logging
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(
+      "https://ssbrllliprffeegamygw.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzYnJsbGxpcHJmZmVlZ2FteWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3OTYzMDcsImV4cCI6MjA2NzM3MjMwN30.wvo84CIabcxhhc4x1DRm3uZkwCAausESXvQLadZ1VNs"
+    );
 
     // Save message to database first
     const { data: messageData, error: dbError } = await supabase
@@ -138,8 +123,8 @@ const handler = async (req: Request): Promise<Response> => {
         type: 'portfolio_contact_form_to_me',
         to: {
           id: 'ajay',
-          email: CONTACT_EMAIL,
-          number: CONTACT_PHONE
+          email: 'ajay.bervanshi@gmail.com',
+          number: '+917620085260'
         },
         parameters
       });
@@ -151,7 +136,7 @@ const handler = async (req: Request): Promise<Response> => {
         message_id: messageId,
         recipient_type: 'ajay',
         channel: 'email',
-        recipient_email: CONTACT_EMAIL,
+        recipient_email: 'ajay.bervanshi@gmail.com',
         status: 'sent'
       });
 
@@ -160,7 +145,7 @@ const handler = async (req: Request): Promise<Response> => {
         message_id: messageId,
         recipient_type: 'ajay',
         channel: 'sms',
-        recipient_phone: CONTACT_PHONE,
+        recipient_phone: '+917620085260',
         status: 'sent'
       });
 
@@ -173,7 +158,7 @@ const handler = async (req: Request): Promise<Response> => {
           message_id: messageId,
           recipient_type: 'ajay',
           channel: 'email',
-          recipient_email: CONTACT_EMAIL,
+          recipient_email: 'ajay.bervanshi@gmail.com',
           status: 'failed',
           error: ajayNotifError.message
         },
@@ -181,7 +166,7 @@ const handler = async (req: Request): Promise<Response> => {
           message_id: messageId,
           recipient_type: 'ajay',
           channel: 'sms',
-          recipient_phone: CONTACT_PHONE,
+          recipient_phone: '+917620085260',
           status: 'failed',
           error: ajayNotifError.message
         }
@@ -200,12 +185,12 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("Error sending notification:", error);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error instanceof Error ? error.message : "Failed to send notification" 
+        error: error.message || "Failed to send notification" 
       }),
       {
         status: 500,

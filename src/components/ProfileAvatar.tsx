@@ -9,9 +9,9 @@ interface ProfileAvatarProps {
 
 const sizeClasses = {
   sm: "w-16 h-16",
-  md: "w-20 h-20", 
-  lg: "w-28 h-28",
-  xl: "w-36 h-36"
+  md: "w-24 h-24", 
+  lg: "w-32 h-32",
+  xl: "w-44 h-44"
 };
 
 const ringClasses = {
