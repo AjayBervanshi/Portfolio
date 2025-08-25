@@ -32,6 +32,7 @@ const ALLOWED_ORIGINS = [
   "https://ssbrllliprffeegamygw.supabase.co",
   "https://lovely-salamander-4c8859.netlify.app", // Update with your actual domain
   "http://localhost:5173", // Development only
+  "https://28fefa16-dc12-4235-9392-49327b182b5a.sandbox.lovable.dev", // Current Lovable sandbox
 ];
 
 const corsHeaders = {
