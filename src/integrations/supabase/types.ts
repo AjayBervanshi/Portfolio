@@ -105,33 +105,6 @@ export type Database = {
           },
         ]
       }
-      rate_limits: {
-        Row: {
-          action: string
-          attempts: number | null
-          created_at: string | null
-          id: string
-          identifier: string
-          window_start: string | null
-        }
-        Insert: {
-          action: string
-          attempts?: number | null
-          created_at?: string | null
-          id?: string
-          identifier: string
-          window_start?: string | null
-        }
-        Update: {
-          action?: string
-          attempts?: number | null
-          created_at?: string | null
-          id?: string
-          identifier?: string
-          window_start?: string | null
-        }
-        Relationships: []
-      }
       visitors: {
         Row: {
           browser: string | null
@@ -173,40 +146,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      check_rate_limit: {
-        Args: {
-          p_action: string
-          p_identifier: string
-          p_max_attempts?: number
-          p_window_minutes?: number
-        }
-        Returns: boolean
-      }
-      secure_insert_message: {
-        Args: {
-          p_email: string
-          p_message: string
-          p_name: string
-          p_phone: string
-          p_subject: string
-          p_visitor_id?: string
-        }
-        Returns: string
-      }
-      secure_insert_notification_log: {
-        Args: {
-          p_channel: string
-          p_error?: string
-          p_message_id: string
-          p_provider_message_id?: string
-          p_provider_type?: string
-          p_recipient_email?: string
-          p_recipient_phone?: string
-          p_recipient_type: string
-          p_status?: string
-        }
-        Returns: string
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

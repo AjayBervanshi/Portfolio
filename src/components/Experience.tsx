@@ -44,7 +44,7 @@ export const Experience = () => {
       company: "Wipro Limited",
       startDate: "2022-07-01",
       endDate: undefined, // undefined means "Present"
-      location: "Mumbai, Maharashtra India",
+      location: "Remote, India",
       type: "Full-time",
       responsibilities: [
         "Administered and maintained MS SQL Server databases, ensuring 99.9% uptime for critical banking applications",

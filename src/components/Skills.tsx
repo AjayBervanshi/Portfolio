@@ -60,7 +60,7 @@ export const Skills = () => {
       icon: Code,
       description: "Efficiency through automation",
       skills: [
-        { name: "T-SQL Scripting", level: "Advanced", startDate: '2022-08-01' },
+        { name: "T-SQL Scripting", level: "Expert", startDate: careerStartDate },
         { name: "PowerShell Scripting", level: "Advanced", startDate: '2022-08-01' },
         { name: "Automated Monitoring Scripts", level: "Advanced", startDate: '2022-09-01' },
         { name: "Database Maintenance Automation", level: "Advanced", startDate: '2022-09-01' },

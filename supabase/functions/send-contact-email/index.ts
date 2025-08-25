@@ -7,7 +7,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const NOTIFICATION_API_PROJECT_ID = Deno.env.get('NOTIFICATION_API_PROJECT_ID');
 const NOTIFICATION_API_SECRET_KEY = Deno.env.get('NOTIFICATION_API_SECRET_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
 const CONTACT_EMAIL = Deno.env.get('CONTACT_EMAIL');
 const CONTACT_PHONE = Deno.env.get('CONTACT_PHONE');
 
@@ -16,7 +16,7 @@ if (!NOTIFICATION_API_PROJECT_ID || !NOTIFICATION_API_SECRET_KEY) {
   throw new Error('Missing required NotificationAPI environment variables');
 }
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error('Missing required Supabase environment variables');
 }
 
@@ -27,17 +27,10 @@ if (!CONTACT_EMAIL || !CONTACT_PHONE) {
 // Initialize NotificationAPI with project credentials
 notificationapi.init(NOTIFICATION_API_PROJECT_ID, NOTIFICATION_API_SECRET_KEY);
 
-// Allowed origins for production security
-const ALLOWED_ORIGINS = [
-  "https://ssbrllliprffeegamygw.supabase.co",
-  "https://lovely-salamander-4c8859.netlify.app", // Update with your actual domain
-  "http://localhost:5173", // Development only
-  "https://28fefa16-dc12-4235-9392-49327b182b5a.sandbox.lovable.dev", // Current Lovable sandbox
-];
-
 const corsHeaders = {
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface ContactFormData {
@@ -49,140 +42,45 @@ interface ContactFormData {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Origin-based CORS security
-  const origin = req.headers.get("origin");
-  const isAllowedOrigin = !origin || ALLOWED_ORIGINS.includes(origin);
-  const responseHeaders = {
-    ...corsHeaders,
-    "Access-Control-Allow-Origin": isAllowedOrigin ? (origin || "*") : "null",
-  };
-
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: responseHeaders });
-  }
-
-  // Security: Block requests from unauthorized origins
-  if (!isAllowedOrigin) {
-    console.log(`Blocked request from unauthorized origin: ${origin}`);
-    return new Response(
-      JSON.stringify({ error: "Unauthorized origin" }), 
-      { status: 403, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(null, { headers: corsHeaders });
   }
 
   if (req.method !== "POST") {
     return new Response("Method not allowed", { 
       status: 405, 
-      headers: responseHeaders 
+      headers: corsHeaders 
     });
   }
 
   try {
     const { name, email, phone, subject, message }: ContactFormData = await req.json();
 
-    // Security: Basic bot detection
-    const userAgent = req.headers.get("user-agent") || "";
-    const isBot = /bot|crawl|spider|scrape/i.test(userAgent) || userAgent === "";
-    
-    if (isBot) {
-      console.log(`Blocked potential bot request: ${userAgent}`);
-      return new Response(
-        JSON.stringify({ error: "Automated requests not allowed" }), 
-        { status: 429, headers: responseHeaders }
-      );
-    }
+    console.log("Received contact form submission:", { name, email, phone, subject });
 
-    // Security: Input validation and size limits
-    if (!name || !email || !subject || !message) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }), 
-        { status: 400, headers: responseHeaders }
-      );
-    }
+    // Initialize Supabase client for logging
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    if (message.length > 5000 || name.length > 100 || subject.length > 200) {
-      return new Response(
-        JSON.stringify({ error: "Input too long" }), 
-        { status: 400, headers: responseHeaders }
-      );
-    }
-    
-    // Reduced PII logging - only log submission attempt without sensitive data
-    console.log('Contact form submission attempt:', { 
-      nameLength: name.length, 
-      emailDomain: email.split('@')[1], 
-      hasPhone: !!phone,
-      subjectLength: subject.length,
-      messageLength: message.length 
-    });
-
-    // Initialize Supabase client with service role for secure operations
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    // Get client IP for rate limiting
-    const clientIP = req.headers.get('x-forwarded-for') || 
-                    req.headers.get('x-real-ip') || 
-                    'unknown';
-
-    // Check rate limit (5 attempts per hour per IP)
-    const { data: rateLimitCheck, error: rateLimitError } = await supabase
-      .rpc('check_rate_limit', {
-        p_identifier: clientIP,
-        p_action: 'contact_form',
-        p_max_attempts: 5,
-        p_window_minutes: 60
-      });
-
-    if (rateLimitError) {
-      console.error('Rate limit check error:', rateLimitError);
-      throw new Error('Rate limit validation failed');
-    }
-
-    if (!rateLimitCheck) {
-      console.warn(`Rate limit exceeded for IP: ${clientIP}`);
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: "Too many submissions. Please try again later." 
-        }),
-        {
-          status: 429,
-          headers: { 
-            "Content-Type": "application/json", 
-            ...responseHeaders 
-          },
-        }
-      );
-    }
-
-    // Save message using secure function with server-side validation
-    const { data: messageId, error: dbError } = await supabase
-      .rpc('secure_insert_message', {
-        p_name: name,
-        p_email: email,
-        p_phone: phone || null,
-        p_subject: subject,
-        p_message: message
-      });
+    // Save message to database first
+    const { data: messageData, error: dbError } = await supabase
+      .from('messages')
+      .insert({
+        name,
+        email,
+        phone: phone || null,
+        subject,
+        message,
+      })
+      .select('id')
+      .single();
 
     if (dbError) {
       console.error('Database error:', dbError);
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: dbError.message || 'Validation failed' 
-        }),
-        {
-          status: 400,
-          headers: { 
-            "Content-Type": "application/json", 
-            ...responseHeaders 
-          },
-        }
-      );
+      throw new Error('Failed to save message');
     }
 
+    const messageId = messageData.id;
     console.log("Message saved with ID:", messageId);
 
     const parameters = {
@@ -208,28 +106,28 @@ const handler = async (req: Request): Promise<Response> => {
         
         console.log("Notification sent to user:", email || phone);
 
-        // Log user notification using secure function
-        await supabase.rpc('secure_insert_notification_log', {
-          p_message_id: messageId,
-          p_recipient_type: 'user',
-          p_channel: email ? 'email' : 'sms',
-          p_recipient_email: email || null,
-          p_recipient_phone: phone || null,
-          p_status: 'sent'
+        // Log user notification
+        await supabase.from('notification_logs').insert({
+          message_id: messageId,
+          recipient_type: 'user',
+          channel: email ? 'email' : 'sms',
+          recipient_email: email || null,
+          recipient_phone: phone || null,
+          status: 'sent'
         });
 
       } catch (userNotifError) {
         console.error("Error sending user notification:", userNotifError);
         
-        // Log failed user notification using secure function
-        await supabase.rpc('secure_insert_notification_log', {
-          p_message_id: messageId,
-          p_recipient_type: 'user',
-          p_channel: email ? 'email' : 'sms',
-          p_recipient_email: email || null,
-          p_recipient_phone: phone || null,
-          p_status: 'failed',
-          p_error: userNotifError.message
+        // Log failed user notification
+        await supabase.from('notification_logs').insert({
+          message_id: messageId,
+          recipient_type: 'user',
+          channel: email ? 'email' : 'sms',
+          recipient_email: email || null,
+          recipient_phone: phone || null,
+          status: 'failed',
+          error: userNotifError.message
         });
       }
     }
@@ -248,45 +146,46 @@ const handler = async (req: Request): Promise<Response> => {
       
       console.log("Notification sent to Ajay");
 
-      // Log Ajay's email notification using secure function
-      await supabase.rpc('secure_insert_notification_log', {
-        p_message_id: messageId,
-        p_recipient_type: 'ajay',
-        p_channel: 'email',
-        p_recipient_email: CONTACT_EMAIL,
-        p_status: 'sent'
+      // Log Ajay's email notification
+      await supabase.from('notification_logs').insert({
+        message_id: messageId,
+        recipient_type: 'ajay',
+        channel: 'email',
+        recipient_email: CONTACT_EMAIL,
+        status: 'sent'
       });
 
-      // Log Ajay's SMS notification using secure function
-      await supabase.rpc('secure_insert_notification_log', {
-        p_message_id: messageId,
-        p_recipient_type: 'ajay',
-        p_channel: 'sms',
-        p_recipient_phone: CONTACT_PHONE,
-        p_status: 'sent'
+      // Log Ajay's SMS notification
+      await supabase.from('notification_logs').insert({
+        message_id: messageId,
+        recipient_type: 'ajay',
+        channel: 'sms',
+        recipient_phone: CONTACT_PHONE,
+        status: 'sent'
       });
 
     } catch (ajayNotifError) {
       console.error("Error sending Ajay notification:", ajayNotifError);
       
-      // Log failed notifications for Ajay using secure function
-      await supabase.rpc('secure_insert_notification_log', {
-        p_message_id: messageId,
-        p_recipient_type: 'ajay',
-        p_channel: 'email',
-        p_recipient_email: CONTACT_EMAIL,
-        p_status: 'failed',
-        p_error: ajayNotifError.message
-      });
-      
-      await supabase.rpc('secure_insert_notification_log', {
-        p_message_id: messageId,
-        p_recipient_type: 'ajay',
-        p_channel: 'sms',
-        p_recipient_phone: CONTACT_PHONE,
-        p_status: 'failed',
-        p_error: ajayNotifError.message
-      });
+      // Log failed notifications for Ajay
+      await supabase.from('notification_logs').insert([
+        {
+          message_id: messageId,
+          recipient_type: 'ajay',
+          channel: 'email',
+          recipient_email: CONTACT_EMAIL,
+          status: 'failed',
+          error: ajayNotifError.message
+        },
+        {
+          message_id: messageId,
+          recipient_type: 'ajay',
+          channel: 'sms',
+          recipient_phone: CONTACT_PHONE,
+          status: 'failed',
+          error: ajayNotifError.message
+        }
+      ]);
     }
 
     // Response back to frontend
@@ -296,24 +195,23 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: {
           "Content-Type": "application/json",
-          ...responseHeaders,
+          ...corsHeaders,
         },
       }
     );
 
   } catch (error: unknown) {
-    // Security: Don't log full error details to prevent information leakage
-    console.error('Contact form processing error:', error instanceof Error ? error.message : 'Unknown error');
+    console.error("Error sending notification:", error);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Failed to process contact form. Please try again later." 
+        error: error instanceof Error ? error.message : "Failed to send notification" 
       }),
       {
         status: 500,
         headers: { 
           "Content-Type": "application/json", 
-          ...responseHeaders 
+          ...corsHeaders 
         },
       }
     );
