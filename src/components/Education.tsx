@@ -47,9 +47,9 @@ export const Education = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {education.map((edu, index) => (
-            <Card key={index} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300 hover:shadow-xl group">
+            <Card key={index} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-150 hover:shadow-xl group">
               <CardContent className="p-8">
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-150">
                   <GraduationCap size={32} className="text-white" />
                 </div>
                 

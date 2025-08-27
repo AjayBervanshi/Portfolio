@@ -65,7 +65,7 @@ export const Hero = () => {
           <Button 
             size="lg" 
             onClick={handleLinkedInClick}
-            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3 rounded-lg shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105 border border-cyan-400/30"
+            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3 rounded-lg shadow-2xl hover:shadow-cyan-500/25 transition-all duration-150 hover:scale-105 border border-cyan-400/30"
           >
             <Linkedin className="mr-2" size={20} />
             Connect on LinkedIn
@@ -74,7 +74,7 @@ export const Hero = () => {
             variant="outline" 
             size="lg"
             onClick={handleScrollToContact}
-            className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 px-8 py-3 rounded-lg shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+            className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 px-8 py-3 rounded-lg shadow-2xl hover:shadow-cyan-500/25 transition-all duration-150 hover:scale-105 backdrop-blur-sm"
           >
             <ExternalLink className="mr-2" size={20} />
             Contact Me
@@ -83,7 +83,7 @@ export const Hero = () => {
 
         {/* Location with tech styling */}
         <p className="text-sm text-slate-400 mt-6 animate-fade-in">
-          📍 Airoli, Mumbai, Maharashtra, India
+          📍 Nagpur, Maharashtra, India
         </p>
       </div>
     </section>

@@ -3,11 +3,14 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import notificationapi from 'npm:notificationapi-node-server-sdk';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// Initialize NotificationAPI with project credentials
-notificationapi.init(
-  'ef6raefq8m4ejrjs42m6kq32y1',
-  '59l1czomvfnm1g6bi9q41kdj2m6osppusbwkaddplosgj4dz29v3s3apt2'
-);
+// Initialize NotificationAPI with environment variables
+const NOTIFICATIONAPI_CLIENT_ID = Deno.env.get("NOTIFICATIONAPI_CLIENT_ID");
+const NOTIFICATIONAPI_CLIENT_SECRET = Deno.env.get("NOTIFICATIONAPI_CLIENT_SECRET");
+
+if (!NOTIFICATIONAPI_CLIENT_ID || !NOTIFICATIONAPI_CLIENT_SECRET) {
+  throw new Error("Missing NotificationAPI credentials");
+}
+notificationapi.init(NOTIFICATIONAPI_CLIENT_ID, NOTIFICATIONAPI_CLIENT_SECRET);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -41,10 +44,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Received contact form submission:", { name, email, phone, subject });
 
-    // Initialize Supabase client for logging
+    // Initialize Supabase client with environment variables
     const supabase = createClient(
-      "https://ssbrllliprffeegamygw.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzYnJsbGxpcHJmZmVlZ2FteWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3OTYzMDcsImV4cCI6MjA2NzM3MjMwN30.wvo84CIabcxhhc4x1DRm3uZkwCAausESXvQLadZ1VNs"
+      Deno.env.get("SUPABASE_URL") ?? '',
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ''
     );
 
     // Save message to database first

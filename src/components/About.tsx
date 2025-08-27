@@ -25,7 +25,7 @@ export const About = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Main About Card */}
-          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-300 shadow-xl">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-150 shadow-xl">
             <CardContent className="p-8">
               <div className="flex items-center mb-6">
                 <Award className="text-cyan-400 mr-3" size={24} />
@@ -58,7 +58,7 @@ export const About = () => {
           </Card>
 
           {/* Contact Information Card */}
-          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-300 shadow-xl">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-150 shadow-xl">
             <CardContent className="p-8">
               <h3 className="text-xl font-semibold text-white mb-6">Contact Information</h3>
               

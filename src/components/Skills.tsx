@@ -60,7 +60,7 @@ export const Skills = () => {
       icon: Code,
       description: "Efficiency through automation",
       skills: [
-        { name: "T-SQL Scripting", level: "Expert", startDate: careerStartDate },
+        { name: "T-SQL Scripting", level: "Advanced", startDate: careerStartDate },
         { name: "PowerShell Scripting", level: "Advanced", startDate: '2022-08-01' },
         { name: "Automated Monitoring Scripts", level: "Advanced", startDate: '2022-09-01' },
         { name: "Database Maintenance Automation", level: "Advanced", startDate: '2022-09-01' },
@@ -134,10 +134,10 @@ export const Skills = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((category, index) => (
-            <Card key={index} className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20 group transform hover:-translate-y-2">
+            <Card key={index} className="bg-slate-800/80 border-slate-700 backdrop-blur-sm hover:bg-slate-800/90 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 group transform hover:-translate-y-2">
               <CardHeader className="pb-4">
                 <div className="flex items-center space-x-4 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg">
                     <category.icon size={24} className="text-white" />
                   </div>
                   <div className="flex-1">

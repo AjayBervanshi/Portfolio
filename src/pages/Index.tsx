@@ -8,6 +8,8 @@ import { Education } from "@/components/Education";
 import { Contact } from "@/components/Contact";
 import { ThreeBackground } from "@/components/ThreeBackground";
 
+import { BackToTopButton } from "@/components/BackToTopButton";
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-transparent relative">
@@ -19,6 +21,7 @@ const Index = () => {
       <Experience />
       <Education />
       <Contact />
+      <BackToTopButton />
     </div>
   );
 };

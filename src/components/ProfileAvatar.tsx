@@ -26,13 +26,13 @@ export const ProfileAvatar = ({ size = "md", className, priority = false }: Prof
     <div className={cn("relative group", className)}>
       {/* Glow effect */}
       <div className={cn(
-        "absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-500/20 blur-lg transition-all duration-300 group-hover:from-cyan-400/30 group-hover:to-blue-500/30",
+        "absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-500/20 blur-lg transition-all duration-200 group-hover:from-cyan-400/30 group-hover:to-blue-500/30",
         sizeClasses[size]
       )} />
       
       {/* Avatar with gradient ring */}
       <Avatar className={cn(
-        "relative border-2 border-transparent bg-gradient-to-br from-cyan-400 to-blue-500 p-0.5 transition-all duration-300 hover:from-cyan-300 hover:to-blue-400",
+        "relative border-2 border-transparent bg-gradient-to-br from-cyan-400 to-blue-500 p-0.5 transition-all duration-200 hover:from-cyan-300 hover:to-blue-400",
         sizeClasses[size],
         ringClasses[size]
       )}>
