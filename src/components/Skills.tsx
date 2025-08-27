@@ -35,7 +35,6 @@ export const Skills = () => {
       description: "Enterprise-level availability solutions",
       skills: [
         { name: "Database Clustering", level: "Advanced", startDate: '2022-10-01' },
-        { name: "Database Replication", level: "Advanced", startDate: '2022-10-01' },
         { name: "Database Mirroring", level: "Advanced", startDate: '2022-10-01' },
         { name: "Disaster Recovery Planning", level: "Advanced", startDate: '2022-10-01' },
         { name: "Failover Processes", level: "Advanced", startDate: '2022-10-01' },
@@ -50,8 +49,6 @@ export const Skills = () => {
         { name: "User Authentication & Access Control", level: "Advanced", startDate: '2022-11-01' },
         { name: "Security Policies Implementation", level: "Advanced", startDate: '2022-11-01' },
         { name: "Data Encryption", level: "Advanced", startDate: '2022-11-01' },
-        { name: "GDPR Compliance", level: "Advanced", startDate: '2022-12-01' },
-        { name: "PCI DSS Compliance", level: "Advanced", startDate: '2022-12-01' },
         { name: "Database Security Management", level: "Advanced", startDate: '2022-11-01' }
       ]
     },
