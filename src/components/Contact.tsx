@@ -47,7 +47,8 @@ export const Contact = () => {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
+    phone: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -156,6 +157,7 @@ export const Contact = () => {
       // Reset form
       setName('');
       setEmail('');
+      setPhone('');
       setSubject('');
       setMessage('');
       setErrors({ name: '', email: '', subject: '', message: '', phone: '' });
