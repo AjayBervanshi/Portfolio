@@ -40,11 +40,7 @@ export const Hero = () => {
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden px-6 pt-16">
       <div className="max-w-4xl mx-auto text-center relative z-10">
-        {/* Profile Avatar with tech effects */}
-        <div className="mb-8 relative flex justify-center items-center">
-          <ProfileAvatar size="lg" priority className="flex-shrink-0" />
-          <div className="absolute inset-0 w-32 h-32 mx-auto rounded-full border-2 border-cyan-400/30 animate-spin" style={{animationDuration: '10s'}}></div>
-        </div>
+        
 
         {/* Main Title with tech styling */}
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 animate-fade-in drop-shadow-2xl">
