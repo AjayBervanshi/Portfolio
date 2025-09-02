@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Mail, Phone, Linkedin, Database, Server, BarChart3 } from "lucide-react";
 import { ProfileAvatar } from "@/components/ProfileAvatar";
+import { PERSONAL_INFO } from "@/utils/constants";
 
 export const ProfileCard = () => {
   return (
@@ -11,8 +12,8 @@ export const ProfileCard = () => {
           <ProfileAvatar size="lg" />
         </div>
         
-        <h1 className="text-2xl font-bold text-white mb-2">Ajay Bervanshi</h1>
-        <p className="text-cyan-400 text-lg font-medium mb-3">MS SQL Database Administrator</p>
+        <h1 className="text-2xl font-bold text-white mb-2">{PERSONAL_INFO.NAME}</h1>
+        <p className="text-cyan-400 text-lg font-medium mb-3">{PERSONAL_INFO.TITLE}</p>
         
         <div className="flex flex-wrap gap-2 justify-center mb-4">
           <Badge variant="secondary" className="bg-slate-700/50 text-cyan-300 border-cyan-400/30">
@@ -33,33 +34,33 @@ export const ProfileCard = () => {
       <CardContent className="space-y-3">
         <div className="flex items-center space-x-3 text-slate-300 p-2 bg-slate-700/30 rounded-lg">
           <MapPin className="text-cyan-400 flex-shrink-0" size={16} />
-          <span className="text-sm">Nagpur, Maharashtra, India</span>
+          <span className="text-sm">{PERSONAL_INFO.LOCATION}</span>
         </div>
         
         <div className="flex items-center space-x-3 text-slate-300 p-2 bg-slate-700/30 rounded-lg">
           <Mail className="text-cyan-400 flex-shrink-0" size={16} />
           <a 
-            href="mailto:ajay.bervanshi@gmail.com" 
+            href={`mailto:${PERSONAL_INFO.EMAIL}`} 
             className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
           >
-            ajay.bervanshi@gmail.com
+            {PERSONAL_INFO.EMAIL}
           </a>
         </div>
         
         <div className="flex items-center space-x-3 text-slate-300 p-2 bg-slate-700/30 rounded-lg">
           <Phone className="text-cyan-400 flex-shrink-0" size={16} />
           <a 
-            href="tel:+917620085260" 
+            href={`tel:${PERSONAL_INFO.PHONE}`} 
             className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
           >
-            +91 7620 085260
+            {PERSONAL_INFO.PHONE}
           </a>
         </div>
         
         <div className="flex items-center space-x-3 text-slate-300 p-2 bg-slate-700/30 rounded-lg">
           <Linkedin className="text-cyan-400 flex-shrink-0" size={16} />
           <a 
-            href="https://www.linkedin.com/in/ajay-bervanshi" 
+            href={PERSONAL_INFO.LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"

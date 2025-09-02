@@ -2,47 +2,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, MapPin, Building, TrendingUp } from "lucide-react";
+import { PERSONAL_INFO } from "@/utils/constants";
+import { calculateDuration, formatDateRange, formatExperience } from "@/utils/dateUtils";
 
 export const Experience = () => {
-  // Calculate duration between two dates
-  const calculateDuration = (startDate: string, endDate?: string): string => {
-    const start = new Date(startDate);
-    const end = endDate ? new Date(endDate) : new Date();
-    
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 30) {
-      return `${diffDays} days`;
-    } else if (diffDays < 365) {
-      const months = Math.floor(diffDays / 30.44);
-      return `${months} month${months !== 1 ? 's' : ''}`;
-    } else {
-      const years = Math.floor(diffDays / 365.25);
-      const remainingMonths = Math.floor((diffDays % 365.25) / 30.44);
-      
-      if (remainingMonths === 0) {
-        return `${years} year${years !== 1 ? 's' : ''}`;
-      } else {
-        return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-      }
-    }
-  };
-
-  // Calculate total experience from career start
-  const calculateTotalExperience = (startDate: string): string => {
-    const start = new Date(startDate);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - start.getTime());
-    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
-    return `${diffYears}+ years`;
-  };
 
   const experiences = [
     {
       title: "MS SQL Database Administrator",
       company: "Wipro Limited",
-      startDate: "2022-07-01",
+      startDate: PERSONAL_INFO.CAREER_START_DATE,
       endDate: undefined, // undefined means "Present"
       location: "Mumbai, Maharashtra, India",
       type: "Full-time",
@@ -93,19 +62,6 @@ export const Experience = () => {
       default:
         return "bg-slate-600";
     }
-  };
-
-  const formatDateRange = (startDate: string, endDate?: string): string => {
-    const start = new Date(startDate);
-    const startFormatted = start.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    
-    if (!endDate) {
-      return `${startFormatted} - Present`;
-    }
-    
-    const end = new Date(endDate);
-    const endFormatted = end.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    return `${startFormatted} - ${endFormatted}`;
   };
 
   return (
@@ -201,7 +157,7 @@ export const Experience = () => {
                 <CalendarDays size={20} className="text-cyan-400" />
                 <span className="text-white font-semibold">Total Professional Experience:</span>
                 <span className="text-cyan-400 font-bold text-lg">
-                  {calculateTotalExperience('2022-07-01')}
+                  {formatExperience(PERSONAL_INFO.CAREER_START_DATE)}
                 </span>
               </div>
             </CardContent>

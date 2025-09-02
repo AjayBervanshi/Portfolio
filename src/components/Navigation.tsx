@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Database, User, Briefcase, GraduationCap, Mail, Home } from "lucide-react";
+import { PERSONAL_INFO } from "@/utils/constants";
+import { scrollToSection } from "@/utils/navigation";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,12 +34,9 @@ export const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setIsMenuOpen(false);
-    }
+  const handleScrollToSection = (sectionId: string) => {
+    scrollToSection(sectionId);
+    setIsMenuOpen(false);
   };
 
   return (
@@ -50,7 +49,7 @@ export const Navigation = () => {
               <Database size={20} className="text-white" />
             </div>
             <div className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Ajay Bervanshi
+              {PERSONAL_INFO.NAME}
             </div>
           </div>
 
@@ -61,7 +60,7 @@ export const Navigation = () => {
               {navItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => scrollToSection(item.id)}
+                  onClick={() => handleScrollToSection(item.id)}
                   className={`group relative px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-800/80 hover:scale-105 ${
                     activeSection === item.id 
                       ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" 
@@ -101,7 +100,7 @@ export const Navigation = () => {
               {navItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => scrollToSection(item.id)}
+                  onClick={() => handleScrollToSection(item.id)}
                   className={`group flex items-center space-x-3 p-4 rounded-lg transition-all duration-150 hover:bg-slate-800/80 ${
                     activeSection === item.id 
                       ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" 

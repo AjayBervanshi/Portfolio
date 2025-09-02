@@ -1,21 +1,11 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Calendar, Mail, Linkedin, Award, Target, Phone } from "lucide-react";
+import { PERSONAL_INFO } from "@/utils/constants";
+import { calculateExperience } from "@/utils/dateUtils";
+import { openLinkedIn } from "@/utils/navigation";
 
 export const About = () => {
-  const handleLinkedInClick = () => {
-    window.open("https://www.linkedin.com/in/ajay-bervanshi", "_blank");
-  };
-
-  // Calculate years of experience dynamically from July 2022
-  const calculateExperience = () => {
-    const startDate = new Date('2022-07-01');
-    const currentDate = new Date();
-    const diffTime = Math.abs(currentDate.getTime() - startDate.getTime());
-    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
-    return diffYears;
-  };
-
   const yearsOfExperience = calculateExperience();
 
   return (
@@ -67,7 +57,7 @@ export const About = () => {
                   <MapPin className="text-cyan-400 flex-shrink-0" size={20} />
                   <div>
                     <p className="font-medium">Location</p>
-                    <p>Nagpur, Maharashtra, India</p>
+                    <p>{PERSONAL_INFO.LOCATION}</p>
                   </div>
                 </div>
                 
@@ -83,7 +73,7 @@ export const About = () => {
                   <Mail className="text-cyan-400 flex-shrink-0" size={20} />
                   <div>
                     <p className="font-medium">Email</p>
-                    <p className="break-all">ajay.bervanshi@gmail.com</p>
+                    <p className="break-all">{PERSONAL_INFO.EMAIL}</p>
                   </div>
                 </div>
 
@@ -91,7 +81,7 @@ export const About = () => {
                   <Phone className="text-cyan-400 flex-shrink-0" size={20} />
                   <div>
                     <p className="font-medium">Phone</p>
-                    <p>7620085260</p>
+                    <p>{PERSONAL_INFO.PHONE}</p>
                   </div>
                 </div>
                 
@@ -100,7 +90,7 @@ export const About = () => {
                   <div>
                     <p className="font-medium">LinkedIn</p>
                     <button 
-                      onClick={handleLinkedInClick}
+                      onClick={openLinkedIn}
                       className="text-cyan-400 hover:text-cyan-300 transition-colors"
                     >
                       View Professional Profile

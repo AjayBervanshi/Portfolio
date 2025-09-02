@@ -1,32 +1,21 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Database, Server, Shield, Code, Settings, Users, Zap, TrendingUp, Lock, Cloud } from "lucide-react";
+import { Database, Server, Shield, Code, Settings, Users, Zap, TrendingUp } from "lucide-react";
+import { SKILL_START_DATES, SKILL_LEVELS } from "@/utils/constants";
+import { formatExperience } from "@/utils/dateUtils";
 
 export const Skills = () => {
-  // Calculate experience dynamically from July 2022
-  const calculateExperience = (startDate: string) => {
-    const start = new Date(startDate);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - start.getTime());
-    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
-    return `${diffYears}+ years`;
-  };
-
-  // Career start date
-  const careerStartDate = '2022-07-01';
-
   const skillCategories = [
     {
       title: "Database Management",
       icon: Database,
       description: "Core database administration and optimization",
       skills: [
-        { name: "SQL Server Administration (2016/2019/2022)", level: "Expert", startDate: careerStartDate },
-        { name: "Database Performance Tuning", level: "Advanced", startDate: '2022-09-01' },
-        { name: "Query Optimization", level: "Advanced", startDate: '2022-09-01' },
-        { name: "Backup & Recovery Planning", level: "Expert", startDate: careerStartDate },
-        { name: "Database Health Monitoring", level: "Advanced", startDate: '2022-09-01' }
+        { name: "SQL Server Administration (2016/2019/2022)", level: SKILL_LEVELS.EXPERT, startDate: SKILL_START_DATES.CORE_SKILLS },
+        { name: "Database Performance Tuning", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.MID_SKILLS },
+        { name: "Query Optimization", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.MID_SKILLS },
+        { name: "Backup & Recovery Planning", level: SKILL_LEVELS.EXPERT, startDate: SKILL_START_DATES.CORE_SKILLS },
+        { name: "Database Health Monitoring", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.MID_SKILLS }
       ]
     },
     {
@@ -34,11 +23,11 @@ export const Skills = () => {
       icon: Server,
       description: "Enterprise-level availability solutions",
       skills: [
-        { name: "Database Clustering", level: "Advanced", startDate: '2022-10-01' },
-        { name: "Database Mirroring", level: "Advanced", startDate: '2022-10-01' },
-        { name: "Disaster Recovery Planning", level: "Advanced", startDate: '2022-10-01' },
-        { name: "Failover Processes", level: "Advanced", startDate: '2022-10-01' },
-        { name: "HA/DR Solutions", level: "Advanced", startDate: '2022-10-01' }
+        { name: "Database Clustering", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.ADVANCED_SKILLS },
+        { name: "Database Mirroring", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.ADVANCED_SKILLS },
+        { name: "Disaster Recovery Planning", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.ADVANCED_SKILLS },
+        { name: "Failover Processes", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.ADVANCED_SKILLS },
+        { name: "HA/DR Solutions", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.ADVANCED_SKILLS }
       ]
     },
     {
@@ -46,10 +35,10 @@ export const Skills = () => {
       icon: Shield,
       description: "Data protection and regulatory compliance",
       skills: [
-        { name: "User Authentication & Access Control", level: "Advanced", startDate: '2022-11-01' },
-        { name: "Security Policies Implementation", level: "Advanced", startDate: '2022-11-01' },
-        { name: "Data Encryption", level: "Advanced", startDate: '2022-11-01' },
-        { name: "Database Security Management", level: "Advanced", startDate: '2022-11-01' }
+        { name: "User Authentication & Access Control", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.SECURITY_SKILLS },
+        { name: "Security Policies Implementation", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.SECURITY_SKILLS },
+        { name: "Data Encryption", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.SECURITY_SKILLS },
+        { name: "Database Security Management", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.SECURITY_SKILLS }
       ]
     },
     {
@@ -57,11 +46,11 @@ export const Skills = () => {
       icon: Code,
       description: "Efficiency through automation",
       skills: [
-        { name: "T-SQL Scripting", level: "Advanced", startDate: careerStartDate },
-        { name: "PowerShell Scripting", level: "Advanced", startDate: '2022-08-01' },
-        { name: "Automated Monitoring Scripts", level: "Advanced", startDate: '2022-09-01' },
-        { name: "Database Maintenance Automation", level: "Advanced", startDate: '2022-09-01' },
-        { name: "Routine Task Automation", level: "Advanced", startDate: '2022-09-01' }
+        { name: "T-SQL Scripting", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.CORE_SKILLS },
+        { name: "PowerShell Scripting", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.EARLY_SKILLS },
+        { name: "Automated Monitoring Scripts", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.MID_SKILLS },
+        { name: "Database Maintenance Automation", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.MID_SKILLS },
+        { name: "Routine Task Automation", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.MID_SKILLS }
       ]
     },
     {
@@ -69,10 +58,10 @@ export const Skills = () => {
       icon: Settings,
       description: "Professional database tools",
       skills: [
-        { name: "SQL Server Management Studio (SSMS)", level: "Expert", startDate: careerStartDate },
-        { name: "SQL Profiler", level: "Advanced", startDate: '2022-08-01' },
-        { name: "Performance Monitor", level: "Advanced", startDate: '2022-08-01' },
-        { name: "Azure SQL", level: "Intermediate", startDate: '2023-01-01' }
+        { name: "SQL Server Management Studio (SSMS)", level: SKILL_LEVELS.EXPERT, startDate: SKILL_START_DATES.CORE_SKILLS },
+        { name: "SQL Profiler", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.EARLY_SKILLS },
+        { name: "Performance Monitor", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.EARLY_SKILLS },
+        { name: "Azure SQL", level: SKILL_LEVELS.INTERMEDIATE, startDate: SKILL_START_DATES.CLOUD_SKILLS }
       ]
     },
     {
@@ -80,23 +69,23 @@ export const Skills = () => {
       icon: Users,
       description: "Professional competencies",
       skills: [
-        { name: "Analytical Problem-Solving", level: "Expert", startDate: careerStartDate },
-        { name: "Effective Communication", level: "Advanced", startDate: '2022-08-01' },
-        { name: "Collaboration & Teamwork", level: "Advanced", startDate: '2022-08-01' },
-        { name: "Attention to Detail", level: "Expert", startDate: careerStartDate }
+        { name: "Analytical Problem-Solving", level: SKILL_LEVELS.EXPERT, startDate: SKILL_START_DATES.CORE_SKILLS },
+        { name: "Effective Communication", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.EARLY_SKILLS },
+        { name: "Collaboration & Teamwork", level: SKILL_LEVELS.ADVANCED, startDate: SKILL_START_DATES.EARLY_SKILLS },
+        { name: "Attention to Detail", level: SKILL_LEVELS.EXPERT, startDate: SKILL_START_DATES.CORE_SKILLS }
       ]
     }
   ];
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case "Expert":
+      case SKILL_LEVELS.EXPERT:
         return "bg-gradient-to-r from-emerald-500 to-green-600 text-white border-0";
-      case "Advanced":
+      case SKILL_LEVELS.ADVANCED:
         return "bg-gradient-to-r from-blue-500 to-cyan-600 text-white border-0";
-      case "Intermediate":
+      case SKILL_LEVELS.INTERMEDIATE:
         return "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0";
-      case "Beginner":
+      case SKILL_LEVELS.BEGINNER:
         return "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0";
       default:
         return "bg-gradient-to-r from-slate-500 to-gray-600 text-white border-0";
@@ -105,13 +94,13 @@ export const Skills = () => {
 
   const getLevelIcon = (level: string) => {
     switch (level) {
-      case "Expert":
+      case SKILL_LEVELS.EXPERT:
         return <Zap size={12} className="mr-1" />;
-      case "Advanced":
+      case SKILL_LEVELS.ADVANCED:
         return <TrendingUp size={12} className="mr-1" />;
-      case "Intermediate":
+      case SKILL_LEVELS.INTERMEDIATE:
         return <Settings size={12} className="mr-1" />;
-      case "Beginner":
+      case SKILL_LEVELS.BEGINNER:
         return <Users size={12} className="mr-1" />;
       default:
         return <Settings size={12} className="mr-1" />;
@@ -160,7 +149,7 @@ export const Skills = () => {
                       </div>
                       <div className="flex items-center justify-between text-xs text-slate-500">
                         <span>Experience</span>
-                        <span className="text-cyan-400 font-medium">{calculateExperience(skill.startDate)}</span>
+                        <span className="text-cyan-400 font-medium">{formatExperience(skill.startDate)}</span>
                       </div>
                     </div>
                   ))}
@@ -178,15 +167,15 @@ export const Skills = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
                   <Badge className="bg-gradient-to-r from-emerald-500 to-green-600 text-white mb-2">Expert</Badge>
-                  <p className="text-xs text-slate-400">{calculateExperience(careerStartDate)} experience</p>
+                  <p className="text-xs text-slate-400">{formatExperience(SKILL_START_DATES.CORE_SKILLS)}</p>
                 </div>
                 <div className="text-center">
                   <Badge className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white mb-2">Advanced</Badge>
-                  <p className="text-xs text-slate-400">{calculateExperience('2022-09-01')} experience</p>
+                  <p className="text-xs text-slate-400">{formatExperience(SKILL_START_DATES.MID_SKILLS)}</p>
                 </div>
                 <div className="text-center">
                   <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white mb-2">Intermediate</Badge>
-                  <p className="text-xs text-slate-400">{calculateExperience('2023-01-01')} experience</p>
+                  <p className="text-xs text-slate-400">{formatExperience(SKILL_START_DATES.CLOUD_SKILLS)}</p>
                 </div>
                 <div className="text-center">
                   <Badge className="bg-gradient-to-r from-red-500 to-pink-600 text-white mb-2">Beginner</Badge>
