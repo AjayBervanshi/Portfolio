@@ -114,12 +114,12 @@ export const Contact = () => {
       const visitorIdToSend = visitorId === '' || visitorId === undefined ? null : visitorId;
       console.log('Processed visitorId:', visitorIdToSend);
       console.log('visitorId type:', typeof visitorIdToSend);
-      const { data: messageData, error: insertError } = await supabase.rpc('secure_insert_message', {
+      const { data: messageData, error: insertError } = await supabase.rpc('secure_insert_message_v2', {
         p_name: name,
         p_email: email,
-        p_phone: phone,
         p_subject: subject,
         p_message: message,
+        p_phone: phone,
         p_visitor_id: visitorIdToSend
       });
       console.log('RPC Response:', { messageData, insertError });
@@ -269,7 +269,7 @@ export const Contact = () => {
                 
                 <Button 
                   type="submit" 
-                  disabled={isSubmitting || !visitorId}
+                  disabled={isSubmitting}
                   className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-150 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="mr-2" size={18} />

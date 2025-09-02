@@ -202,6 +202,17 @@ export type Database = {
         }
         Returns: string
       }
+      secure_insert_message_v2: {
+        Args: {
+          p_email: string
+          p_message: string
+          p_name: string
+          p_phone?: string
+          p_subject: string
+          p_visitor_id?: string
+        }
+        Returns: string
+      }
       secure_insert_notification_log: {
         Args: {
           p_channel: string

@@ -8,6 +8,13 @@ export const useVisitorTracking = () => {
   useEffect(() => {
     const trackVisitor = async () => {
       try {
+        // Check if visitor was already tracked in this session
+        const existingVisitorId = sessionStorage.getItem('visitor_id');
+        if (existingVisitorId) {
+          setVisitorId(existingVisitorId);
+          console.log('Using existing visitor ID:', existingVisitorId);
+          return;
+        }
         // Get visitor information
         const userAgent = navigator.userAgent;
         const referrer = document.referrer || 'direct';
@@ -67,8 +74,13 @@ export const useVisitorTracking = () => {
 
         if (error) {
           console.error('Error tracking visitor:', error);
+          // Set a fallback visitor ID to allow form submission
+          const fallbackId = 'fallback-' + Date.now();
+          setVisitorId(fallbackId);
+          sessionStorage.setItem('visitor_id', fallbackId);
         } else {
           setVisitorId(data.id);
+          sessionStorage.setItem('visitor_id', data.id);
           console.log('Visitor tracked:', {
             id: data.id,
             browser: getBrowser(),
@@ -79,6 +91,10 @@ export const useVisitorTracking = () => {
         }
       } catch (error) {
         console.error('Error in visitor tracking:', error);
+        // Set a fallback visitor ID to ensure form works
+        const fallbackId = 'fallback-' + Date.now();
+        setVisitorId(fallbackId);
+        sessionStorage.setItem('visitor_id', fallbackId);
       }
     };
 
