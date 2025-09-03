@@ -19,8 +19,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <BrowserRouter>
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-x-hidden">
-            
+          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-x-hidden">
             <div className="relative z-10" style={{ scrollBehavior: 'smooth' }}>
               <Routes>
                 <Route path="/" element={<Index />} />

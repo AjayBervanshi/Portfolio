@@ -4,6 +4,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 @layer base {
   :root {
     --background: 222.2 84% 4.9%;
@@ -68,28 +80,133 @@
   background: #94a3b8;
 }
 
-/* Smooth transitions for all interactive elements */
+/* Performance-optimized transitions */
 a, button, input, textarea {
-  transition: all 0.3s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+             color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+             background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+             border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+             box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
-/* Enhanced link hover effects */
-a:hover {
+/* Enhanced interactive effects */
+a:hover, button:hover {
   transform: translateY(-1px);
 }
 
-/* Custom animation for fade-in elements */
+/* GPU acceleration for animations */
+.animate-fade-in-up,
+[class*="animate-"] {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+/* Optimized backdrop blur */
+.backdrop-blur-sm,
+.backdrop-blur-xl {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@supports not (backdrop-filter: blur(8px)) {
+  .backdrop-blur-sm,
+  .backdrop-blur-xl {
+    background-color: rgba(30, 41, 59, 0.95) !important;
+  }
+}
+
+/* Preload critical animations */
+@media (prefers-reduced-motion: no-preference) {
+  .hover-scale {
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+}
+
+/* Optimized animations with hardware acceleration */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translate3d(0, 30px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
   }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Responsive animation controls */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-glow,
+  [class*="animate-"] {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Loading optimizations */
+.lazy-load {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.lazy-load.loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
