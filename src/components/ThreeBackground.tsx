@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 declare global {
@@ -11,120 +11,84 @@ declare global {
 export const ThreeBackground = () => {
   const vantaRef = useRef<HTMLDivElement>(null);
   const vantaEffect = useRef<any>(null);
-  const scriptsLoaded = useRef({ three: false, vanta: false });
   const isMobile = useIsMobile();
 
-  // Optimized configuration based on device capabilities
-  const vantaConfig = useMemo(() => {
-    const isHighEnd = !isMobile && window.navigator.hardwareConcurrency > 4;
-    const isLowEnd = isMobile || window.navigator.hardwareConcurrency <= 2;
-    
-    return {
-      el: vantaRef.current,
-      mouseControls: true,
-      touchControls: !isMobile, // Disable touch controls on mobile for better performance
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 0.8, // Reduce scale on mobile
-      color: 0x00f5ff,
-      backgroundColor: 0x0a0f1c,
-      // Dynamic performance settings
-      points: isHighEnd ? 35 : isLowEnd ? 15 : 25,
-      maxDistance: isHighEnd ? 35 : isLowEnd ? 20 : 25,
-      spacing: isHighEnd ? 20 : isLowEnd ? 30 : 25,
-      showDots: !isLowEnd, // Hide dots on low-end devices
-      forceAnimate: false, // Let the system decide
-      fps: isHighEnd ? 60 : 30, // Adaptive FPS
-    };
-  }, [isMobile]);
-
-  const initializeVanta = useCallback(() => {
-    if (vantaRef.current && window.VANTA && !vantaEffect.current) {
-      try {
-        vantaEffect.current = window.VANTA.NET(vantaConfig);
-        
-        // Performance optimization: Reduce quality on slower devices
-        if (vantaEffect.current && vantaEffect.current.renderer) {
-          const renderer = vantaEffect.current.renderer;
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          renderer.powerPreference = "default";
-        }
-      } catch (error) {
-        console.warn('Vanta.js initialization failed:', error);
-      }
-    }
-  }, [vantaConfig]);
-
-  const loadScript = useCallback((src: string, key: 'three' | 'vanta'): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      if (scriptsLoaded.current[key]) {
-        resolve();
-        return;
-      }
-
-      const existingScript = document.querySelector(`script[src="${src}"]`);
-      if (existingScript) {
-        scriptsLoaded.current[key] = true;
-        resolve();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = src;
-      script.async = true;
-      script.onload = () => {
-        scriptsLoaded.current[key] = true;
-        resolve();
-      };
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }, []);
-
   useEffect(() => {
+    // Skip loading on mobile devices for performance
     if (isMobile) return;
 
     let mounted = true;
 
-    const initBackground = async () => {
+    const loadScripts = async () => {
       try {
-        // Use requestIdleCallback for non-critical loading
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(async () => {
-            if (!mounted) return;
-            
-            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js', 'three');
-            if (!mounted) return;
-            
-            await loadScript('https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js', 'vanta');
-            if (!mounted) return;
-            
-            // Small delay to ensure DOM is ready
-            requestAnimationFrame(() => {
-              if (mounted) initializeVanta();
-            });
+        // Check if scripts are already loaded
+        if (window.THREE && window.VANTA) {
+          initVanta();
+          return;
+        }
+
+        // Load Three.js first
+        if (!window.THREE) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js';
+            script.onload = () => resolve();
+            script.onerror = reject;
+            document.head.appendChild(script);
           });
-        } else {
-          // Fallback for browsers without requestIdleCallback
-          setTimeout(async () => {
-            if (!mounted) return;
-            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js', 'three');
-            if (!mounted) return;
-            await loadScript('https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js', 'vanta');
-            if (!mounted) return;
-            requestAnimationFrame(() => {
-              if (mounted) initializeVanta();
-            });
-          }, 100);
+        }
+
+        // Then load Vanta.js
+        if (!window.VANTA) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js';
+            script.onload = () => resolve();
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
+        // Initialize Vanta effect
+        if (mounted) {
+          initVanta();
         }
       } catch (error) {
         console.warn('Failed to load background scripts:', error);
       }
     };
 
-    initBackground();
+    const initVanta = () => {
+      if (!vantaRef.current || !window.VANTA || vantaEffect.current) return;
+
+      try {
+        // Device-specific configuration
+        const isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024;
+        const isHighDPI = window.devicePixelRatio > 2;
+        
+        vantaEffect.current = window.VANTA.NET({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: isTablet ? 0.9 : 1.00,
+          scaleMobile: 0.8,
+          color: 0x00f5ff,
+          backgroundColor: 0x0a0f1c,
+          // Adaptive settings based on device
+          points: isHighDPI ? 20 : isTablet ? 25 : 30,
+          maxDistance: isHighDPI ? 25 : isTablet ? 28 : 30,
+          spacing: isHighDPI ? 30 : isTablet ? 27 : 25,
+          showDots: true,
+        });
+      } catch (error) {
+        console.warn('Vanta initialization failed:', error);
+      }
+    };
+
+    loadScripts();
 
     return () => {
       mounted = false;
@@ -137,14 +101,37 @@ export const ThreeBackground = () => {
         }
       }
     };
-  }, [isMobile, loadScript, initializeVanta]);
+  }, [isMobile]);
 
-  // Enhanced fallback for mobile and low-end devices
+  // Mobile fallback with animated network pattern
   if (isMobile) {
     return (
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900/20 via-slate-900 to-slate-900"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(0,245,255,0.02)_50%,_transparent_75%)] bg-[length:60px_60px] animate-pulse"></div>
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+        <div className="absolute inset-0 opacity-30">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="network" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="20" r="2" fill="#00f5ff" opacity="0.5">
+                  <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="80" cy="40" r="1.5" fill="#00f5ff" opacity="0.4">
+                  <animate attributeName="opacity" values="0.2;0.7;0.2" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="50" cy="70" r="1" fill="#00f5ff" opacity="0.6">
+                  <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <line x1="20" y1="20" x2="80" y2="40" stroke="#00f5ff" strokeWidth="0.5" opacity="0.3">
+                  <animate attributeName="opacity" values="0.1;0.4;0.1" dur="3.5s" repeatCount="indefinite"/>
+                </line>
+                <line x1="80" y1="40" x2="50" y2="70" stroke="#00f5ff" strokeWidth="0.5" opacity="0.2">
+                  <animate attributeName="opacity" values="0.1;0.3;0.1" dur="4.5s" repeatCount="indefinite"/>
+                </line>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#network)" />
+          </svg>
+        </div>
       </div>
     );
   }
@@ -152,7 +139,7 @@ export const ThreeBackground = () => {
   return (
     <div 
       ref={vantaRef} 
-      className="fixed inset-0 -z-10 transition-opacity duration-1000"
+      className="fixed inset-0 -z-10"
       style={{ 
         width: '100%', 
         height: '100%',
