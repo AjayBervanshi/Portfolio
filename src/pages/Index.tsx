@@ -6,7 +6,7 @@ import { Skills } from "@/components/Skills";
 import { Experience } from "@/components/Experience";
 import { Education } from "@/components/Education";
 import { Contact } from "@/components/Contact";
-import { EnhancedThreeBackground } from "@/components/EnhancedThreeBackground";
+import { ThreeBackground } from "@/components/ThreeBackground";
 import { OptimizedSection } from "@/components/OptimizedSection";
 import { BackToTopButton } from "@/components/BackToTopButton";
 import { Suspense, lazy } from "react";
@@ -19,7 +19,7 @@ const LazyEducation = lazy(() => import("@/components/Education").then(module =>
 const Index = () => {
   return (
     <div className="min-h-screen bg-transparent relative">
-      <EnhancedThreeBackground />
+      <ThreeBackground />
       <Navigation />
       <Hero />
       
