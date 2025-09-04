@@ -95,6 +95,21 @@ a:hover, button:hover {
   transform: translateY(-1px);
 }
 
+/* Network background optimizations */
+.network-canvas {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  will-change: transform;
+}
+
+/* Smooth canvas scaling */
+canvas {
+  image-rendering: auto;
+  image-rendering: smooth;
+}
+
 /* GPU acceleration for animations */
 .animate-fade-in-up,
 [class*="animate-"] {
