@@ -68,60 +68,80 @@ export const ThreeBackground = () => {
     };
   }, [isMobile, isHighEnd, isLowEnd, preferReducedMotion, connectionSpeed]);
 
-  // Initialize canvas-based network nodes
+  // Initialize canvas-based network with center-point distribution
   const initializeNodes = useCallback((width: number, height: number) => {
     const nodes: NetworkNode[] = [];
     const { nodeCount } = config.canvas;
+    const centerX = width / 2;
+    const centerY = height / 2;
     
-    // Fibonacci spiral distribution for optimal coverage
-    const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
+    // Create center node first
+    nodes.push({
+      id: 0,
+      x: centerX,
+      y: centerY,
+      z: 0,
+      vx: 0,
+      vy: 0,
+      vz: 0,
+      size: 6, // Larger center node
+      brightness: 1,
+      targetBrightness: 1,
+      connections: [],
+      pulse: 0,
+      type: 'primary',
+      lastInteraction: 0
+    });
     
-    for (let i = 0; i < nodeCount; i++) {
-      const theta = 2 * Math.PI * i / phi;
-      const radius = Math.sqrt(i / nodeCount) * Math.min(width, height) * 0.4;
+    // Create concentric rings expanding outward from center
+    const rings = 4;
+    const nodesPerRing = Math.floor((nodeCount - 1) / rings);
+    
+    for (let ring = 1; ring <= rings; ring++) {
+      const ringRadius = (ring / rings) * Math.min(width, height) * 0.35;
+      const nodesInThisRing = ring === rings ? (nodeCount - 1) - (rings - 1) * nodesPerRing : nodesPerRing;
       
-      // Add randomness and spread across Z-axis
-      const x = width / 2 + radius * Math.cos(theta) + (Math.random() - 0.5) * 100;
-      const y = height / 2 + radius * Math.sin(theta) + (Math.random() - 0.5) * 100;
-      const z = (Math.random() - 0.5) * 200;
-      
-      const nodeTypes: NetworkNode['type'][] = ['primary', 'secondary', 'accent'];
-      const weights = [0.3, 0.5, 0.2]; // Distribution weights
-      const rand = Math.random();
-      let type: NetworkNode['type'] = 'secondary';
-      let cumulative = 0;
-      
-      for (let j = 0; j < weights.length; j++) {
-        cumulative += weights[j];
-        if (rand <= cumulative) {
-          type = nodeTypes[j];
-          break;
-        }
+      for (let i = 0; i < nodesInThisRing; i++) {
+        const angle = (2 * Math.PI * i) / nodesInThisRing + (ring * Math.PI / 8); // Offset each ring
+        const x = centerX + ringRadius * Math.cos(angle);
+        const y = centerY + ringRadius * Math.sin(angle);
+        const z = (Math.random() - 0.5) * 100;
+        
+        // Determine node type based on ring
+        const type: NetworkNode['type'] = ring <= 2 ? 'primary' : ring === 3 ? 'secondary' : 'accent';
+        
+        nodes.push({
+          id: nodes.length,
+          x: Math.max(20, Math.min(width - 20, x)),
+          y: Math.max(20, Math.min(height - 20, y)),
+          z,
+          vx: (Math.random() - 0.5) * 0.2,
+          vy: (Math.random() - 0.5) * 0.2,
+          vz: (Math.random() - 0.5) * 0.1,
+          size: type === 'primary' ? 4 + Math.random() * 1.5 : 
+                type === 'secondary' ? 2.5 + Math.random() * 1 : 
+                1.5 + Math.random() * 0.8,
+          brightness: 0.5 + Math.random() * 0.3,
+          targetBrightness: 0.5 + Math.random() * 0.3,
+          connections: [],
+          pulse: Math.random() * Math.PI * 2,
+          type,
+          lastInteraction: 0
+        });
       }
-      
-      nodes.push({
-        id: i,
-        x: Math.max(20, Math.min(width - 20, x)),
-        y: Math.max(20, Math.min(height - 20, y)),
-        z,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        vz: (Math.random() - 0.5) * 0.2,
-        size: type === 'primary' ? 4 + Math.random() * 2 : 
-              type === 'secondary' ? 2.5 + Math.random() * 1.5 : 
-              1.5 + Math.random() * 1,
-        brightness: 0.4 + Math.random() * 0.3,
-        targetBrightness: 0.4 + Math.random() * 0.3,
-        connections: [],
-        pulse: Math.random() * Math.PI * 2,
-        type,
-        lastInteraction: 0
-      });
     }
 
-    // Create intelligent connections based on proximity and type compatibility
+    // Create symmetric connections from center outward
     nodes.forEach((node, i) => {
-      const distances: { index: number; distance: number; compatibility: number }[] = [];
+      if (i === 0) {
+        // Center node connects to all inner ring nodes
+        for (let j = 1; j <= Math.min(8, nodes.length - 1); j++) {
+          node.connections.push(j);
+        }
+        return;
+      }
+      
+      const distances: { index: number; distance: number; priority: number }[] = [];
       
       nodes.forEach((otherNode, j) => {
         if (i !== j) {
@@ -130,19 +150,20 @@ export const ThreeBackground = () => {
           const dz = node.z - otherNode.z;
           const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
           
-          // Type compatibility scoring
-          const compatibility = node.type === otherNode.type ? 1.2 : 
-                               (node.type === 'primary' || otherNode.type === 'primary') ? 1.1 : 1.0;
+          // Prioritize center connections and same-type connections
+          const isCenterConnection = j === 0 ? 2.0 : 1.0;
+          const typeCompatibility = node.type === otherNode.type ? 1.3 : 1.0;
+          const priority = isCenterConnection * typeCompatibility;
           
-          distances.push({ index: j, distance, compatibility });
+          distances.push({ index: j, distance, priority });
         }
       });
       
-      // Connect to more nodes for denser network
-      const maxConnections = node.type === 'primary' ? 5 : node.type === 'secondary' ? 4 : 3;
+      // Connect based on distance and priority for symmetric structure
+      const maxConnections = node.type === 'primary' ? 4 : node.type === 'secondary' ? 3 : 2;
       
       distances
-        .sort((a, b) => (a.distance / a.compatibility) - (b.distance / b.compatibility))
+        .sort((a, b) => (a.distance / a.priority) - (b.distance / b.priority))
         .slice(0, maxConnections)
         .forEach(({ index, distance }) => {
           if (distance < config.canvas.connectionDistance) {
@@ -236,7 +257,7 @@ export const ThreeBackground = () => {
         node.vz += (Math.random() - 0.5) * 0.005;
       }
       
-      // Mouse interaction with enhanced physics
+      // Enhanced mouse interaction with faster response
       if (mouseRef.current.isNear) {
         const dx = mouseRef.current.x - node.x;
         const dy = mouseRef.current.y - node.y;
@@ -244,22 +265,23 @@ export const ThreeBackground = () => {
         
         if (distance < config.canvas.interactionRadius) {
           const force = (config.canvas.interactionRadius - distance) / config.canvas.interactionRadius;
-          node.targetBrightness = Math.min(1, 0.6 + force * 0.4);
+          node.targetBrightness = Math.min(1, 0.8 + force * 0.2);
           node.lastInteraction = currentTime;
           
-          // Magnetic attraction/repulsion
+          // Faster interaction response
           const angle = Math.atan2(dy, dx);
-          const pushPull = node.type === 'primary' ? -1 : 1; // Primary nodes attract, others repel
-          const interactionForce = force * 0.02 * pushPull;
+          const interactionMultiplier = node.type === 'primary' ? -2 : 1.5; // Center attracts stronger
+          const interactionForce = force * 0.05 * interactionMultiplier;
           
           node.vx += Math.cos(angle) * interactionForce;
           node.vy += Math.sin(angle) * interactionForce;
           
-          // Ripple effect to connected nodes
+          // Instant ripple effect to connected nodes
           node.connections.forEach(connIdx => {
             const connectedNode = nodes[connIdx];
             if (connectedNode) {
-              connectedNode.targetBrightness = Math.min(1, connectedNode.brightness + force * 0.2);
+              connectedNode.targetBrightness = Math.min(1, connectedNode.brightness + force * 0.4);
+              connectedNode.lastInteraction = currentTime;
             }
           });
         }
@@ -385,11 +407,11 @@ export const ThreeBackground = () => {
     mouseRef.current.y = event.clientY - rect.top;
     mouseRef.current.isNear = true;
     
-    // Clear mouse interaction after delay
+    // Ultra-fast mouse interaction clearing
     clearTimeout(mouseRef.current.timeout);
     mouseRef.current.timeout = setTimeout(() => {
       mouseRef.current.isNear = false;
-    }, 100);
+    }, 50); // Reduced from 100ms for faster response
   }, []);
 
   // Canvas resize handler
@@ -433,35 +455,39 @@ export const ThreeBackground = () => {
         color: 0x00f5ff,
         backgroundColor: 0x0a0f1c,
         // Optimized symmetric distribution
+        // Optimized center-point network configuration
         points: vanta.points,
         maxDistance: vanta.maxDistance,
         spacing: vanta.spacing,
         showDots: true,
-        // Enhanced center-point distribution
+        // Center-point distribution
         centerX: 0.5,
         centerY: 0.5,
-        // Symmetric radial distribution
+        // Symmetric radial expansion
         distribution: 'uniform',
         // High-performance settings
         forceAnimate: true,
-        animationSpeed: preferReducedMotion ? 0.3 : 1.2, // Increased speed
-        // Enhanced interaction responsiveness
+        animationSpeed: preferReducedMotion ? 0.4 : 1.5,
+        // Ultra-fast interaction response
         mouseEase: true,
-        mouseSpeed: 2.0, // Faster mouse response
-        touchSpeed: 2.0, // Faster touch response
-        // Optimized rendering
-        size: 1.2,
-        lineOpacity: 0.25,
-        dotOpacity: 0.9,
-        // Symmetric color distribution
+        mouseSpeed: 3.0, // Increased for faster response
+        touchSpeed: 3.0, // Increased for faster touch response
+        // Enhanced rendering for symmetric effect
+        size: 1.3,
+        lineOpacity: 0.3,
+        dotOpacity: 0.95,
+        // Symmetric color distribution from center
         vertexColors: [0x00f5ff, 0x3b82f6, 0xa855f7],
-        // Enhanced wave properties for center distribution
-        waveHeight: 15,
-        waveSpeed: 0.8,
-        zoom: 0.75,
+        // Enhanced wave properties for center expansion
+        waveHeight: 20,
+        waveSpeed: 1.0,
+        zoom: 0.7,
         // Performance boost
         lowLatency: true,
-        gpuAcceleration: true
+        gpuAcceleration: true,
+        // Network symmetry enhancements
+        meshDensity: 1.2,
+        meshOpacity: 0.4
       });
 
       // Post-initialization optimizations
