@@ -248,3 +248,27 @@ canvas {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Performance optimizations for smooth rendering */
+.network-canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  image-rendering: optimizeSpeed;
+  pointer-events: none;
+}
+
+/* Global performance improvements */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hardware acceleration for animations */
+.animate-fade-in-up,
+.animate-slide-in-left,
+.animate-slide-in-right {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}

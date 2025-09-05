@@ -42,14 +42,14 @@ export const ThreeBackground = () => {
   const config = useMemo(() => {
     const baseConfigs = {
       vanta: {
-        high: { points: 25, maxDistance: 25, spacing: 35, fps: 60 },
-        medium: { points: 18, maxDistance: 20, spacing: 40, fps: 60 },
-        low: { points: 12, maxDistance: 15, spacing: 45, fps: 30 }
+        high: { points: 38, maxDistance: 38, spacing: 28, fps: 60 },
+        medium: { points: 27, maxDistance: 30, spacing: 32, fps: 60 },
+        low: { points: 18, maxDistance: 23, spacing: 38, fps: 30 }
       },
       canvas: {
-        high: { nodeCount: 30, connectionDistance: 150, interactionRadius: 120 },
-        medium: { nodeCount: 20, connectionDistance: 120, interactionRadius: 100 },
-        low: { nodeCount: 15, connectionDistance: 100, interactionRadius: 80 }
+        high: { nodeCount: 45, connectionDistance: 225, interactionRadius: 180 },
+        medium: { nodeCount: 30, connectionDistance: 180, interactionRadius: 150 },
+        low: { nodeCount: 23, connectionDistance: 150, interactionRadius: 120 }
       }
     };
 
@@ -138,8 +138,8 @@ export const ThreeBackground = () => {
         }
       });
       
-      // Connect to closest compatible nodes
-      const maxConnections = node.type === 'primary' ? 4 : node.type === 'secondary' ? 3 : 2;
+      // Connect to optimal number of nodes for performance
+      const maxConnections = node.type === 'primary' ? 3 : node.type === 'secondary' ? 2 : 1;
       
       distances
         .sort((a, b) => (a.distance / a.compatibility) - (b.distance / b.compatibility))
@@ -174,8 +174,8 @@ export const ThreeBackground = () => {
       performanceRef.current.lastFpsCheck = currentTime;
     }
 
-    // Adaptive quality based on performance
-    const shouldSkipFrame = performanceRef.current.fps < 30 && performanceRef.current.frameCount % 2 === 0;
+    // Adaptive quality based on performance with better frame skipping
+    const shouldSkipFrame = performanceRef.current.fps < 45 && performanceRef.current.frameCount % 3 === 0;
     if (shouldSkipFrame && !isHighEnd) {
       animationRef.current = requestAnimationFrame(animateCanvas);
       return;
