@@ -42,14 +42,14 @@ export const ThreeBackground = () => {
   const config = useMemo(() => {
     const baseConfigs = {
       vanta: {
-        high: { points: 38, maxDistance: 38, spacing: 28, fps: 60 },
-        medium: { points: 27, maxDistance: 30, spacing: 32, fps: 60 },
-        low: { points: 18, maxDistance: 23, spacing: 38, fps: 30 }
+        high: { points: 55, maxDistance: 50, spacing: 20, fps: 60 },
+        medium: { points: 40, maxDistance: 40, spacing: 25, fps: 60 },
+        low: { points: 25, maxDistance: 30, spacing: 30, fps: 30 }
       },
       canvas: {
-        high: { nodeCount: 45, connectionDistance: 225, interactionRadius: 180 },
-        medium: { nodeCount: 30, connectionDistance: 180, interactionRadius: 150 },
-        low: { nodeCount: 23, connectionDistance: 150, interactionRadius: 120 }
+        high: { nodeCount: 70, connectionDistance: 300, interactionRadius: 250 },
+        medium: { nodeCount: 50, connectionDistance: 250, interactionRadius: 200 },
+        low: { nodeCount: 35, connectionDistance: 200, interactionRadius: 160 }
       }
     };
 
@@ -138,8 +138,8 @@ export const ThreeBackground = () => {
         }
       });
       
-      // Connect to optimal number of nodes for performance
-      const maxConnections = node.type === 'primary' ? 3 : node.type === 'secondary' ? 2 : 1;
+      // Connect to more nodes for denser network
+      const maxConnections = node.type === 'primary' ? 5 : node.type === 'secondary' ? 4 : 3;
       
       distances
         .sort((a, b) => (a.distance / a.compatibility) - (b.distance / b.compatibility))
