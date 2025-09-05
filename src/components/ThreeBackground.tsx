@@ -42,14 +42,14 @@ export const ThreeBackground = () => {
   const config = useMemo(() => {
     const baseConfigs = {
       vanta: {
-        high: { points: 40, maxDistance: 35, spacing: 20, fps: 60 },
-        medium: { points: 30, maxDistance: 30, spacing: 25, fps: 60 },
-        low: { points: 20, maxDistance: 25, spacing: 30, fps: 30 }
+        high: { points: 25, maxDistance: 25, spacing: 35, fps: 60 },
+        medium: { points: 18, maxDistance: 20, spacing: 40, fps: 60 },
+        low: { points: 12, maxDistance: 15, spacing: 45, fps: 30 }
       },
       canvas: {
-        high: { nodeCount: 50, connectionDistance: 200, interactionRadius: 180 },
-        medium: { nodeCount: 35, connectionDistance: 160, interactionRadius: 150 },
-        low: { nodeCount: 20, connectionDistance: 120, interactionRadius: 120 }
+        high: { nodeCount: 30, connectionDistance: 150, interactionRadius: 120 },
+        medium: { nodeCount: 20, connectionDistance: 120, interactionRadius: 100 },
+        low: { nodeCount: 15, connectionDistance: 100, interactionRadius: 80 }
       }
     };
 
