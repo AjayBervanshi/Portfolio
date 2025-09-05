@@ -42,14 +42,14 @@ export const ThreeBackground = () => {
   const config = useMemo(() => {
     const baseConfigs = {
       vanta: {
-        high: { points: 55, maxDistance: 50, spacing: 20, fps: 60 },
-        medium: { points: 40, maxDistance: 40, spacing: 25, fps: 60 },
-        low: { points: 25, maxDistance: 30, spacing: 30, fps: 30 }
+        high: { points: 28, maxDistance: 35, spacing: 25, fps: 60 },
+        medium: { points: 20, maxDistance: 25, spacing: 30, fps: 60 },
+        low: { points: 12, maxDistance: 20, spacing: 35, fps: 30 }
       },
       canvas: {
-        high: { nodeCount: 70, connectionDistance: 300, interactionRadius: 250 },
-        medium: { nodeCount: 50, connectionDistance: 250, interactionRadius: 200 },
-        low: { nodeCount: 35, connectionDistance: 200, interactionRadius: 160 }
+        high: { nodeCount: 35, connectionDistance: 150, interactionRadius: 120 },
+        medium: { nodeCount: 25, connectionDistance: 125, interactionRadius: 100 },
+        low: { nodeCount: 18, connectionDistance: 100, interactionRadius: 80 }
       }
     };
 
@@ -160,7 +160,7 @@ export const ThreeBackground = () => {
       });
       
       // Connect based on distance and priority for symmetric structure
-      const maxConnections = node.type === 'primary' ? 4 : node.type === 'secondary' ? 3 : 2;
+      const maxConnections = node.type === 'primary' ? 2 : node.type === 'secondary' ? 1 : 1;
       
       distances
         .sort((a, b) => (a.distance / a.priority) - (b.distance / b.priority))
@@ -225,16 +225,16 @@ export const ThreeBackground = () => {
           node.vy += Math.sin(angle) * force;
         }
         
-        // Individual orbital movement
-        const orbitalSpeed = 0.0002 + node.type === 'primary' ? 0.0001 : 0;
+        // Individual orbital movement with 3x faster rotation
+        const orbitalSpeed = (0.0006 + (node.type === 'primary' ? 0.0003 : 0)) * 3;
         const orbitalRadius = distFromCenter;
         const orbitalAngle = Math.atan2(node.y - centerY, node.x - centerX) + orbitalSpeed;
         
         const targetX = centerX + orbitalRadius * Math.cos(orbitalAngle);
         const targetY = centerY + orbitalRadius * Math.sin(orbitalAngle);
         
-        node.vx += (targetX - node.x) * 0.0001;
-        node.vy += (targetY - node.y) * 0.0001;
+        node.vx += (targetX - node.x) * 0.0005;
+        node.vy += (targetY - node.y) * 0.0005;
         
         // Apply velocities with 3D movement
         node.x += node.vx;
@@ -292,9 +292,9 @@ export const ThreeBackground = () => {
         node.targetBrightness = 0.4 + Math.sin(time + node.id) * 0.1;
       }
       
-      // Update brightness and pulse
-      node.brightness += (node.targetBrightness - node.brightness) * 0.08;
-      node.pulse += 0.015 + node.brightness * 0.01;
+      // Update brightness and pulse with faster response
+      node.brightness += (node.targetBrightness - node.brightness) * 0.15;
+      node.pulse += 0.025 + node.brightness * 0.02;
     });
 
     // Draw connections with enhanced visuals
@@ -411,7 +411,7 @@ export const ThreeBackground = () => {
     clearTimeout(mouseRef.current.timeout);
     mouseRef.current.timeout = setTimeout(() => {
       mouseRef.current.isNear = false;
-    }, 50); // Reduced from 100ms for faster response
+    }, 25); // Ultra-fast 25ms response
   }, []);
 
   // Canvas resize handler
