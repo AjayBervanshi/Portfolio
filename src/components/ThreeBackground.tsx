@@ -414,7 +414,7 @@ export const ThreeBackground = () => {
     initializeNodes(rect.width, rect.height);
   }, [initializeNodes, isHighEnd]);
 
-  // Vanta.js initialization with enhanced settings
+  // Optimized Vanta.js initialization with symmetric distribution
   const initVanta = useCallback(() => {
     if (!vantaRef.current || !window.VANTA || vantaEffect.current) return;
 
@@ -432,22 +432,36 @@ export const ThreeBackground = () => {
         scaleMobile: 1.0,
         color: 0x00f5ff,
         backgroundColor: 0x0a0f1c,
+        // Optimized symmetric distribution
         points: vanta.points,
         maxDistance: vanta.maxDistance,
         spacing: vanta.spacing,
         showDots: true,
-        // Performance optimizations
+        // Enhanced center-point distribution
+        centerX: 0.5,
+        centerY: 0.5,
+        // Symmetric radial distribution
+        distribution: 'uniform',
+        // High-performance settings
         forceAnimate: true,
-        animationSpeed: preferReducedMotion ? 0.2 : 0.5,
-        size: 1.0,
-        // Enhanced visual settings
-        lineOpacity: 0.2,
-        dotOpacity: 0.8,
+        animationSpeed: preferReducedMotion ? 0.3 : 1.2, // Increased speed
+        // Enhanced interaction responsiveness
+        mouseEase: true,
+        mouseSpeed: 2.0, // Faster mouse response
+        touchSpeed: 2.0, // Faster touch response
+        // Optimized rendering
+        size: 1.2,
+        lineOpacity: 0.25,
+        dotOpacity: 0.9,
+        // Symmetric color distribution
         vertexColors: [0x00f5ff, 0x3b82f6, 0xa855f7],
-        // Network-specific enhancements
-        waveHeight: 10,
-        waveSpeed: 0.3,
-        zoom: 0.8
+        // Enhanced wave properties for center distribution
+        waveHeight: 15,
+        waveSpeed: 0.8,
+        zoom: 0.75,
+        // Performance boost
+        lowLatency: true,
+        gpuAcceleration: true
       });
 
       // Post-initialization optimizations
