@@ -13,17 +13,18 @@ export const Experience = () => {
       company: "Pall Corporation",
       startDate: "2025-09-29",
       endDate: undefined, // undefined means "Present"
-      location: "Mumbai, Maharashtra, India",
+      location: "Pune, Maharashtra, India",
       type: "Full-time",
       responsibilities: [
-        "Administering and maintaining MS SQL Server databases, ensuring high availability for critical applications",
-        "Managing and maintaining AWS EC2 instances for database hosting and application deployment",
-        "Monitoring database performance and implementing optimization techniques",
-        "Managing database security, user accounts, and permissions",
-        "Implementing backup and recovery strategies",
-        "Collaborating with development teams for database design and performance tuning",
-        "Learning and implementing AWS cloud services for improved infrastructure management"
-      ],
+  "Administer and maintain MS SQL Server databases ensuring high availability, reliability, and optimal performance for critical applications",
+  "Manage and maintain AWS EC2 instances for database hosting and application deployment with secure and efficient operations",
+  "Monitor and analyze database performance, implementing indexing, query tuning, and resource optimization techniques",
+  "Manage database security, user accounts, and permissions in compliance with organizational policies",
+  "Implement and test robust backup and disaster recovery strategies to ensure data integrity and business continuity",
+  "Collaborate with development teams to optimize database design, improve query performance, and streamline deployments",
+  "Explore and integrate AWS services such as RDS, S3, and CloudWatch for enhanced infrastructure scalability and automation"
+],
+
       technologies: ["SQL Server 2016/2019/2022", "T-SQL", "PowerShell", "SSMS", "SQL Profiler", "Performance Monitor", "AWS EC2", "AWS Cloud Services"],
       achievements: [
         "Successfully transitioned to new role with focus on database optimization",
