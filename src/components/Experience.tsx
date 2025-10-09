@@ -10,9 +10,29 @@ export const Experience = () => {
   const experiences = [
     {
       title: "MS SQL Database Administrator",
+      company: "Pall Corporation",
+      startDate: "2024-09-20",
+      endDate: undefined, // undefined means "Present"
+      location: "Mumbai, Maharashtra, India",
+      type: "Full-time",
+      responsibilities: [
+        "Administering and maintaining MS SQL Server databases, ensuring high availability for critical applications",
+        "Monitoring database performance and implementing optimization techniques",
+        "Managing database security, user accounts, and permissions",
+        "Implementing backup and recovery strategies",
+        "Collaborating with development teams for database design and performance tuning"
+      ],
+      technologies: ["SQL Server 2016/2019/2022", "T-SQL", "PowerShell", "SSMS", "SQL Profiler", "Performance Monitor"],
+      achievements: [
+        "Successfully transitioned to new role with focus on database optimization",
+        "Maintaining database reliability and performance"
+      ]
+    },
+    {
+      title: "MS SQL Database Administrator",
       company: "Wipro Limited",
       startDate: PERSONAL_INFO.CAREER_START_DATE,
-      endDate: undefined, // undefined means "Present"
+      endDate: "2024-09-20",
       location: "Mumbai, Maharashtra, India",
       type: "Full-time",
       responsibilities: [
