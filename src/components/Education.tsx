@@ -5,23 +5,6 @@ import { GraduationCap, Calendar, MapPin, Award, BookOpen } from "lucide-react";
 export const Education = () => {
   const education = [
     {
-      degree: "Master of Technology in Computer Science",
-      institution: "Birla Institute of Technology and Science, Pilani",
-      location: "Pilani, Rajasthan",
-      duration: "Pursuing",
-      status: "Currently Enrolled",
-      grade: "In Progress",
-      specialization: "Computer Science & Engineering",
-      relevantCourses: [
-        "Advanced Database Management Systems",
-        "Data Structures and Algorithms",
-        "Computer Networks",
-        "Software Engineering",
-        "Distributed Systems",
-        "Database Security"
-      ]
-    },
-    {
       degree: "Bachelor of Computer Application (BCA)",
       institution: "G. H. Raisoni Institute Of Information Technology",
       location: "Nagpur, Maharashtra",
@@ -45,9 +28,10 @@ export const Education = () => {
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-white text-center mb-16">Education</h2>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {education.map((edu, index) => (
-            <Card key={index} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-150 hover:shadow-xl group">
+        <div className="flex justify-center">
+          <div className="w-full max-w-2xl">
+            {education.map((edu, index) => (
+              <Card key={index} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-150 hover:shadow-xl group mb-8">
               <CardContent className="p-8">
                 <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-150">
                   <GraduationCap size={32} className="text-white" />
@@ -102,7 +86,8 @@ export const Education = () => {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

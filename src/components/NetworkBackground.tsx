@@ -320,13 +320,17 @@ export const NetworkBackground = ({
   }, [animate, handleMouseMove, handleResize, interactive]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      style={{
-        background: 'linear-gradient(135deg, hsl(var(--background)) 0%, #1e293b 50%, #0f172a 100%)',
-        zIndex: -1
-      }}
-    />
+    <div className="absolute inset-0 w-full h-full" style={{ zIndex: -1 }}>
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(135deg, hsl(var(--background)) 0%, #1e293b 50%, #0f172a 100%)'
+        }}
+      />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+      />
+    </div>
   );
 };

@@ -152,19 +152,14 @@ export const EnhancedThreeBackground = () => {
     };
   }, [shouldUseVanta, shouldUseFallback, isHighEnd]);
 
-  // Loading state
+  // Loading state with immediate fallback background
   if (!isLoaded) {
     return (
       <div className="fixed inset-0 -z-10">
-        <div 
-          className="absolute inset-0"
-          style={{ 
-            background: 'linear-gradient(135deg, hsl(var(--background)) 0%, #1e293b 50%, #0f172a 100%)'
-          }}
+        <NetworkBackground 
+          interactive={false}
+          quality="low"
         />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-pulse text-cyan-400 text-sm">Loading...</div>
-        </div>
       </div>
     );
   }
