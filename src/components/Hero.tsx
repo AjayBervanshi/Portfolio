@@ -1,33 +1,97 @@
-
 import { Button } from "@/components/ui/button";
 import { Download, ExternalLink, Linkedin } from "lucide-react";
 import { ProfileAvatar } from "@/components/ProfileAvatar";
 import { PERSONAL_INFO } from "@/utils/constants";
 import { calculateExperience } from "@/utils/dateUtils";
 import { openLinkedIn, scrollToContact } from "@/utils/navigation";
+import { motion } from "framer-motion";
 
 export const Hero = () => {
   const yearsOfExperience = calculateExperience();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    },
+  };
+
+  const typewriterVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const letterVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.1 }
+    },
+  };
+
+  const name = PERSONAL_INFO.NAME.split("");
+
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden px-6 pt-16">
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        {/* Main Title with optimized animations */}
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-2xl transform translate-y-0 opacity-100 transition-all duration-700 ease-out animate-slide-in-left">
-          {PERSONAL_INFO.NAME}
-        </h1>
+      <motion.div
+        className="max-w-4xl mx-auto text-center relative z-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Main Title with typewriter effect */}
+        <div className="mb-4 overflow-hidden">
+          <motion.h1
+            className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl inline-block"
+            variants={typewriterVariants}
+          >
+            {name.map((char, index) => (
+              <motion.span key={index} variants={letterVariants} className="inline-block">
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
+          </motion.h1>
+        </div>
         
-        <h2 className="text-2xl md:text-3xl text-cyan-400 mb-6 font-light bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent transform translate-y-0 opacity-100 transition-all duration-700 ease-out delay-200 animate-fade-in-up">
+        <motion.h2
+          className="text-2xl md:text-3xl text-cyan-400 mb-6 font-light bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent"
+          variants={itemVariants}
+        >
           {PERSONAL_INFO.TITLE}
-        </h2>
+        </motion.h2>
 
-        <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed transform translate-y-0 opacity-100 transition-all duration-700 ease-out delay-400 animate-slide-in-right">
+        <motion.p
+          className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed"
+          variants={itemVariants}
+        >
           {yearsOfExperience}+ years of expertise in SQL Server management, performance optimization, 
           high availability solutions, and database security for critical banking applications.
-        </p>
+        </motion.p>
 
         {/* Action Buttons with enhanced tech styling and staggered animation */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center transform translate-y-0 opacity-100 transition-all duration-700 ease-out delay-600">
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+          variants={itemVariants}
+        >
           <Button 
             size="lg" 
             onClick={openLinkedIn}
@@ -45,13 +109,16 @@ export const Hero = () => {
             <ExternalLink className="mr-2" size={20} />
             Contact Me
           </Button>
-        </div>
+        </motion.div>
 
         {/* Location with tech styling */}
-        <p className="text-sm text-slate-400 mt-6 transform translate-y-0 opacity-100 transition-all duration-700 ease-out delay-800">
+        <motion.p
+          className="text-sm text-slate-400 mt-6"
+          variants={itemVariants}
+        >
           📍 {PERSONAL_INFO.LOCATION}
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
     </section>
   );
 };

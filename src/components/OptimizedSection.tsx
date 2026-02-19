@@ -1,43 +1,41 @@
-import React, { memo } from 'react';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { ReactNode } from 'react';
 
 interface OptimizedSectionProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   id?: string;
   animationDelay?: number;
-  threshold?: number;
 }
 
-export const OptimizedSection = memo<OptimizedSectionProps>(({
+export const OptimizedSection = ({
   children,
   className,
   id,
   animationDelay = 0,
-  threshold = 0.1,
-}) => {
-  const { ref, isVisible, hasBeenVisible } = useIntersectionObserver({
-    threshold,
-    freezeOnceVisible: true,
-  });
-
+}: OptimizedSectionProps) => {
   return (
-    <section
-      ref={ref}
+    <motion.section
       id={id}
-      className={cn(
-        'transition-opacity duration-700',
-        hasBeenVisible ? 'opacity-100' : 'opacity-0',
-        className
-      )}
-      style={{
-        animationDelay: hasBeenVisible ? `${animationDelay}ms` : undefined,
+      className={cn("py-12 md:py-20 relative z-10", className)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.8,
+            ease: "easeOut",
+            delay: animationDelay / 1000,
+          },
+        },
       }}
     >
-      {hasBeenVisible ? children : <div className="min-h-[200px]" />}
-    </section>
+      {children}
+    </motion.section>
   );
-});
-
-OptimizedSection.displayName = 'OptimizedSection';
+};
