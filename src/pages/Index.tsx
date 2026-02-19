@@ -9,6 +9,8 @@ import { Contact } from "@/components/Contact";
 import { ThreeBackground } from "@/components/ThreeBackground";
 import { OptimizedSection } from "@/components/OptimizedSection";
 import { BackToTopButton } from "@/components/BackToTopButton";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { StoryLine } from "@/components/StoryLine";
 import { Suspense, lazy } from "react";
 
 // Lazy load non-critical components for better initial load
@@ -19,6 +21,8 @@ const LazyEducation = lazy(() => import("@/components/Education").then(module =>
 const Index = () => {
   return (
     <div className="min-h-screen bg-transparent relative">
+      <ScrollProgress />
+      <StoryLine />
       <ThreeBackground />
       <Navigation />
       <Hero />
