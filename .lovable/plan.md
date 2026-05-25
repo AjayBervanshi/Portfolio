@@ -1,62 +1,53 @@
+## What's actually broken
 
+The blank page is **only on the published URL** (`ajaybervanshi.lovable.app`). The live preview already renders correctly — we confirmed this in the previous session.
 
-## Issues Found and Fixes
+The published bundle (`index-BNGwmfnx.js`) throws on load:
 
-### 1. Notification Issue: User not receiving SMS, You not receiving Email
+```
+Error: Missing Supabase URL or publishable key
+    at /assets/index-BNGwmfnx.js
+```
 
-**Root Cause**: After analyzing the notification logs, the `send-notifications` edge function correctly makes 4 separate API calls. However, there's a critical issue in how NotificationAPI works -- when you send with `type: 'portfolio_contact_form_for_user'`, the template on NotificationAPI's dashboard controls which channels are active.
+It also shows a MIME-type error for an inline data-URL module script. Both symptoms come from the **same root cause**: the published build is a stale artifact that was generated before `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` were present in `.env`. Since Vite inlines those values at build time, the old bundle has no Supabase config and crashes on the first import.
 
-**The problem**: Each `notificationapi.send()` call includes BOTH `email` and `number` fields in the `to` object for the user call (step 1 in old `send-contact-email`). The current `send-notifications` function already splits into 4 calls, BUT:
-- The user EMAIL call (step 1) only passes `email` -- this is correct
-- The user SMS call (step 2) passes `number` -- this is correct  
-- Ajay EMAIL call (step 3) only passes `email` -- correct
-- Ajay SMS call (step 4) only passes `number` -- correct
+The current `.env`, `src/integrations/supabase/client.ts`, and `index.html` are all correct. There is no code bug to fix — local dev preview renders the full landing page.
 
-The code logic looks correct. The issue is most likely on your **NotificationAPI dashboard**:
-- Template `portfolio_contact_form_for_user` must have **both EMAIL and SMS channels enabled**
-- Template `portfolio_contact_form_to_me` must have **both EMAIL and SMS channels enabled**
+## What to do
 
-**Action needed from you**: Check your NotificationAPI dashboard and ensure both templates have both email and SMS channels configured and active.
+1. **Republish the site.** Open the Publish dialog and click **Update**. This rebuilds with the current `.env` baked in, replaces `index-BNGwmfnx.js` with a fresh asset that contains the Supabase URL/key, and fixes both errors at once.
+2. **Hard-refresh** `ajaybervanshi.lovable.app` (Ctrl/Cmd+Shift+R) so the browser drops the cached broken bundle.
 
-**Code fix**: I'll also add better error logging and ensure the `send-contact-email` function (which is an older duplicate) is not interfering. I'll update `send-notifications` to add more detailed logging so you can diagnose channel-level failures.
+That's it — no migrations, no code edits, no security regressions.
 
-### 2. Background - Already Using Framer Motion
+## Security posture (unchanged, already clean)
 
-The `ThreeBackground.tsx` component already uses `framer-motion` (Framer's open-source animation library). This is the same animation engine that powers framer.com. The current implementation includes:
-- Floating particles with glow effects
-- SVG connection lines between nearby nodes
-- Mouse parallax interaction
-- Ambient glow orbs
+From the previous loop the security scan is already in a good state:
 
-The background is consistent across mobile and desktop (same Framer Motion code, just fewer particles on mobile for performance). No changes needed here.
+- `visitors` INSERT policy locked down with field-level WITH CHECK validation (enum browser/device, regex page path & referrer, `ip_address` forced NULL, time-bounded timestamps).
+- `messages`, `notification_logs`, `rate_limits`, all `aisha_*`, and `ajay_profile` are service_role-only; grants revoked from anon/authenticated.
+- Contact form writes go through `secure_insert_message_v2` (SECURITY DEFINER, rate-limited, validated) or the `send-contact-email` edge function (service role).
+- Security memory is up to date.
 
-### 3. Console Errors/Warnings Fix
+Republishing does **not** change any of this — it only ships the existing frontend code that already respects these boundaries.
 
-I'll check for and fix:
-- Unused imports (`useEffect`, `useState` in ThreeBackground.tsx)
-- The `window.innerWidth`/`window.innerHeight` usage at module level in ThreeBackground (can cause SSR issues)
-- The `colors` object being recreated every render (should be moved outside component or memoized)
+## Why we are not editing code
 
----
+- `src/integrations/supabase/client.ts` correctly reads `import.meta.env.VITE_SUPABASE_*` and the values exist in `.env`.
+- `index.html` is the standard Vite entry; the data-URL MIME warning only appears because the published HTML refers to a broken bundle.
+- Removing the `throw` in `client.ts` would mask the real problem and let pages render half-broken. The right fix is to make the build actually contain the env values, which republishing does.
 
-## Technical Changes
+## Verification after you click Update
 
-### File: `supabase/functions/send-notifications/index.ts`
-- Add detailed per-channel logging with the notification type and channel being sent
-- Add a check: if user has no phone, skip SMS; if no email, skip email (already done, but add explicit logging)
-- No structural changes -- the 4-call pattern is correct
+I will:
 
-### File: `src/components/ThreeBackground.tsx`
-- Move `colorMap` and `glowMap` outside the component (they're static, no need to recreate each render)
-- Fix `window.innerWidth`/`window.innerHeight` usage -- wrap in a state/effect to avoid issues during SSR or initial render when window may not be available
-- Remove unused imports if any
+1. Reload `https://ajaybervanshi.lovable.app` in the browser tool.
+2. Confirm the landing page renders (hero, terminal, CTAs).
+3. Check the console for the "Missing Supabase URL" error — it should be gone.
+4. Confirm the contact form still works end-to-end via the existing edge function path.
 
-### File: `supabase/functions/send-contact-email/index.ts`
-- This is an older duplicate function. I'll update its notification logic to match the 4-call pattern in `send-notifications` for consistency (in case it's ever called directly)
-
-### Important Note for You
-To fully fix the SMS/email issue, you **must** verify in your NotificationAPI dashboard:
-1. Go to `portfolio_contact_form_for_user` template -- enable both Email AND SMS channels
-2. Go to `portfolio_contact_form_to_me` template -- enable both Email AND SMS channels
-3. Make sure your SMS provider (Twilio, etc.) is properly connected in NotificationAPI
-
+```text
+stale publish ──► broken bundle ──► blank page
+        │
+        └── Update publish ──► fresh bundle with env ──► page renders
+```
