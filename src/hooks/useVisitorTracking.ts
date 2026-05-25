@@ -58,29 +58,32 @@ export const useVisitorTracking = () => {
           return 'Unknown';
         };
 
-        // Insert visitor data
-        const { data, error } = await supabase
+        // Generate visitor id client-side (anon has INSERT but no SELECT on visitors)
+        const newVisitorId = (crypto as any).randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+        const { error } = await supabase
           .from('visitors')
           .insert({
+            id: newVisitorId,
             user_agent: userAgent,
             referrer: referrer,
             browser: getBrowser(),
             device_type: deviceType,
             operating_system: getOperatingSystem(),
             page_visited: pageVisited,
-          })
-          .select('id')
-          .single();
+          });
 
         if (error) {
           console.error('Error tracking visitor:', error);
           setVisitorId(null);
           sessionStorage.removeItem('visitor_id');
         } else {
-          setVisitorId(data.id);
-          sessionStorage.setItem('visitor_id', data.id);
+          setVisitorId(newVisitorId);
+          sessionStorage.setItem('visitor_id', newVisitorId);
           console.log('Visitor tracked:', {
-            id: data.id,
+            id: newVisitorId,
             browser: getBrowser(),
             os: getOperatingSystem(),
             device: deviceType,
