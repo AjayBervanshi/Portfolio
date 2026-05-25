@@ -109,6 +109,10 @@ export const Contact = () => {
 
         if (rpcError) throw rpcError;
         
+        if (typeof rpcData === 'string' && rpcData.startsWith('Error:')) {
+          throw new Error(rpcData.replace('Error: ', ''));
+        }
+        
         toast.success("Connection transaction completed via fallback routing!");
         setIsSubmitted(true);
         setName('');
@@ -120,7 +124,7 @@ export const Contact = () => {
         setTimeout(() => setIsSubmitted(false), 5000);
       } catch (fallbackErr: any) {
         console.error("All messaging protocols failed:", fallbackErr);
-        toast.error("Messaging service offline. Please try LinkedIn connection!");
+        toast.error(fallbackErr.message || "Messaging service offline. Please try LinkedIn connection!");
       }
     } finally {
       setIsSubmitting(false);
