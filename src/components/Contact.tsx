@@ -1,288 +1,310 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Send } from "lucide-react";
-import { useState } from "react";
+import { Send, CheckCircle, AlertTriangle, Shield, Mail, Phone, MapPin, Terminal, Activity } from "lucide-react";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { ProfileCard } from "./ProfileCard";
-
-// Validation Utility Functions
-const validateName = (name: string) => {
-  const trimmedName = name.trim();
-  return trimmedName.length >= 2 && trimmedName.length <= 100;
-};
-const validateEmail = (email: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email) && email.length <= 255;
-};
-const validateSubject = (subject: string) => {
-  const trimmedSubject = subject.trim();
-  return trimmedSubject.length >= 5 && trimmedSubject.length <= 200;
-};
-const validateMessage = (message: string) => {
-  const trimmedMessage = message.trim();
-  return trimmedMessage.length >= 10 && trimmedMessage.length <= 5000;
-};
-
-const validatePhone = (phone: string) => {
-  const trimmedPhone = phone.trim();
-  return trimmedPhone.length === 0 || trimmedPhone.length <= 20; // Allow empty or up to 20 chars
-};
+import { motion, AnimatePresence } from "framer-motion";
 
 export const Contact = () => {
   const visitorId = useVisitorTracking();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState(''); // Added phone state
+  const [phone, setPhone] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // New state for inline validation errors
   const [errors, setErrors] = useState({
     name: '',
     email: '',
     subject: '',
-    message: '',
-    phone: ''
+    message: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Validation on field blur
-  const handleBlur = (field: string) => {
-    switch(field) {
-      case 'name':
-        setErrors(prev => ({
-          ...prev,
-          name: validateName(name) ? '' : 'Name must be between 2 and 100 characters'
-        }));
-        break;
-      case 'email':
-        setErrors(prev => ({
-          ...prev,
-          email: validateEmail(email) ? '' : 'Please enter a valid email address'
-        }));
-        break;
-      case 'subject':
-        setErrors(prev => ({
-          ...prev,
-          subject: validateSubject(subject) ? '' : 'Subject must be between 5 and 200 characters'
-        }));
-        break;
-      case 'message':
-        setErrors(prev => ({
-          ...prev,
-          message: validateMessage(message) ? '' : 'Message must be between 10 and 5000 characters'
-        }));
-        break;
-      case 'phone':
-        setErrors(prev => ({
-          ...prev,
-          phone: validatePhone(phone) ? '' : 'Phone number too long'
-        }));
-        break;
-    }
+  const validate = () => {
+    const newErrors = {
+      name: name.trim().length < 2 ? 'Name must be at least 2 characters' : '',
+      email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Please enter a valid email address' : '',
+      subject: subject.trim().length < 5 ? 'Subject must be at least 5 characters' : '',
+      message: message.trim().length < 10 ? 'Message must be at least 10 characters' : ''
+    };
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(err => err !== '');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Perform full validation before submission
-    const validationErrors = {
-      name: !validateName(name) ? 'Name must be between 2 and 100 characters' : '',
-      email: !validateEmail(email) ? 'Please enter a valid email address' : '',
-      subject: !validateSubject(subject) ? 'Subject must be between 5 and 200 characters' : '',
-      message: !validateMessage(message) ? 'Message must be between 10 and 5000 characters' : '',
-      phone: !validatePhone(phone) ? 'Phone number too long' : ''
-    };
-    setErrors(validationErrors);
-
-    // Check if any errors exist
-    if (Object.values(validationErrors).some(error => error !== '')) {
-      return; // Prevent submission
-    }
+    if (!validate()) return;
 
     setIsSubmitting(true);
+    const visitorIdToSend = visitorId || null;
 
     try {
-      console.log('Original visitorId:', visitorId);
-      const visitorIdToSend = visitorId === '' || visitorId === undefined ? null : visitorId;
-      console.log('Processed visitorId:', visitorIdToSend);
-      console.log('visitorId type:', typeof visitorIdToSend);
-      const { data: messageData, error: insertError } = await supabase.rpc('secure_insert_message_v2', {
-        p_name: name,
-        p_email: email,
-        p_subject: subject,
-        p_message: message,
-        p_phone: phone,
-        p_visitor_id: visitorIdToSend
-      });
-      console.log('RPC Response:', { messageData, insertError });
+      // 1. Direct database insert into 'messages' table
+      const { data, error: insertError } = await supabase
+        .from('messages')
+        .insert([
+          {
+            name,
+            email,
+            phone: phone || null,
+            subject,
+            message,
+            visitor_id: visitorIdToSend
+          }
+        ])
+        .select('id')
+        .single();
 
-      // Prioritize specific error message from RPC if available
-      if (typeof messageData === 'string' && messageData.startsWith('Error:')) {
-        toast.error(messageData.replace('Error: ', '')); // Display the specific error message
-        throw new Error(messageData); // Re-throw to stop further processing
-      }
-
-      // If insertError exists AND messageData is NOT a specific error, then it's a generic RPC/network error
       if (insertError) {
-        console.error('Insert Error Details:', insertError);
-        // Check if insertError has a specific message we can use, otherwise use generic
-        const errorMessage = insertError.message || "Failed to save message.";
-        toast.error(errorMessage); // Display the error from insertError or generic
-        throw new Error(errorMessage); // Re-throw
+        console.error('Database Insert Error:', insertError);
+        throw new Error(insertError.message || "Database insert failed");
       }
 
-      const message_id = messageData;
-
-      // 2. Trigger the notification edge function
+      // 2. Invoke notification edge function
+      const message_id = data.id;
       const { error: notificationError } = await supabase.functions.invoke('send-notifications', {
         body: { message_id },
       });
 
       if (notificationError) {
-        console.error('Notification error:', notificationError);
-        // Even if notifications fail, the message is saved.
-        toast.warning("Message sent, but couldn't send a confirmation. I'll get back to you.");
+        console.warn('Notification notificationError:', notificationError);
+        toast.warning("Message logged in DB, but notifications are queued. I will see it!");
       } else {
-        toast.success("Message sent successfully! You'll receive a confirmation, and I'll get back to you soon.");
+        toast.success("Connection transaction committed successfully!");
       }
 
-      // Reset form
+      setIsSubmitted(true);
+      
+      // Reset form fields
       setName('');
       setEmail('');
       setPhone('');
       setSubject('');
       setMessage('');
-      setErrors({ name: '', email: '', subject: '', message: '', phone: '' });
+      
+      setTimeout(() => setIsSubmitted(false), 5000);
 
-    } catch (error: any) {
-      console.error("Error sending message:", error);
-      toast.error(error.message || "Failed to send message. Please try again or contact me directly at ajay.bervanshi@gmail.com");
+    } catch (err: any) {
+      console.error("Connection transaction aborted:", err);
+      
+      // Standalone fallback: Try using secure insert RPC if direct insert fails
+      try {
+        console.log("Attempting fallback RPC insertion...");
+        const { data: rpcData, error: rpcError } = await supabase.rpc('secure_insert_message_v2', {
+          p_name: name,
+          p_email: email,
+          p_subject: subject,
+          p_message: message,
+          p_phone: phone || null,
+          p_visitor_id: visitorIdToSend
+        });
+
+        if (rpcError) throw rpcError;
+        
+        toast.success("Connection transaction completed via fallback routing!");
+        setIsSubmitted(true);
+        setName('');
+        setEmail('');
+        setPhone('');
+        setSubject('');
+        setMessage('');
+        
+        setTimeout(() => setIsSubmitted(false), 5000);
+      } catch (fallbackErr: any) {
+        console.error("All messaging protocols failed:", fallbackErr);
+        toast.error("Messaging service offline. Please try LinkedIn connection!");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl font-bold text-white text-center mb-16">Get In Touch</h2>
+    <section id="contact" className="py-20 px-4 md:px-6 relative scroll-mt-20">
+      <div className="max-w-4xl mx-auto space-y-12">
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Profile Card */}
-          <div>
-            <ProfileCard />
+        <div className="text-center space-y-3">
+          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest text-white">
+            Establish Connection
+          </h2>
+          <p className="text-xs font-mono text-slate-400 uppercase tracking-widest max-w-xl mx-auto leading-relaxed">
+            Submit a message directly to Ajay's Supabase instance to initiate collaboration
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+          {/* Metadata & Quick Info Card (5/12 Width) */}
+          <div className="md:col-span-5 flex flex-col justify-between space-y-6">
+            <Card className="bg-slate-950/65 border-[0.5px] border-cyan-500/20 backdrop-blur-md rounded-3xl p-6 shadow-2xl relative overflow-hidden group flex-1 text-left flex flex-col justify-between">
+              {/* Purple corner glow */}
+              <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="space-y-6">
+                <h3 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-900 pb-3">
+                  <Terminal size={12} className="text-cyan-400 animate-pulse" />
+                  Routing Terminal Metrics
+                </h3>
+
+                <div className="space-y-4 font-mono text-xs text-slate-400">
+                  <div className="flex items-center gap-3">
+                    <Mail className="text-cyan-400 flex-shrink-0" size={16} />
+                    <div>
+                      <span className="text-[8px] text-slate-500 uppercase tracking-widest block font-bold">Email Direct</span>
+                      <span className="text-white hover:text-cyan-300 transition-colors font-medium">ajay.bervanshi@gmail.com</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Phone className="text-purple-400 flex-shrink-0" size={16} />
+                    <div>
+                      <span className="text-[8px] text-slate-500 uppercase tracking-widest block font-bold">Mobile Link</span>
+                      <span className="text-white font-medium">+91 76200 85260</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <MapPin className="text-emerald-400 flex-shrink-0" size={16} />
+                    <div>
+                      <span className="text-[8px] text-slate-500 uppercase tracking-widest block font-bold">Operations Hub</span>
+                      <span className="text-white font-medium">Nagpur / Pune, India</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-slate-900 mt-6 space-y-3 font-mono text-[10px]">
+                <div className="flex justify-between items-center text-slate-500">
+                  <span>SSL HANDSHAKE</span>
+                  <span className="text-emerald-400 font-bold">SECURED</span>
+                </div>
+                <div className="flex justify-between items-center text-slate-500">
+                  <span>CATALOG TARGET</span>
+                  <span className="text-cyan-400 font-bold">SUPABASE.MESSAGES</span>
+                </div>
+                <div className="flex justify-between items-center text-slate-500">
+                  <span>DR ESCAPE ROUTING</span>
+                  <span className="text-purple-400 font-bold">RPC_v2 ACTIVE</span>
+                </div>
+              </div>
+            </Card>
           </div>
 
-          {/* Contact Form */} 
-          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold text-white">Send a Message</CardTitle>
-              <p className="text-slate-300 text-sm">
-                Fill out the form below and I'll get back to you within 24 hours.
-              </p>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name" className="text-slate-300">Full Name *</Label>
+          {/* Glowing Contact Form Panel (7/12 Width) */}
+          <div className="md:col-span-7 w-full">
+            <Card className="bg-slate-950/65 border-[0.5px] border-cyan-500/20 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full text-left">
+              {/* Cyan corner glow */}
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Name field */}
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Commander Name *</Label>
                     <Input
-                      id="name"
+                      placeholder="e.g. Elon Musk"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      onBlur={() => handleBlur('name')}
-                      className={`bg-slate-700 border-slate-600 text-white focus:border-cyan-400 mt-1 ${errors.name ? 'border-red-500' : ''}`}
-                      placeholder="Your full name"
-                      required
+                      className={`bg-slate-900 border ${
+                        errors.name ? 'border-rose-500/50' : 'border-slate-800'
+                      } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700`}
                     />
-                    {errors.name && <span className="text-red-500 text-xs mt-1">{errors.name}</span>}
+                    {errors.name && <span className="text-[9px] font-mono text-rose-400 block">{errors.name}</span>}
                   </div>
-                  <div>
-                    <Label htmlFor="email" className="text-slate-300">Email Address *</Label>
+
+                  {/* Email field */}
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Email Binding *</Label>
                     <Input
-                      id="email"
                       type="email"
+                      placeholder="e.g. elon@spacex.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      onBlur={() => handleBlur('email')}
-                      className={`bg-slate-700 border-slate-600 text-white focus:border-cyan-400 mt-1 ${errors.email ? 'border-red-500' : ''}`}
-                      placeholder="your.email@example.com"
-                      required
+                      className={`bg-slate-900 border ${
+                        errors.email ? 'border-rose-500/50' : 'border-slate-800'
+                      } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700`}
                     />
-                    {errors.email && <span className="text-red-500 text-xs mt-1">{errors.email}</span>}
+                    {errors.email && <span className="text-[9px] font-mono text-rose-400 block">{errors.email}</span>}
                   </div>
                 </div>
-                
-                <div>
-                  <Label htmlFor="phone" className="text-slate-300">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    onBlur={() => handleBlur('phone')}
-                    className={`bg-slate-700 border-slate-600 text-white focus:border-cyan-400 mt-1 ${errors.phone ? 'border-red-500' : ''}`}
-                    placeholder="+1 (555) 123-4567"
-                  />
-                  {errors.phone && <span className="text-red-500 text-xs mt-1">{errors.phone}</span>}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Phone field */}
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Phone Connection (Optional)</Label>
+                    <Input
+                      placeholder="e.g. +91 99999 88888"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="bg-slate-900 border border-slate-800 hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700"
+                    />
+                  </div>
+
+                  {/* Subject field */}
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Access Subject *</Label>
+                    <Input
+                      placeholder="e.g. Production Oracle to MS SQL Migration"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      className={`bg-slate-900 border ${
+                        errors.subject ? 'border-rose-500/50' : 'border-slate-800'
+                      } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700`}
+                    />
+                    {errors.subject && <span className="text-[9px] font-mono text-rose-400 block">{errors.subject}</span>}
+                  </div>
                 </div>
-                
-                <div>
-                  <Label htmlFor="subject" className="text-slate-300">Subject *</Label>
-                  <Input
-                    id="subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    onBlur={() => handleBlur('subject')}
-                    className={`bg-slate-700 border-slate-600 text-white focus:border-cyan-400 mt-1 ${errors.subject ? 'border-red-500' : ''}`}
-                    placeholder="Brief description of your inquiry"
-                    required
-                  />
-                    {errors.subject && <span className="text-red-500 text-xs mt-1">{errors.subject}</span>}
-                </div>
-                
-                <div>
-                  <Label htmlFor="message" className="text-slate-300">Message *</Label>
+
+                {/* Message field */}
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Payload Message *</Label>
                   <Textarea
-                    id="message"
+                    placeholder="Describe transaction specifications, project parameters, or questions..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onBlur={() => handleBlur('message')}
-                    rows={6}
-                    className={`bg-slate-700 border-slate-600 text-white focus:border-cyan-400 resize-none mt-1 ${errors.message ? 'border-red-500' : ''}`}
-                    placeholder="Tell me more about your project or inquiry..."
-                    required
+                    className={`bg-slate-900 border ${
+                      errors.message ? 'border-rose-500/50' : 'border-slate-800'
+                    } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-24 text-white placeholder-slate-700 resize-none leading-relaxed`}
                   />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1">
-                    {errors.message && <span className="text-red-500">{errors.message}</span>}
-                    <span>{message.length}/5000 characters</span>
-                  </div>
+                  {errors.message && <span className="text-[9px] font-mono text-rose-400 block">{errors.message}</span>}
                 </div>
-                
-                <Button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-150 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Send className="mr-2" size={18} />
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </Button>
-                
-                <p className="text-xs text-slate-400 text-center">
-                  Your message will be sent via email and SMS notifications
-                </p>
+
+                <div className="pt-2">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || isSubmitted}
+                    className="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-mono text-xs uppercase tracking-widest font-black py-4 rounded-xl shadow-lg border border-cyan-400/20 flex items-center justify-center gap-2 h-11"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-4 h-4 border border-t-transparent border-white rounded-full animate-spin" />
+                        COMMITTING TRANSACTION...
+                      </>
+                    ) : isSubmitted ? (
+                      <>
+                        <CheckCircle size={14} className="text-emerald-400" />
+                        TRANSACTION COMMITTED
+                      </>
+                    ) : (
+                      <>
+                        <Send size={12} />
+                        EXECUTE COMMIT
+                      </>
+                    )}
+                  </Button>
+                </div>
               </form>
-            </CardContent>
-          </Card>
+            </Card>
+          </div>
         </div>
+
       </div>
     </section>
   );
