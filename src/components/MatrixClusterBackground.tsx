@@ -17,7 +17,7 @@ export const MatrixClusterBackground = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Dynamic, organic auroral glows
+    // Warm, premium 2026 organic auroral glows
     const auroras = [
       {
         x: Math.random() * width,
@@ -25,7 +25,7 @@ export const MatrixClusterBackground = () => {
         tx: Math.random() * width,
         ty: Math.random() * height,
         radius: isMobile ? 250 : 500,
-        color: 'rgba(6, 182, 212, 0.08)', // Soft Cyan
+        color: 'rgba(245, 158, 11, 0.08)', // Warm Amber Gold
         speed: 0.002,
         phase: Math.random() * Math.PI * 2,
       },
@@ -35,7 +35,7 @@ export const MatrixClusterBackground = () => {
         tx: Math.random() * width,
         ty: Math.random() * height,
         radius: isMobile ? 300 : 600,
-        color: 'rgba(168, 85, 247, 0.07)', // Soft Purple
+        color: 'rgba(236, 72, 153, 0.07)', // Warm Rose Violet
         speed: 0.0015,
         phase: Math.random() * Math.PI * 2,
       },
@@ -45,7 +45,7 @@ export const MatrixClusterBackground = () => {
         tx: Math.random() * width,
         ty: Math.random() * height,
         radius: isMobile ? 200 : 400,
-        color: 'rgba(59, 130, 246, 0.06)', // Soft Blue
+        color: 'rgba(99, 102, 241, 0.06)', // Soft Elegant Indigo
         speed: 0.0025,
         phase: Math.random() * Math.PI * 2,
       },
@@ -55,7 +55,7 @@ export const MatrixClusterBackground = () => {
         tx: Math.random() * width,
         ty: Math.random() * height,
         radius: isMobile ? 200 : 350,
-        color: 'rgba(16, 185, 129, 0.04)', // Soft Emerald Glow
+        color: 'rgba(249, 115, 22, 0.07)', // Warm Terracotta/Bronze Orange
         speed: 0.001,
         phase: Math.random() * Math.PI * 2,
       }
@@ -82,8 +82,8 @@ export const MatrixClusterBackground = () => {
 
     // Animation Loop
     const draw = () => {
-      // 1. Deep Space Black-Slate Base
-      ctx.fillStyle = '#030712'; // Tailwind Gray 950 - extremely rich, deep slate-black
+      // 1. Deep space warm Stone-Bronze base (gorgeous warm charcoal, visibly lighter and warmer)
+      ctx.fillStyle = '#221a17'; 
       ctx.fillRect(0, 0, width, height);
 
       // Smooth mouse tracking coordinates
@@ -131,7 +131,7 @@ export const MatrixClusterBackground = () => {
           currentRadius
         );
         grad.addColorStop(0, aurora.color);
-        grad.addColorStop(0.5, aurora.color.replace(/[\d\.]+\)$/, '0.03)'));
+        grad.addColorStop(0.5, aurora.color.replace(/[\d\.]+\)$/, '0.02)'));
         grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         ctx.fillStyle = grad;
@@ -140,7 +140,7 @@ export const MatrixClusterBackground = () => {
         ctx.fill();
       });
 
-      // 3. Smooth Mouse Spotlight Interaction (Ambient Cursor Glow)
+      // 3. Smooth Mouse Spotlight Interaction (Luxurious Purple/Indigo Ambient Cursor Glow)
       const cursorGlow = ctx.createRadialGradient(
         mouse.x,
         mouse.y,
@@ -149,8 +149,8 @@ export const MatrixClusterBackground = () => {
         mouse.y,
         isMobile ? 200 : 450
       );
-      cursorGlow.addColorStop(0, 'rgba(6, 182, 212, 0.14)'); // Noticeable bright ambient cyan spotlight
-      cursorGlow.addColorStop(0.5, 'rgba(168, 85, 247, 0.05)'); // Organic purple transition ambient
+      cursorGlow.addColorStop(0, 'rgba(168, 85, 247, 0.16)'); // Soft premium purple spotlight
+      cursorGlow.addColorStop(0.5, 'rgba(99, 102, 241, 0.05)'); // Sleek indigo/violet ambient blend
       cursorGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = cursorGlow;
       ctx.fillRect(0, 0, width, height);
@@ -171,7 +171,7 @@ export const MatrixClusterBackground = () => {
           // Spotlight effect: close to mouse, grid highlights elegantly
           if (dist < 250) {
             const factor = (250 - dist) / 250;
-            alpha += factor * 0.12; // Brighter highlights for interactive tactile grid dots
+            alpha += factor * 0.10; // Brighter highlights for interactive tactile grid dots
           }
 
           // Draw an elegant, tiny point or fine dot/crosshair instead of hard grids
@@ -183,7 +183,7 @@ export const MatrixClusterBackground = () => {
           // Draw extremely subtle crossing axis ticks at grid lines for a technical drafting blueprint feel
           if (dist < 220) {
             const factor = (220 - dist) / 220;
-            ctx.strokeStyle = `rgba(6, 182, 212, ${factor * 0.12})`; // Crisply highlighted axis crosshairs
+            ctx.strokeStyle = `rgba(245, 158, 11, ${factor * 0.12})`; // Crisply highlighted warm amber axis crosshairs
             ctx.beginPath();
             ctx.moveTo(x - 4, y);
             ctx.lineTo(x + 4, y);
@@ -198,7 +198,7 @@ export const MatrixClusterBackground = () => {
             const tags = ['[SLA_99.999%]', '[LSN_24:412]', '[DB_ACTIVE]', '[sa_sa]', '[PORT_1433]', '[PING_18ms]', '[CPU_OK]', '[HA_SYNC]'];
             const tag = tags[Math.floor((x + y) / gridSize) % tags.length];
             ctx.font = '7px monospace';
-            ctx.fillStyle = `rgba(6, 182, 212, ${factor * 0.09})`; // Soft cyan technical lettering
+            ctx.fillStyle = `rgba(245, 158, 11, ${factor * 0.09})`; // Soft amber technical lettering
             ctx.fillText(tag, x + 8, y - 4);
           }
         }

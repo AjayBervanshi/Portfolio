@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Play, ShieldAlert, CheckCircle, Network, Server, Cloud, Cpu, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { sound } from '@/utils/soundManager';
 
 interface LogEntry {
   timestamp: string;
@@ -42,7 +43,7 @@ export const AlwaysOnSimulator = () => {
     window.dispatchEvent(new CustomEvent('switch-dba-tab', { detail: 'alwayson' }));
     window.addEventListener('trigger-failover', handleGlobalFailover);
     return () => window.removeEventListener('trigger-failover', handleGlobalFailover);
-  }, [isFailoverActive]);
+  }, [isFailoverActive, nodes]);
 
   const addLog = (message: string, type: LogEntry['type'] = 'info') => {
     const time = new Date().toLocaleTimeString('en-US', { hour12: false });
@@ -52,6 +53,7 @@ export const AlwaysOnSimulator = () => {
   const handleFailover = () => {
     if (isFailoverActive) return;
 
+    sound.playAlarm(2.0);
     setIsFailoverActive(true);
     setFailoverStep(1);
     setLogs([]); // Reset logs for clean trace
@@ -114,6 +116,7 @@ export const AlwaysOnSimulator = () => {
     // Phase 6: Finished
     setTimeout(() => {
       setFailoverStep(6);
+      sound.playSuccess();
       addLog('Availability Group Failover Complete. Cluster ONLINE.', 'success');
       addLog(`New Cluster Primary: ${targetHost} (${isNagpurPrimary ? 'Pune Node' : 'Nagpur Node'}).`, 'info');
       
@@ -134,6 +137,7 @@ export const AlwaysOnSimulator = () => {
 
   const handleReset = () => {
     if (isFailoverActive) return;
+    sound.playTick();
     setFailoverStep(0);
     setNodes({
       nagpur: { role: 'PRIMARY', syncState: 'Synchronized', status: 'HEALTHY' },

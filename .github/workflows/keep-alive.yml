@@ -1,0 +1,17 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # Runs at 06:00 UTC (11:30 AM IST) every single day
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping_supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" -X GET "https://ssbrllliprffeegamygw.supabase.co/rest/v1/" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzYnJsbGxpcHJmZmVlZ2FteWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3OTYzMDcsImV4cCI6MjA2NzM3MjMwN30.wvo84CIabcxhhc4x1DRm3uZkwCAausESXvQLadZ1VNs' }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzYnJsbGxpcHJmZmVlZ2FteWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3OTYzMDcsImV4cCI6MjA2NzM3MjMwN30.wvo84CIabcxhhc4x1DRm3uZkwCAausESXvQLadZ1VNs' }}"

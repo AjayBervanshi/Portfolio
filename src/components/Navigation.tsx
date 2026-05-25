@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Database, Terminal, Briefcase, Mail, Home } from "lucide-react";
+import { Menu, X, Database, Terminal, Briefcase, Mail, Home, Volume2, VolumeX } from "lucide-react";
 import { PERSONAL_INFO } from "@/utils/constants";
 import { scrollToSection } from "@/utils/navigation";
+import { sound } from "@/utils/soundManager";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    setIsMuted(sound.getMutedState());
+  }, []);
 
   const navItems = [
     { id: "home", label: "Home", icon: Home },
@@ -13,6 +19,11 @@ export const Navigation = () => {
     { id: "experience", label: "Chronicles", icon: Briefcase },
     { id: "contact", label: "Connection Desk", icon: Mail },
   ];
+
+  const toggleSound = () => {
+    const nextMuted = sound.toggleMute();
+    setIsMuted(nextMuted);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +44,7 @@ export const Navigation = () => {
   }, []);
 
   const handleScrollToSection = (sectionId: string) => {
+    sound.playTick();
     scrollToSection(sectionId);
     setIsMenuOpen(false);
   };
@@ -51,11 +63,25 @@ export const Navigation = () => {
             </div>
           </div>
 
-          {/* Sync status directly in navbar (wow touch!) */}
-          <div className="hidden md:flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-full border border-slate-800 text-[10px] font-mono text-slate-400 select-none">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>AG REPLICAS: NAGPUR ⇄ PUNE ⇄ AWS</span>
-            <span className="text-emerald-400 font-bold">SYNCED</span>
+          {/* Sync status directly in navbar with Sound Toggle */}
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1 rounded-full border border-slate-800 text-[10px] font-mono text-slate-400 select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>AG REPLICAS: NAGPUR ⇄ PUNE</span>
+              <span className="text-emerald-400 font-bold">SYNCED</span>
+            </div>
+
+            <button
+              onClick={toggleSound}
+              className={`p-2 rounded-full border transition-all duration-200 ${
+                !isMuted 
+                  ? "bg-purple-500/10 text-purple-400 border-purple-500/30 shadow-md shadow-purple-500/5 animate-pulse" 
+                  : "bg-slate-900/40 text-slate-400 border-slate-800 hover:text-cyan-400"
+              }`}
+              title={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+            >
+              {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+            </button>
           </div>
 
           {/* Desktop Navigation */}

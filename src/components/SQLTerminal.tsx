@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, RotateCcw, Database, Table as TableIcon, GitFork, CheckCircle, AlertCircle, Terminal, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { sound } from '@/utils/soundManager';
 
 export const SQLTerminal = () => {
   const [query, setQuery] = useState("SELECT * FROM Skills WHERE level = 'Expert'");
@@ -15,24 +16,30 @@ export const SQLTerminal = () => {
 
   // Automatically execute initial query on mount
   useEffect(() => {
-    handleExecute();
+    // Skip initial audio trigger on load to obey autoplay rules
+    const res = executeSQLQuery(query);
+    setResult(res);
   }, []);
 
   const handleExecute = () => {
+    sound.playTick();
     setIsExecuting(true);
     setTimeout(() => {
       const res = executeSQLQuery(query);
       setResult(res);
       setIsExecuting(false);
       setActiveTab('results');
+      sound.playSuccess();
     }, 250); // Simulated delay to feel like database server latency
   };
 
   const handleClear = () => {
+    sound.playTick();
     setQuery("");
   };
 
   const handleQuerySelect = (selectedQuery: string) => {
+    sound.playTick();
     setQuery(selectedQuery);
     setTimeout(() => {
       setIsExecuting(true);
@@ -40,6 +47,7 @@ export const SQLTerminal = () => {
       setResult(res);
       setIsExecuting(false);
       setActiveTab('results');
+      sound.playSuccess();
     }, 150);
   };
 
@@ -182,7 +190,10 @@ export const SQLTerminal = () => {
             <div className="relative border border-slate-800/80 rounded-2xl overflow-hidden bg-slate-950/80 shadow-inner">
               <textarea
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  sound.playTick();
+                }}
                 className="w-full h-28 p-4 bg-transparent font-mono text-xs text-cyan-100 placeholder-slate-700 focus:outline-none focus:ring-0 resize-none leading-relaxed"
                 spellCheck="false"
                 onKeyDown={(e) => {
