@@ -50,38 +50,29 @@ export const Contact = () => {
     const visitorIdToSend = visitorId && uuidRegex.test(visitorId) ? visitorId : null;
 
     try {
-      // 1. Direct database insert into 'messages' table
-      const { data, error: insertError } = await supabase
-        .from('messages')
-        .insert([
-          {
-            name,
-            email,
-            phone: phone || null,
-            subject,
-            message,
-            visitor_id: visitorIdToSend
-          }
-        ])
-        .select('id')
-        .single();
-
-      if (insertError) {
-        console.error('Database Insert Error:', insertError);
-        throw new Error(insertError.message || "Database insert failed");
-      }
-
-      // 2. Invoke notification edge function
-      const message_id = data.id;
-      const { error: notificationError } = await supabase.functions.invoke('send-notifications', {
-        body: { message_id },
+      // 1. Primary routing: Invoke the backend 'send-contact-email' Edge Function directly
+      // This bypasses client-side RLS and triggers both database insert + email/SMS notifications
+      console.log("Invoking primary backend Edge Function: send-contact-email...");
+      const { data, error: functionError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name,
+          email,
+          phone: phone || undefined,
+          subject,
+          message,
+          visitor_id: visitorIdToSend
+        }
       });
 
-      if (notificationError) {
-        console.warn('Notification notificationError:', notificationError);
-        toast.warning("Message logged in DB, but notifications are queued. I will see it!");
-      } else {
+      if (functionError) {
+        console.error('Edge Function invocation error:', functionError);
+        throw new Error(functionError.message || "Failed to invoke notification routing");
+      }
+
+      if (data?.success) {
         toast.success("Connection transaction committed successfully!");
+      } else {
+        throw new Error(data?.error || "Unknown edge routing error");
       }
 
       setIsSubmitted(true);
@@ -96,11 +87,11 @@ export const Contact = () => {
       setTimeout(() => setIsSubmitted(false), 5000);
 
     } catch (err: any) {
-      console.error("Connection transaction aborted:", err);
+      console.error("Primary notification routing failed, initiating disaster recovery failover:", err);
       
-      // Standalone fallback: Try using secure insert RPC if direct insert fails
+      // 2. Failover Disaster Recovery Routing: Try using secure insert RPC directly into DB
       try {
-        console.log("Attempting fallback RPC insertion...");
+        console.log("Executing failover RPC routing (secure_insert_message_v2)...");
         const { data: rpcData, error: rpcError } = await supabase.rpc('secure_insert_message_v2', {
           p_name: name,
           p_email: email,
@@ -116,7 +107,7 @@ export const Contact = () => {
           throw new Error(rpcData.replace('Error: ', ''));
         }
         
-        toast.success("Connection transaction completed via fallback routing!");
+        toast.warning("Message saved in DB, but backend mail/SMS routing is offline.");
         setIsSubmitted(true);
         setName('');
         setEmail('');
@@ -126,7 +117,7 @@ export const Contact = () => {
         
         setTimeout(() => setIsSubmitted(false), 5000);
       } catch (fallbackErr: any) {
-        console.error("All messaging protocols failed:", fallbackErr);
+        console.error("All messaging routing options exhausted:", fallbackErr);
         toast.error(fallbackErr.message || "Messaging service offline. Please try LinkedIn connection!");
       }
     } finally {

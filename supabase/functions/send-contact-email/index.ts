@@ -24,6 +24,7 @@ interface ContactFormData {
   phone?: string;
   subject: string;
   message: string;
+  visitor_id?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -40,9 +41,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, phone, subject, message }: ContactFormData = await req.json();
+    const { name, email, phone, subject, message, visitor_id }: ContactFormData = await req.json();
 
-    console.log("Received contact form submission:", { name, email, phone, subject });
+    console.log("Received contact form submission:", { name, email, phone, subject, visitor_id });
 
     // Initialize Supabase client with environment variables
     const supabase = createClient(
@@ -59,6 +60,7 @@ const handler = async (req: Request): Promise<Response> => {
         phone: phone || null,
         subject,
         message,
+        visitor_id: visitor_id || null
       })
       .select('id')
       .single();
