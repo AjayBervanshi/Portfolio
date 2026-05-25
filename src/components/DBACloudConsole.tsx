@@ -9,6 +9,7 @@ import { PERSONAL_INFO } from '@/utils/constants';
 import { calculateExperience } from '@/utils/dateUtils';
 import { Skills } from './Skills';
 import { Card, CardContent } from './ui/card';
+import { Badge } from './ui/badge';
 
 export const DBACloudConsole = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'query' | 'cluster' | 'telemetry' | 'experience' | 'contact'>('overview');
