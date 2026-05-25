@@ -81,7 +81,7 @@ export const Hero = () => {
 
           <motion.div variants={itemVariants} className="space-y-3">
             <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter drop-shadow-2xl leading-none uppercase">
-              AJAY BERVANHI
+              AJAY BERVANSHI
             </h1>
             <h2 className="text-xl md:text-2xl font-black text-cyan-400 font-mono tracking-wide uppercase">
               Production Database Operations Commander

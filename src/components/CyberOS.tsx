@@ -137,7 +137,7 @@ export const CyberOS = () => {
           <div className="border border-slate-800 p-4 bg-slate-950/80 rounded space-y-2">
             <h1 className="text-sm font-bold text-cyan-400 flex items-center">
               <Database size={16} className="mr-2 animate-spin" />
-              AJAY BERVANHI OPERATING COCKPIT (RTM-CU12)
+              AJAY BERVANSHI OPERATING COCKPIT (RTM-CU12)
             </h1>
             <p className="text-[10px] text-slate-500">Copyright (C) 2026. All rights reserved.</p>
           </div>
