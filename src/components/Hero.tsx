@@ -142,10 +142,10 @@ export const Hero = () => {
 
             {/* Typewriter logs stream */}
             <div className="font-mono text-[10px] text-slate-400 space-y-2.5 min-h-[140px] leading-relaxed select-none">
-              {bootText.map((txt, i) => (
+              {bootText.filter(Boolean).map((txt, i) => (
                 <div key={i} className="flex items-start gap-1">
                   <span className="text-cyan-400 font-extrabold flex-shrink-0">&gt;</span>
-                  <span className={txt.includes('FAIL') || txt.includes('OK') ? 'text-emerald-400 font-bold' : ''}>
+                  <span className={txt?.includes('FAIL') || txt?.includes('OK') ? 'text-emerald-400 font-bold' : ''}>
                     {txt}
                   </span>
                 </div>
