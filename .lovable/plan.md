@@ -1,53 +1,51 @@
-## What's actually broken
+## What's actually happening
 
-The blank page is **only on the published URL** (`ajaybervanshi.lovable.app`). The live preview already renders correctly — we confirmed this in the previous session.
+I checked both URLs side by side:
 
-The published bundle (`index-BNGwmfnx.js`) throws on load:
+- **Preview** (`id-preview--...lovable.app`) — renders the full page. Screenshot confirms hero, terminal logs, CTAs all visible. No runtime errors.
+- **Published** (`ajaybervanshi.lovable.app`) — still blank brown screen. Console shows:
+  ```
+  Error: Missing Supabase URL or publishable key
+    at /assets/index-C-8n4Ev0.js
+  ```
 
-```
-Error: Missing Supabase URL or publishable key
-    at /assets/index-BNGwmfnx.js
-```
+So the code is fine. The deployed bundle is a stale build that was produced before `.env` had the Supabase values, and `src/integrations/supabase/client.ts` throws at module load time when they are missing — which kills the whole React tree before it can render.
 
-It also shows a MIME-type error for an inline data-URL module script. Both symptoms come from the **same root cause**: the published build is a stale artifact that was generated before `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` were present in `.env`. Since Vite inlines those values at build time, the old bundle has no Supabase config and crashes on the first import.
+The `txt.includes` Hero fix from earlier is already in place and working in preview. It is not related to the blank published page.
 
-The current `.env`, `src/integrations/supabase/client.ts`, and `index.html` are all correct. There is no code bug to fix — local dev preview renders the full landing page.
+## The real fix (so this can never happen again)
 
-## What to do
+Two changes, both small:
 
-1. **Republish the site.** Open the Publish dialog and click **Update**. This rebuilds with the current `.env` baked in, replaces `index-BNGwmfnx.js` with a fresh asset that contains the Supabase URL/key, and fixes both errors at once.
-2. **Hard-refresh** `ajaybervanshi.lovable.app` (Ctrl/Cmd+Shift+R) so the browser drops the cached broken bundle.
+1. **Inline the Supabase URL + publishable key in `src/integrations/supabase/client.ts`** as the fallback when `import.meta.env.VITE_SUPABASE_*` is missing, and **remove the `throw`**. The publishable (anon) key is safe to ship in client code — that's its entire purpose, and it's already exposed in every Supabase request from the browser. This means even if a future publish ever misses the env injection, the app still boots.
 
-That's it — no migrations, no code edits, no security regressions.
+   ```ts
+   const SUPABASE_URL =
+     import.meta.env.VITE_SUPABASE_URL ?? "https://ssbrllliprffeegamygw.supabase.co";
+   const SUPABASE_PUBLISHABLE_KEY =
+     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "<anon key>";
+   // no throw
+   ```
 
-## Security posture (unchanged, already clean)
+2. **Republish once.** This is the only step that has to happen on your side — I cannot click Publish for you. After step 1 is in code, you click **Publish → Update**, then hard-refresh `ajaybervanshi.lovable.app` (Ctrl/Cmd+Shift+R). The new bundle will load and the page will render.
 
-From the previous loop the security scan is already in a good state:
+After this, any future republish is self-healing: if env injection ever fails again, the bundle still has working Supabase credentials baked in and the page renders.
 
-- `visitors` INSERT policy locked down with field-level WITH CHECK validation (enum browser/device, regex page path & referrer, `ip_address` forced NULL, time-bounded timestamps).
-- `messages`, `notification_logs`, `rate_limits`, all `aisha_*`, and `ajay_profile` are service_role-only; grants revoked from anon/authenticated.
-- Contact form writes go through `secure_insert_message_v2` (SECURITY DEFINER, rate-limited, validated) or the `send-contact-email` edge function (service role).
-- Security memory is up to date.
+## What I will NOT change
 
-Republishing does **not** change any of this — it only ships the existing frontend code that already respects these boundaries.
+- No schema, RLS, or security changes. The current posture (service_role-only sensitive tables, validated visitor inserts, SECURITY DEFINER contact path) stays exactly as it is.
+- No edge function or migration edits.
+- No removal of `next-themes` or other deps — they're working in preview.
+- No design changes.
 
-## Why we are not editing code
+## Verification after you Update
 
-- `src/integrations/supabase/client.ts` correctly reads `import.meta.env.VITE_SUPABASE_*` and the values exist in `.env`.
-- `index.html` is the standard Vite entry; the data-URL MIME warning only appears because the published HTML refers to a broken bundle.
-- Removing the `throw` in `client.ts` would mask the real problem and let pages render half-broken. The right fix is to make the build actually contain the env values, which republishing does.
-
-## Verification after you click Update
-
-I will:
-
-1. Reload `https://ajaybervanshi.lovable.app` in the browser tool.
-2. Confirm the landing page renders (hero, terminal, CTAs).
-3. Check the console for the "Missing Supabase URL" error — it should be gone.
-4. Confirm the contact form still works end-to-end via the existing edge function path.
+I will reload the published URL in the browser tool, screenshot it, and confirm:
+- Page renders (hero, terminal, sections).
+- Console has no "Missing Supabase URL" error.
+- Visitor insert still hits `/rest/v1/visitors` with status 201.
 
 ```text
-stale publish ──► broken bundle ──► blank page
-        │
-        └── Update publish ──► fresh bundle with env ──► page renders
+current:  stale build → throw at load → blank brown page
+after:    new build with fallback creds → boots even if env missing → page renders
 ```
