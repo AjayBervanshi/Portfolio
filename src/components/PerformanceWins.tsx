@@ -7,7 +7,7 @@ interface WinCardProps {
     whatIDid: string;
     tools: string;
     impact: string;
-    icon: any;
+    icon: React.ElementType;
     delay: number;
 }
 

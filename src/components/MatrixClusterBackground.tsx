@@ -259,13 +259,13 @@ export const MatrixClusterBackground = () => {
           const size = node.size * proj.scale * 0.8;
 
           // Glowing Node Halo
-          ctx.fillStyle = node.color.replace(/[\d\.]+\)$/, `${nodeAlpha * 0.22})`);
+          ctx.fillStyle = node.color.replace(/[\d.]+\)$/, `${nodeAlpha * 0.22})`);
           ctx.beginPath();
           ctx.arc(proj.x, proj.y, size * (isMobile ? 2.5 : 3.5), 0, Math.PI * 2);
           ctx.fill();
 
           // Node center core
-          ctx.fillStyle = node.color.replace(/[\d\.]+\)$/, `${nodeAlpha})`);
+          ctx.fillStyle = node.color.replace(/[\d.]+\)$/, `${nodeAlpha})`);
           ctx.beginPath();
           ctx.arc(proj.x, proj.y, Math.max(0.8, size), 0, Math.PI * 2);
           ctx.fill();

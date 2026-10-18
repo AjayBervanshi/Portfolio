@@ -137,7 +137,10 @@ export const Hero = () => {
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
               </div>
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest font-bold">SQL_REPL_AGENT</span>
+              <div className="flex flex-col items-end">
+                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest font-bold">SQL_REPL_AGENT</span>
+                <span className="text-[8px] font-mono text-cyan-500/50 uppercase tracking-widest">(Simulated System Log)</span>
+              </div>
             </div>
 
             {/* Typewriter logs stream */}

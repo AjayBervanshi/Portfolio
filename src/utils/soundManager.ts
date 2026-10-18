@@ -14,7 +14,7 @@ class SoundManager {
 
   private initContext() {
     if (!this.ctx) {
-      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     }
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
@@ -82,7 +82,7 @@ class SoundManager {
 
       osc.start();
       osc.stop(ctx.currentTime + 0.8);
-    } catch (e) {}
+    } catch (e) { /* empty */ }
   }
 
   // Successful operation/query chord
@@ -109,7 +109,7 @@ class SoundManager {
         osc.start(now + idx * 0.07);
         osc.stop(now + idx * 0.07 + 0.25);
       });
-    } catch (e) {}
+    } catch (e) { /* empty */ }
   }
 
   // Alternating cyber disaster/failover siren alert
@@ -139,7 +139,7 @@ class SoundManager {
 
       osc.start();
       osc.stop(now + durationSecs);
-    } catch (e) {}
+    } catch (e) { /* empty */ }
   }
 }
 

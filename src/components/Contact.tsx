@@ -86,7 +86,7 @@ export const Contact = () => {
       
       setTimeout(() => setIsSubmitted(false), 5000);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Primary notification routing failed, initiating disaster recovery failover:", err);
       
       // 2. Failover Disaster Recovery Routing: Try using secure insert RPC directly into DB
@@ -116,9 +116,10 @@ export const Contact = () => {
         setMessage('');
         
         setTimeout(() => setIsSubmitted(false), 5000);
-      } catch (fallbackErr: any) {
+      } catch (fallbackErr: unknown) {
         console.error("All messaging routing options exhausted:", fallbackErr);
-        toast.error(fallbackErr.message || "Messaging service offline. Please try LinkedIn connection!");
+        const errorMessage = fallbackErr instanceof Error ? fallbackErr.message : "Messaging service offline. Please try LinkedIn connection!";
+        toast.error(errorMessage);
       }
     } finally {
       setIsSubmitting(false);

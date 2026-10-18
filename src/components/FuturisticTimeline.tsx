@@ -17,7 +17,7 @@ interface Job {
   summary: string;
   operations: string[];
   tech: string[];
-  metrics: { label: string; value: string; icon: any }[];
+  metrics: { label: string; value: string; icon: React.ElementType }[];
 }
 
 export const FuturisticTimeline = () => {
@@ -126,7 +126,7 @@ export const FuturisticTimeline = () => {
                   <Card 
                     onMouseEnter={() => setExpandedId(job.id)}
                     onMouseLeave={() => setExpandedId(null)}
-                    className="bg-slate-950/65 border-[0.5px] border-cyan-500/20 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden relative group hover:border-cyan-500/40 transition-colors duration-300"
+                    className="bg-slate-950/65 border-[0.5px] border-cyan-500/20 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden relative group hover:border-cyan-500/40 transition-colors duration-300 min-h-[140px]"
                   >
                     <CardContent className="p-6 space-y-4">
                       {/* Job Header */}

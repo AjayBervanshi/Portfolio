@@ -82,7 +82,7 @@ const handler = async (req: Request): Promise<Response> => {
           recipient_email: message.email,
           status: 'sent'
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error sending user email:", err);
         await supabase.from('notification_logs').insert({
           message_id: message.id,
@@ -115,7 +115,7 @@ const handler = async (req: Request): Promise<Response> => {
           recipient_phone: message.phone,
           status: 'sent'
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error sending user SMS:", err);
         await supabase.from('notification_logs').insert({
           message_id: message.id,
@@ -147,7 +147,7 @@ const handler = async (req: Request): Promise<Response> => {
         recipient_email: 'ajay.bervanshi@gmail.com',
         status: 'sent'
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error sending Ajay email:", err);
       await supabase.from('notification_logs').insert({
         message_id: message.id,
@@ -178,7 +178,7 @@ const handler = async (req: Request): Promise<Response> => {
         recipient_phone: '+917620085260',
         status: 'sent'
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error sending Ajay SMS:", err);
       await supabase.from('notification_logs').insert({
         message_id: message.id,
@@ -198,10 +198,11 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in notification flow:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: errorMessage }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

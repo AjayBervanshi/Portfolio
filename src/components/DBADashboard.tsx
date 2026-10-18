@@ -160,6 +160,7 @@ export const DBADashboard = () => {
           <div className="text-left">
             <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">Live Telemetry Dashboard</h3>
             <p className="text-[10px] text-slate-400 font-mono">Active server metrics and live gamified DBA incident responder alerts</p>
+            <span className="text-[10px] text-blue-500/70 font-mono uppercase font-bold tracking-widest block mt-0.5">(Interactive Demonstration)</span>
           </div>
         </div>
       </div>
