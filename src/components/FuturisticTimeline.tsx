@@ -33,11 +33,11 @@ export const FuturisticTimeline = () => {
       type: "Full-Time",
       summary: "Direct the administration and optimization of critical MS SQL database engines. Build scalable high-availability AlwaysOn clusters, optimize AWS EC2 virtual compute clusters, and maintain extreme system uptime SLA targets.",
       operations: [
-        "Architect and maintain high-performance multi-node AlwaysOn Availability Group configurations, guaranteeing data failover synchronization.",
-        "Govern AWS EC2 SQL Server compute deployments, designing storage configurations and IOPS limits.",
-        "Perform extensive index structures rebuild plans and run execution diagnostics, reducing average system read query latency.",
-        "Collaborate with development leads to implement secure user permissions schemas and maintain SOX/GDPR regulatory security.",
-        "Integrate automated monitoring hooks with AWS CloudWatch and custom Powershell alert frameworks."
+        "**High Availability/DR:** Architected and maintained high-performance multi-node AlwaysOn Availability Group configurations, guaranteeing data failover synchronization.",
+        "**Cloud Operations:** Governed AWS EC2 SQL Server compute deployments, designing storage configurations and IOPS limits.",
+        "**Performance Tuning:** Performed extensive index structures rebuild plans and run execution diagnostics, reducing average system read query latency.",
+        "**Security & Compliance:** Collaborated with development leads to implement secure user permissions schemas and maintain SOX/GDPR regulatory security.",
+        "**Automation & Monitoring:** Integrated automated monitoring hooks with AWS CloudWatch and custom Powershell alert frameworks."
       ],
       tech: ["SQL Server 2022", "T-SQL Tuning", "AlwaysOn AG", "AWS EC2", "Powershell Automation", "SSMS Profiler", "Performance Monitor"],
       metrics: [
@@ -55,10 +55,10 @@ export const FuturisticTimeline = () => {
       type: "Full-Time",
       summary: "Managed the operational database administration lifecycle for major corporate banking clients. Spearheaded replication failover architectures, routine maintenance automation scripts, and critical disaster recovery drills.",
       operations: [
-        "Guaranteed 99.9% uptime SLA compliance for mission-critical core banking transaction databases.",
-        "Re-engineered indexes and optimized parallel MAXDOP hints, boosting general transaction speeds by 20%.",
-        "Orchestrated quarterly disaster recovery simulations and failovers, lowering RTO durations by 25%.",
-        "Automated 40% of routine health-check, sizing alerts, and transaction log backup tasks with robust PowerShell scripts."
+        "**SLA Compliance:** Guaranteed 99.9% uptime SLA compliance for mission-critical core banking transaction databases.",
+        "**Query Optimization:** Re-engineered indexes and optimized parallel MAXDOP hints, boosting general transaction speeds by 20%.",
+        "**Disaster Recovery:** Orchestrated quarterly disaster recovery simulations and failovers, lowering RTO durations by 25%.",
+        "**Process Automation:** Automated 40% of routine health-check, sizing alerts, and transaction log backup tasks with robust PowerShell scripts."
       ],
       tech: ["SQL Server 2019", "Database Replication", "AlwaysOn Cluster", "Query Tuning", "Powershell Automation", "Disaster Recovery"],
       metrics: [
@@ -76,9 +76,9 @@ export const FuturisticTimeline = () => {
       type: "Internship",
       summary: "Designed and engineered interactive web layouts, digital assets, and form connections, obtaining strong foundational skills in structured UI and database client-side integration.",
       operations: [
-        "Crafted dynamic responsive landing templates using HTML5, CSS3, and JavaScript.",
-        "Built blood registration dashboard forms featuring clean client-side validation and database storage hooks.",
-        "Collaborated with project managers to translate client mockups into high-performance web products."
+        "**UI Layouts:** Crafted dynamic responsive landing templates using HTML5, CSS3, and JavaScript.",
+        "**Client Integration:** Built blood registration dashboard forms featuring clean client-side validation and database storage hooks.",
+        "**Project Delivery:** Collaborated with project managers to translate client mockups into high-performance web products."
       ],
       tech: ["HTML5 / CSS3", "JavaScript ES6", "Responsive Layouts", "Form Integration"],
       metrics: [
@@ -189,12 +189,23 @@ export const FuturisticTimeline = () => {
                                 Technical Operations Debrief
                               </span>
                               <ul className="space-y-1.5 pl-1.5">
-                                {job.operations.map((op, i) => (
-                                  <li key={i} className="text-[11px] text-slate-300 font-sans leading-relaxed flex items-start gap-1.5">
-                                    <span className="text-cyan-400 mt-1 flex-shrink-0">•</span>
-                                    <span>{op}</span>
-                                  </li>
-                                ))}
+                                {job.operations.map((op, i) => {
+                                  // Highlight the bolded Problem/Action text if present
+                                  const parts = op.split('**');
+                                  return (
+                                    <li key={i} className="text-[11px] text-slate-300 font-sans leading-relaxed flex items-start gap-1.5">
+                                      <span className="text-cyan-400 mt-1 flex-shrink-0">•</span>
+                                      <span>
+                                        {parts.length > 2 ? (
+                                          <>
+                                            <span className="font-bold text-slate-200">{parts[1]}</span>
+                                            {parts[2]}
+                                          </>
+                                        ) : op}
+                                      </span>
+                                    </li>
+                                  );
+                                })}
                               </ul>
                             </div>
 

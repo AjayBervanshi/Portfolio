@@ -10,14 +10,16 @@ export const Hero = () => {
   const yearsOfExperience = calculateExperience();
   const [bootText, setBootText] = useState<string[]>([]);
 
-  // Simulated cyber system boot logger in Hero
+  // Core competencies script output
   useEffect(() => {
     const logs = [
-      "SYSTEM DECK BOOTED...",
-      "CATALOG IDENTIFIED: AjayPortfolioDB (5.5 TB)",
-      "CLUSTER STATUS: Nagpur Primary ⇄ Pune Secondary (SYNCED)",
-      "DISASTER RECOVERY THRESHOLD: LSN ALIGNED [OK]",
-      "VISITOR ACCESS GRANTED: ACTIVE"
+      "INITIALIZING CORE COMPETENCIES...",
+      "MODULE LOADED: SQL Server Administration [OK]",
+      "MODULE LOADED: AWS/RDS Cloud Deployments [OK]",
+      "MODULE LOADED: Backup & Disaster Recovery [OK]",
+      "MODULE LOADED: Performance Tuning & Optimization [OK]",
+      "MODULE LOADED: PowerShell & T-SQL Automation [OK]",
+      "SYSTEM STATUS: ONLINE & READY"
     ];
     let idx = 0;
     const interval = setInterval(() => {
@@ -138,8 +140,7 @@ export const Hero = () => {
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest font-bold">System Initialization</span>
-                <span className="text-[8px] font-mono text-cyan-500/50 uppercase tracking-widest">(Simulated System Log)</span>
+                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest font-bold">Core Competencies Execution</span>
               </div>
             </div>
 
@@ -153,10 +154,10 @@ export const Hero = () => {
                   </span>
                 </div>
               ))}
-              {bootText.length < 5 && (
+              {bootText.length < 7 && (
                 <div className="flex items-center gap-1.5 text-cyan-400 animate-pulse">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                  <span>Loading metadata...</span>
+                  <span>Executing...</span>
                 </div>
               )}
             </div>
