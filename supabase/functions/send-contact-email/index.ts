@@ -190,12 +190,13 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending notification:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to send notification";
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message || "Failed to send notification" 
+        error: errorMessage
       }),
       {
         status: 500,

@@ -86,7 +86,7 @@ export const Contact = () => {
       
       setTimeout(() => setIsSubmitted(false), 5000);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Primary notification routing failed, initiating disaster recovery failover:", err);
       
       // 2. Failover Disaster Recovery Routing: Try using secure insert RPC directly into DB
@@ -116,9 +116,10 @@ export const Contact = () => {
         setMessage('');
         
         setTimeout(() => setIsSubmitted(false), 5000);
-      } catch (fallbackErr: any) {
+      } catch (fallbackErr: unknown) {
         console.error("All messaging routing options exhausted:", fallbackErr);
-        toast.error(fallbackErr.message || "Messaging service offline. Please try LinkedIn connection!");
+        const errorMessage = fallbackErr instanceof Error ? fallbackErr.message : "Messaging service offline. Please try LinkedIn connection!";
+        toast.error(errorMessage);
       }
     } finally {
       setIsSubmitting(false);
@@ -205,9 +206,9 @@ export const Contact = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Name field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Commander Name *</Label>
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Name *</Label>
                     <Input
-                      placeholder="e.g. Elon Musk"
+                      placeholder="e.g. John Doe"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className={`bg-slate-900 border ${
@@ -219,10 +220,10 @@ export const Contact = () => {
 
                   {/* Email field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Email Binding *</Label>
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Email Address *</Label>
                     <Input
                       type="email"
-                      placeholder="e.g. elon@spacex.com"
+                      placeholder="e.g. john@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={`bg-slate-900 border ${
@@ -247,9 +248,9 @@ export const Contact = () => {
 
                   {/* Subject field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Access Subject *</Label>
+                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Subject *</Label>
                     <Input
-                      placeholder="e.g. Production Oracle to MS SQL Migration"
+                      placeholder="e.g. Database Migration Strategy"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       className={`bg-slate-900 border ${
@@ -283,17 +284,17 @@ export const Contact = () => {
                     {isSubmitting ? (
                       <>
                         <span className="w-4 h-4 border border-t-transparent border-white rounded-full animate-spin" />
-                        COMMITTING TRANSACTION...
+                        SENDING...
                       </>
                     ) : isSubmitted ? (
                       <>
                         <CheckCircle size={14} className="text-emerald-400" />
-                        TRANSACTION COMMITTED
+                        MESSAGE SENT
                       </>
                     ) : (
                       <>
                         <Send size={12} />
-                        EXECUTE COMMIT
+                        SEND MESSAGE
                       </>
                     )}
                   </Button>

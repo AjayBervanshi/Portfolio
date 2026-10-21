@@ -59,7 +59,7 @@ export const useVisitorTracking = () => {
         };
 
         // Generate visitor id client-side (anon has INSERT but no SELECT on visitors)
-        const newVisitorId = (crypto as any).randomUUID
+        const newVisitorId = crypto.randomUUID
           ? crypto.randomUUID()
           : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 

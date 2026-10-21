@@ -165,8 +165,9 @@ export const AlwaysOnSimulator = () => {
             <Network className="text-cyan-400" size={20} />
           </div>
           <div className="text-left">
-            <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">AlwaysOn Group Manager</h3>
-            <p className="text-[10px] text-slate-400 font-mono">Simulate automated high availability failovers & DR routing</p>
+            <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">AlwaysOn High Availability</h3>
+            <p className="text-[10px] text-slate-400 font-mono">Simulate automated failovers & DR routing</p>
+            <span className="text-[10px] text-blue-500/70 font-mono uppercase font-bold tracking-widest block mt-0.5">(Interactive SQL Server HA Demo)</span>
           </div>
         </div>
 

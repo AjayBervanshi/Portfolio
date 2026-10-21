@@ -183,7 +183,7 @@ export const CyberDBAWorkspace = () => {
             }`}
           >
             <Terminal size={14} />
-            T-SQL Console IDE
+            T-SQL Console
           </button>
           
           <button
@@ -195,7 +195,7 @@ export const CyberDBAWorkspace = () => {
             }`}
           >
             <Cpu size={14} />
-            Play DBA HUD
+            Live Dashboard
           </button>
         </div>
 

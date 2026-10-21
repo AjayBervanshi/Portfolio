@@ -83,8 +83,8 @@ export const Hero = () => {
             <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter drop-shadow-2xl leading-none uppercase">
               AJAY BERVANSHI
             </h1>
-            <h2 className="text-xl md:text-2xl font-black text-cyan-400 font-mono tracking-wide uppercase">
-              Production Database Operations Commander
+            <h2 className="text-xl md:text-2xl font-bold text-cyan-400 tracking-wide">
+              Microsoft SQL Server Database Administrator
             </h2>
           </motion.div>
 
@@ -92,7 +92,7 @@ export const Hero = () => {
             className="text-slate-300 text-sm md:text-base leading-relaxed font-sans max-w-xl"
             variants={itemVariants}
           >
-            Senior MS SQL Server DBA with over {yearsOfExperience} years of experience specializing in high-performance clustering, backup disaster recovery plans, automated powershell tooling, and highly robust cloud hostings to guarantee complete database accessibility.
+            Senior DBA with over {yearsOfExperience} years of experience specializing in SQL Server administration, AWS/RDS deployments, high-availability clustering, backup & disaster recovery, and automated performance tuning.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -128,16 +128,19 @@ export const Hero = () => {
             className="bg-slate-950/85 border-[0.5px] border-cyan-500/20 backdrop-blur-md rounded-3xl p-5 shadow-2xl relative overflow-hidden group w-full text-left"
           >
             {/* Corner ambient purple glow */}
-            <div className="absolute -bottom-10 -right-10 w-20 h-20 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all duration-300" />
+            <div className="absolute -bottom-10 -right-10 w-20 h-20 bg-purple-500/5 rounded-full blur-xl transition-all duration-300" />
             
             {/* Terminal Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-900 mb-4">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
               </div>
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest font-bold">SQL_REPL_AGENT</span>
+              <div className="flex flex-col items-end">
+                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest font-bold">System Initialization</span>
+                <span className="text-[8px] font-mono text-cyan-500/50 uppercase tracking-widest">(Simulated System Log)</span>
+              </div>
             </div>
 
             {/* Typewriter logs stream */}

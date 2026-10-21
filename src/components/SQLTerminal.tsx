@@ -57,16 +57,15 @@ export const SQLTerminal = () => {
       <div className="absolute -top-12 -right-12 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
 
       {/* Decorative Console Header bar */}
-      <div className="bg-slate-900/40 px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center space-x-3">
+      <div className="bg-slate-900/40 px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono flex-wrap gap-2">
+        <div className="flex items-center space-x-3 flex-wrap gap-y-1">
           <div className="flex items-center space-x-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-bold text-emerald-400 uppercase tracking-widest text-[10px]">Active Session</span>
           </div>
-          <span className="text-slate-700">|</span>
-          <span className="text-slate-400 truncate max-w-[150px] md:max-w-none">PALL-DB-CLUSTER.NODE_01 (SQL 2022)</span>
-          <span className="text-slate-700 hidden md:inline">|</span>
-          <span className="text-cyan-400 font-bold hidden md:inline">sa (AjayPortfolioDB)</span>
+          <span className="text-slate-700 hidden sm:inline">|</span>
+          <span className="text-slate-400 truncate max-w-[150px] md:max-w-none">PALL-DB-CLUSTER.NODE_01</span>
+          <span className="text-[9px] text-blue-500/70 font-mono uppercase tracking-widest ml-2 hidden sm:inline-block">(Simulated Terminal)</span>
         </div>
         <Badge className="bg-slate-900 text-slate-400 border border-slate-800 text-[9px] rounded-md font-bold px-2 py-0.5">
           SPID: 54

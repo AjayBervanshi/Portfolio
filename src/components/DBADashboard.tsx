@@ -158,8 +158,9 @@ export const DBADashboard = () => {
             <Activity className="text-cyan-400" size={20} />
           </div>
           <div className="text-left">
-            <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">Live Telemetry Dashboard</h3>
-            <p className="text-[10px] text-slate-400 font-mono">Active server metrics and live gamified DBA incident responder alerts</p>
+            <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">DBA Operations Dashboard</h3>
+            <p className="text-[10px] text-slate-400 font-mono">Server metrics and incident responder scenarios</p>
+            <span className="text-[10px] text-blue-500/70 font-mono uppercase font-bold tracking-widest block mt-0.5">(Interactive Dashboard Demo)</span>
           </div>
         </div>
       </div>

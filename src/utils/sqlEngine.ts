@@ -3,13 +3,13 @@ import { calculateExperience, formatExperience } from './dateUtils';
 
 export interface SQLQueryResult {
   columns: string[];
-  rows: any[];
+  rows: Record<string, unknown>[];
   error: string | null;
   executionTimeMs: number;
 }
 
 // Pre-populated relational data based on portfolio content
-const TABLE_DATA: Record<string, any[]> = {
+const TABLE_DATA: Record<string, Record<string, unknown>[]> = {
   aboutme: [
     {
       id: 1,
@@ -281,7 +281,7 @@ export const executeSQLQuery = (query: string): SQLQueryResult => {
         );
 
         result.rows = sourceRows.map(row => {
-          const projected: Record<string, any> = {};
+          const projected: Record<string, unknown> = {};
           result.columns.forEach(col => {
             projected[col] = row[col];
           });
@@ -290,8 +290,9 @@ export const executeSQLQuery = (query: string): SQLQueryResult => {
       }
     }
 
-  } catch (err: any) {
-    result.error = `Execution Error: ${err.message || err}`;
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    result.error = `Execution Error: ${errorMsg}`;
   }
 
   result.executionTimeMs = parseFloat((performance.now() - startTime).toFixed(3));
