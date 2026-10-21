@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Terminal, Database, ShieldAlert, FileText, Send, X, Search, Activity, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { downloadResume } from '@/utils/navigation';
+// import { downloadResume } from '@/utils/navigation';
 
 export const CommandPalette = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +76,7 @@ export const CommandPalette = () => {
             element?.scrollIntoView({ behavior: 'smooth' });
           }
         },
+        /*
         {
           label: "Download PDF Resume Document",
           desc: "Get Ajay Bervanshi's official DBA resume PDF",
@@ -84,6 +85,7 @@ export const CommandPalette = () => {
             downloadResume();
           }
         },
+        */
         {
           label: "Inspect Core DB Skills Arsenal",
           desc: "Scroll directly to domain skills metrics",

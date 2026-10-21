@@ -33,11 +33,11 @@ export const FuturisticTimeline = () => {
       type: "Full-Time",
       summary: "Direct the administration and optimization of critical MS SQL database engines. Build scalable high-availability AlwaysOn clusters, optimize AWS EC2 virtual compute clusters, and maintain extreme system uptime SLA targets.",
       operations: [
-        "**High Availability/DR:** Architected and maintained high-performance multi-node AlwaysOn Availability Group configurations, guaranteeing data failover synchronization.",
-        "**Cloud Operations:** Governed AWS EC2 SQL Server compute deployments, designing storage configurations and IOPS limits.",
-        "**Performance Tuning:** Performed extensive index structures rebuild plans and run execution diagnostics, reducing average system read query latency.",
-        "**Security & Compliance:** Collaborated with development leads to implement secure user permissions schemas and maintain SOX/GDPR regulatory security.",
-        "**Automation & Monitoring:** Integrated automated monitoring hooks with AWS CloudWatch and custom Powershell alert frameworks."
+        "**High Availability/DR:** Architect and maintain high-performance multi-node AlwaysOn Availability Group configurations, guaranteeing data failover synchronization.",
+        "**Cloud Operations:** Govern AWS EC2 SQL Server compute deployments, designing storage configurations and IOPS limits.",
+        "**Performance Tuning:** Perform index rebuilds and execution-plan diagnostics, reducing average system read query latency.",
+        "**Security & Compliance:** Collaborate with development leads to implement secure user permissions schemas and maintain SOX/GDPR regulatory security.",
+        "**Automation & Monitoring:** Integrate automated monitoring hooks with AWS CloudWatch and custom Powershell alert frameworks."
       ],
       tech: ["SQL Server 2022", "T-SQL Tuning", "AlwaysOn AG", "AWS EC2", "Powershell Automation", "SSMS Profiler", "Performance Monitor"],
       metrics: [
@@ -55,7 +55,7 @@ export const FuturisticTimeline = () => {
       type: "Full-Time",
       summary: "Managed the operational database administration lifecycle for major corporate banking clients. Spearheaded replication failover architectures, routine maintenance automation scripts, and critical disaster recovery drills.",
       operations: [
-        "**SLA Compliance:** Guaranteed 99.9% uptime SLA compliance for mission-critical core banking transaction databases.",
+        "**SLA Compliance:** Maintained 99.9% uptime SLA compliance for mission-critical core banking transaction databases.",
         "**Query Optimization:** Re-engineered indexes and optimized parallel MAXDOP hints, boosting general transaction speeds by 20%.",
         "**Disaster Recovery:** Orchestrated quarterly disaster recovery simulations and failovers, lowering RTO durations by 25%.",
         "**Process Automation:** Automated 40% of routine health-check, sizing alerts, and transaction log backup tasks with robust PowerShell scripts."
