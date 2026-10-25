@@ -206,8 +206,9 @@ export const Contact = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Name field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Name *</Label>
+                    <Label htmlFor="name" className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Name *</Label>
                     <Input
+                      id="name"
                       placeholder="e.g. John Doe"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -220,8 +221,9 @@ export const Contact = () => {
 
                   {/* Email field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Email Address *</Label>
+                    <Label htmlFor="email" className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Email Address *</Label>
                     <Input
+                      id="email"
                       type="email"
                       placeholder="e.g. john@company.com"
                       value={email}
@@ -237,8 +239,9 @@ export const Contact = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Phone field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Phone Connection (Optional)</Label>
+                    <Label htmlFor="phone" className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Phone Connection (Optional)</Label>
                     <Input
+                      id="phone"
                       placeholder="e.g. +91 99999 88888"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -248,8 +251,9 @@ export const Contact = () => {
 
                   {/* Subject field */}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Subject *</Label>
+                    <Label htmlFor="subject" className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Subject *</Label>
                     <Input
+                      id="subject"
                       placeholder="e.g. Database Migration Strategy"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
@@ -263,8 +267,9 @@ export const Contact = () => {
 
                 {/* Message field */}
                 <div className="space-y-1.5">
-                  <Label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Payload Message *</Label>
+                  <Label htmlFor="message" className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">Payload Message *</Label>
                   <Textarea
+                    id="message"
                     placeholder="Describe transaction specifications, project parameters, or questions..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
