@@ -21,9 +21,21 @@ export const BackToTopButton = () => {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', toggleVisibility);
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          toggleVisibility();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', toggleVisibility);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
