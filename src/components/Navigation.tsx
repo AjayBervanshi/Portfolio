@@ -83,12 +83,14 @@ export const Navigation = () => {
 
             <button
               onClick={toggleSound}
-              className={`p-2 rounded-full border transition-all duration-200 ${
+              className={`p-2 rounded-full border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 ${
                 !isMuted 
                   ? "bg-purple-500/10 text-purple-400 border-purple-500/30 shadow-md shadow-purple-500/5 animate-pulse" 
                   : "bg-slate-900/40 text-slate-400 border-slate-800 hover:text-cyan-400"
               }`}
               title={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+              aria-label={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+              aria-pressed={!isMuted}
             >
               {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
             </button>
@@ -116,8 +118,10 @@ export const Navigation = () => {
 
           {/* Mobile Menu button */}
           <button
-            className="md:hidden p-2 rounded-xl bg-slate-900/60 hover:bg-slate-800/60 border border-slate-800 transition-colors"
+            className="md:hidden p-2 rounded-xl bg-slate-900/60 hover:bg-slate-800/60 border border-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? (
               <X size={18} className="text-cyan-400" />
