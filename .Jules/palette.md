@@ -5,3 +5,7 @@
 ## 2026-10-25 - Dynamic ARIA States on Icon Buttons
 **Learning:** Found that custom navigation controls (like mute buttons and mobile menus) often omit dynamic accessibility attributes (`aria-pressed`, `aria-expanded`). This causes screen readers to announce them as generic buttons without their current state (e.g. knowing if the menu is actually open or closed).
 **Action:** Always include dynamic ARIA states (`aria-expanded={isOpen}`, `aria-pressed={isActive}`) on custom toggle buttons, alongside `aria-label` for icon-only elements.
+
+## 2026-10-27 - Accessibility: Window Management Controls
+**Learning:** Found that custom window management controls (minimize, maximize, close) in simulated desktop environments often lack `aria-label` attributes. This causes screen readers to announce them as generic buttons, making it difficult for visually impaired users to manage the simulated windows.
+**Action:** Always include `aria-label` attributes on icon-only buttons, especially in complex UI components like simulated desktops.

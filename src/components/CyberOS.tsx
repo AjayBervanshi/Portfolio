@@ -222,18 +222,21 @@ export const CyberOS = () => {
                     <button
                       onClick={() => minimizeWindow(win.id)}
                       className="text-slate-500 hover:text-slate-100 transition-colors focus:outline-none"
+                      aria-label="Minimize window"
                     >
                       <Minus size={12} />
                     </button>
                     <button
                       onClick={() => toggleMaximize(win.id)}
                       className="text-slate-500 hover:text-slate-100 transition-colors focus:outline-none hidden sm:block"
+                      aria-label="Maximize window"
                     >
                       <Square size={10} />
                     </button>
                     <button
                       onClick={() => closeWindow(win.id)}
                       className="text-slate-500 hover:text-rose-400 transition-colors focus:outline-none"
+                      aria-label="Close window"
                     >
                       <X size={12} />
                     </button>
