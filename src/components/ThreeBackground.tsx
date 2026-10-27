@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -72,13 +72,30 @@ export const ThreeBackground = () => {
     return conns;
   }, [particles]);
 
+  const animationRef = useRef<number | null>(null);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+      animationRef.current = requestAnimationFrame(() => {
+        mouseX.set(clientX);
+        mouseY.set(clientY);
+      });
     },
     [mouseX, mouseY]
   );
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   const colorMap = {
     primary: 'rgba(0, 245, 255, 0.8)',
