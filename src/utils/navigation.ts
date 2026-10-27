@@ -8,7 +8,7 @@ export const scrollToSection = (sectionId: string) => {
 };
 
 export const openLinkedIn = () => {
-  window.open(PERSONAL_INFO.LINKEDIN_URL, '_blank');
+  window.open(PERSONAL_INFO.LINKEDIN_URL, '_blank', 'noopener,noreferrer');
 };
 
 export const scrollToContact = () => {
