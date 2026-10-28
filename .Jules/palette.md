@@ -9,3 +9,7 @@
 ## 2026-10-27 - Accessibility: Window Management Controls
 **Learning:** Found that custom window management controls (minimize, maximize, close) in simulated desktop environments often lack `aria-label` attributes. This causes screen readers to announce them as generic buttons, making it difficult for visually impaired users to manage the simulated windows.
 **Action:** Always include `aria-label` attributes on icon-only buttons, especially in complex UI components like simulated desktops.
+
+## 2026-10-27 - Accessibility: Custom Modal Dialogs
+**Learning:** Found that custom modal implementations (e.g., using `framer-motion`) often lack the necessary ARIA attributes to be recognized as dialogs by screen readers. This prevents users from understanding they are in a dialog context and navigating it properly.
+**Action:** Always include `role="dialog"`, `aria-modal="true"`, and an appropriate `aria-label` (or `aria-labelledby`) on the primary container element of custom modals to ensure screen readers announce them correctly.

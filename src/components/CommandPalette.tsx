@@ -133,6 +133,9 @@ export const CommandPalette = () => {
         onClick={() => setIsOpen(true)}
         className="fixed right-6 bottom-24 z-40 w-11 h-11 bg-slate-950/90 border border-cyan-500/30 hover:border-cyan-400 rounded-full flex items-center justify-center text-cyan-400 hover:text-cyan-300 shadow-lg shadow-cyan-500/10 hover:shadow-cyan-400/20 hover:scale-105 transition-all duration-300 backdrop-blur-md group"
         title="Open Command Console (Ctrl+K)"
+        aria-label="Open Command Console"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
       >
         <Search size={18} className="group-hover:rotate-12 transition-transform" />
       </button>
@@ -157,6 +160,9 @@ export const CommandPalette = () => {
               exit={{ opacity: 0, scale: 0.96, y: -15 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="relative w-full max-w-xl bg-slate-950 border-[0.5px] border-cyan-500/20 rounded-3xl shadow-2xl overflow-hidden shadow-cyan-500/5 font-mono text-left max-h-[500px] flex flex-col"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Command Palette"
             >
               {/* Input field area */}
               <div className="p-4 border-b border-slate-900 flex items-center gap-3 relative">
@@ -168,10 +174,12 @@ export const CommandPalette = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="bg-transparent text-xs text-white placeholder-slate-600 focus:outline-none w-full leading-relaxed"
+                  aria-label="Search commands"
                 />
                 <button
                   onClick={() => setIsOpen(false)}
                   className="text-slate-500 hover:text-white transition-colors p-1.5 hover:bg-slate-900 rounded-lg"
+                  aria-label="Close command palette"
                 >
                   <X size={14} />
                 </button>
