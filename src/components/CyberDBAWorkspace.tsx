@@ -143,13 +143,13 @@ export const CyberDBAWorkspace = () => {
 
             {/* Contact quick links */}
             <div className="flex items-center justify-around text-slate-400 pt-2">
-              <a href={`mailto:${PERSONAL_INFO.EMAIL}`} title="Email Direct" className="hover:text-cyan-400 transition-colors p-2 bg-slate-900/50 rounded-full border border-slate-800 hover:border-cyan-500/30">
+              <a href={`mailto:${PERSONAL_INFO.EMAIL}`} title="Email Direct" aria-label="Email Direct" className="hover:text-cyan-400 transition-colors p-2 bg-slate-900/50 rounded-full border border-slate-800 hover:border-cyan-500/30">
                 <Mail size={18} />
               </a>
-              <a href={`tel:${PERSONAL_INFO.PHONE}`} title="Phone Direct" className="hover:text-cyan-400 transition-colors p-2 bg-slate-900/50 rounded-full border border-slate-800 hover:border-cyan-500/30">
+              <a href={`tel:${PERSONAL_INFO.PHONE}`} title="Phone Direct" aria-label="Phone Direct" className="hover:text-cyan-400 transition-colors p-2 bg-slate-900/50 rounded-full border border-slate-800 hover:border-cyan-500/30">
                 <Phone size={18} />
               </a>
-              <button onClick={openLinkedIn} title="LinkedIn" className="hover:text-cyan-400 transition-colors p-2 bg-slate-900/50 rounded-full border border-slate-800 hover:border-cyan-500/30">
+              <button onClick={openLinkedIn} title="LinkedIn" aria-label="LinkedIn Profile" className="hover:text-cyan-400 transition-colors p-2 bg-slate-900/50 rounded-full border border-slate-800 hover:border-cyan-500/30">
                 <Linkedin size={18} />
               </button>
             </div>

@@ -195,6 +195,7 @@ export const SQLTerminal = () => {
                 }}
                 className="w-full h-28 p-4 bg-transparent font-mono text-xs text-cyan-100 placeholder-slate-700 focus:outline-none focus:ring-0 resize-none leading-relaxed"
                 spellCheck="false"
+                aria-label="SQL Editor"
                 onKeyDown={(e) => {
                   if (e.key === 'F5') {
                     e.preventDefault();
