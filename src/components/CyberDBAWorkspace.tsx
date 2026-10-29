@@ -12,10 +12,8 @@ import { SQLTerminal } from './SQLTerminal';
 import { AlwaysOnSimulator } from './AlwaysOnSimulator';
 import { DBADashboard } from './DBADashboard';
 
-export const CyberDBAWorkspace = () => {
-  const [activeTab, setActiveTab] = useState<'alwayson' | 'tsql' | 'incidents'>('alwayson');
+const LiveMetrics = () => {
   const [liveUptime, setLiveUptime] = useState(99.999000);
-  const yearsOfExperience = calculateExperience();
 
   // Tick the live database availability SLA up by tiny decimal amounts to simulate live telemetry
   useEffect(() => {
@@ -28,6 +26,32 @@ export const CyberDBAWorkspace = () => {
     }, 100);
     return () => clearInterval(interval);
   }, []);
+
+  const profileMetrics = [
+    { label: "AVAILABILITY SLA", value: `${liveUptime.toFixed(6)}%`, icon: Activity, color: "text-emerald-400" },
+    { label: "MANAGED DATA", value: "5.5 TB+", icon: Database, color: "text-cyan-400" },
+    { label: "QUERY TUNING EFFICIENCY", value: "20% SPEEDUP ↑", icon: Zap, color: "text-amber-400" },
+    { label: "RTO DEFENSE THRESHOLD", value: "< 30 MINS", icon: Shield, color: "text-purple-400" }
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {profileMetrics.map((metric, i) => (
+        <div key={i} className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700/60 transition-colors">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[9px] font-mono font-bold tracking-wider text-slate-500">{metric.label}</span>
+            <metric.icon size={14} className={metric.color} />
+          </div>
+          <span className="text-sm font-black font-mono text-white tracking-tight">{metric.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const CyberDBAWorkspace = () => {
+  const [activeTab, setActiveTab] = useState<'alwayson' | 'tsql' | 'incidents'>('alwayson');
+  const yearsOfExperience = calculateExperience();
 
   // Listen for global tab switch dispatch triggers
   useEffect(() => {
@@ -44,13 +68,6 @@ export const CyberDBAWorkspace = () => {
     window.addEventListener('switch-dba-tab', handleSwitchTab);
     return () => window.removeEventListener('switch-dba-tab', handleSwitchTab);
   }, []);
-
-  const profileMetrics = [
-    { label: "AVAILABILITY SLA", value: `${liveUptime.toFixed(6)}%`, icon: Activity, color: "text-emerald-400" },
-    { label: "MANAGED DATA", value: "5.5 TB+", icon: Database, color: "text-cyan-400" },
-    { label: "QUERY TUNING EFFICIENCY", value: "20% SPEEDUP ↑", icon: Zap, color: "text-amber-400" },
-    { label: "RTO DEFENSE THRESHOLD", value: "< 30 MINS", icon: Shield, color: "text-purple-400" }
-  ];
 
   const skillBadges = {
     "Core Admin": ["SQL Server 2016-2022", "DB Engine Tuning", "Backup & Restore", "Index Maintenance"],
@@ -102,17 +119,7 @@ export const CyberDBAWorkspace = () => {
             <hr className="border-slate-800" />
 
             {/* Live calculated metrics widgets */}
-            <div className="grid grid-cols-2 gap-4">
-              {profileMetrics.map((metric, i) => (
-                <div key={i} className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700/60 transition-colors">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[9px] font-mono font-bold tracking-wider text-slate-500">{metric.label}</span>
-                    <metric.icon size={14} className={metric.color} />
-                  </div>
-                  <span className="text-sm font-black font-mono text-white tracking-tight">{metric.value}</span>
-                </div>
-              ))}
-            </div>
+            <LiveMetrics />
 
             <hr className="border-slate-800" />
 
