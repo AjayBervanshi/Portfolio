@@ -13,3 +13,6 @@
 ## 2026-10-27 - Accessibility: Custom Modal Dialogs
 **Learning:** Found that custom modal implementations (e.g., using `framer-motion`) often lack the necessary ARIA attributes to be recognized as dialogs by screen readers. This prevents users from understanding they are in a dialog context and navigating it properly.
 **Action:** Always include `role="dialog"`, `aria-modal="true"`, and an appropriate `aria-label` (or `aria-labelledby`) on the primary container element of custom modals to ensure screen readers announce them correctly.
+## 2026-10-31 - Enhanced Contact Form Accessibility
+**Learning:** While React state handles form validation visually, screen readers rely on explicit `aria-invalid` and `aria-describedby` attributes to announce errors contextually with their associated input fields.
+**Action:** Always ensure that form inputs have their required states explicitly set and that error messages are properly linked via ARIA attributes in custom form components.
