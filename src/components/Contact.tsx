@@ -212,11 +212,15 @@ export const Contact = () => {
                       placeholder="e.g. John Doe"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
+                      required
+                      aria-required="true"
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? "name-error" : undefined}
                       className={`bg-slate-900 border ${
                         errors.name ? 'border-rose-500/50' : 'border-slate-800'
                       } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700`}
                     />
-                    {errors.name && <span className="text-[9px] font-mono text-rose-400 block">{errors.name}</span>}
+                    {errors.name && <span id="name-error" className="text-[9px] font-mono text-rose-400 block">{errors.name}</span>}
                   </div>
 
                   {/* Email field */}
@@ -228,11 +232,15 @@ export const Contact = () => {
                       placeholder="e.g. john@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      required
+                      aria-required="true"
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "email-error" : undefined}
                       className={`bg-slate-900 border ${
                         errors.email ? 'border-rose-500/50' : 'border-slate-800'
                       } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700`}
                     />
-                    {errors.email && <span className="text-[9px] font-mono text-rose-400 block">{errors.email}</span>}
+                    {errors.email && <span id="email-error" className="text-[9px] font-mono text-rose-400 block">{errors.email}</span>}
                   </div>
                 </div>
 
@@ -257,11 +265,15 @@ export const Contact = () => {
                       placeholder="e.g. Database Migration Strategy"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
+                      required
+                      aria-required="true"
+                      aria-invalid={!!errors.subject}
+                      aria-describedby={errors.subject ? "subject-error" : undefined}
                       className={`bg-slate-900 border ${
                         errors.subject ? 'border-rose-500/50' : 'border-slate-800'
                       } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700`}
                     />
-                    {errors.subject && <span className="text-[9px] font-mono text-rose-400 block">{errors.subject}</span>}
+                    {errors.subject && <span id="subject-error" className="text-[9px] font-mono text-rose-400 block">{errors.subject}</span>}
                   </div>
                 </div>
 
@@ -273,11 +285,15 @@ export const Contact = () => {
                     placeholder="Describe transaction specifications, project parameters, or questions..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    required
+                    aria-required="true"
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                     className={`bg-slate-900 border ${
                       errors.message ? 'border-rose-500/50' : 'border-slate-800'
                     } hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-24 text-white placeholder-slate-700 resize-none leading-relaxed`}
                   />
-                  {errors.message && <span className="text-[9px] font-mono text-rose-400 block">{errors.message}</span>}
+                  {errors.message && <span id="message-error" className="text-[9px] font-mono text-rose-400 block">{errors.message}</span>}
                 </div>
 
                 <div className="pt-2">
