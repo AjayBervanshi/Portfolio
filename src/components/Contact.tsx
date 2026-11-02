@@ -118,7 +118,8 @@ export const Contact = () => {
         setTimeout(() => setIsSubmitted(false), 5000);
       } catch (fallbackErr: unknown) {
         console.error("All messaging routing options exhausted:", fallbackErr);
-        const errorMessage = fallbackErr instanceof Error ? fallbackErr.message : "Messaging service offline. Please try LinkedIn connection!";
+        // SECURITY FIX: Prevent leaking raw error details to the client
+        const errorMessage = "Unable to process your request at this time. Please try connecting via LinkedIn!";
         toast.error(errorMessage);
       }
     } finally {
