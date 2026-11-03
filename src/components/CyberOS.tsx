@@ -376,6 +376,9 @@ export const CyberOS = () => {
             size="sm"
             onClick={() => setShowStartMenu(!showStartMenu)}
             className="h-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-mono text-xs px-4 rounded shadow border border-cyan-500/20"
+            aria-expanded={showStartMenu}
+            aria-haspopup="menu"
+            aria-controls="start-menu"
           >
             <Shield size={14} className="mr-1.5" />
             Start Menu
@@ -419,6 +422,7 @@ export const CyberOS = () => {
         <AnimatePresence>
           {showStartMenu && (
             <motion.div
+              id="start-menu"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
