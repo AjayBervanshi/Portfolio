@@ -16,3 +16,7 @@
 ## 2026-10-31 - Enhanced Contact Form Accessibility
 **Learning:** While React state handles form validation visually, screen readers rely on explicit `aria-invalid` and `aria-describedby` attributes to announce errors contextually with their associated input fields.
 **Action:** Always ensure that form inputs have their required states explicitly set and that error messages are properly linked via ARIA attributes in custom form components.
+
+## 2026-11-03 - Dynamic ARIA States on Desktop Start Menu
+**Learning:** Found that custom simulated desktop environments (like CyberOS) often omit dynamic accessibility attributes (`aria-expanded`, `aria-haspopup`, `aria-controls`) on their Start Menus, making it difficult for screen reader users to know if the menu opened successfully and where it is.
+**Action:** Always include `aria-expanded={isOpen}`, `aria-haspopup="menu"`, and `aria-controls="menu-id"` on simulated Start Menu toggle buttons to ensure the state is announced correctly.
