@@ -131,18 +131,27 @@ export const NetworkBackground = ({
   }, [config]);
 
   // Handle mouse interaction
+  const mouseMoveRAFRef = useRef<number>();
+
   const handleMouseMove = useCallback((event: MouseEvent) => {
     if (!interactive || !canvasRef.current) return;
     
-    const rect = canvasRef.current.getBoundingClientRect();
-    mouseRef.current.x = event.clientX - rect.left;
-    mouseRef.current.y = event.clientY - rect.top;
+    if (mouseMoveRAFRef.current) {
+      cancelAnimationFrame(mouseMoveRAFRef.current);
+    }
     
-    // Check if mouse is near any node
-    isMouseNearRef.current = nodesRef.current.some(node => {
-      const dx = mouseRef.current.x - node.x;
-      const dy = mouseRef.current.y - node.y;
-      return Math.sqrt(dx * dx + dy * dy) < mouseRef.current.radius;
+    mouseMoveRAFRef.current = requestAnimationFrame(() => {
+      if (!canvasRef.current) return;
+      const rect = canvasRef.current.getBoundingClientRect();
+      mouseRef.current.x = event.clientX - rect.left;
+      mouseRef.current.y = event.clientY - rect.top;
+
+      // Check if mouse is near any node
+      isMouseNearRef.current = nodesRef.current.some(node => {
+        const dx = mouseRef.current.x - node.x;
+        const dy = mouseRef.current.y - node.y;
+        return Math.sqrt(dx * dx + dy * dy) < mouseRef.current.radius;
+      });
     });
   }, [interactive]);
 
@@ -311,6 +320,9 @@ export const NetworkBackground = ({
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+      }
+      if (mouseMoveRAFRef.current) {
+        cancelAnimationFrame(mouseMoveRAFRef.current);
       }
       if (interactive) {
         window.removeEventListener('mousemove', handleMouseMove);
