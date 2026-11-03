@@ -118,7 +118,7 @@ export const MatrixClusterBackground = () => {
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     
     // Initial resize setup
     handleResize();
