@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Packet {
@@ -22,7 +22,7 @@ interface ConstellationNode {
   color: string;
 }
 
-export const MatrixClusterBackground = () => {
+export const MatrixClusterBackground = React.memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
   const isMobile = useIsMobile();
@@ -410,4 +410,4 @@ export const MatrixClusterBackground = () => {
   }, [isMobile]);
 
   return <canvas ref={canvasRef} className="fixed inset-0 w-full h-full -z-20 pointer-events-none block" />;
-};
+});

@@ -9,3 +9,7 @@
 ## 2023-10-29 - Prevent 10Hz re-renders in CyberDBAWorkspace
 **Learning:** Having a fast-updating state (like a live telemetry SLA ticker using `setInterval` every 100ms) at the top-level of a large React component containing unmemoized heavy child components causes the entire subtree to re-render 10 times a second, creating massive render churn.
 **Action:** Extract the fast-changing state and its directly associated UI (e.g. `LiveMetrics`) into a separate sub-component so that state updates are isolated, preventing unnecessary re-renders of the parent and sibling components.
+
+## 2026-11-04 - Memoize Expensive Canvas Backgrounds
+**Learning:** Background components with complex `requestAnimationFrame` canvas loops that take no props can cause unnecessary re-renders when the parent component updates.
+**Action:** Always wrap these pure visual background components in `React.memo()` to prevent them from re-rendering and potentially restarting their internal animation state or causing React reconciliation overhead.
