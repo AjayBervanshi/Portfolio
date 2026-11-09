@@ -1,36 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Database, ShieldAlert, FileText, Send, X, Search, Activity, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { downloadResume } from '@/utils/navigation';
 
-export const CommandPalette = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Toggle Command Palette on Ctrl+K / Cmd+K
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Autofocus input when opened
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isOpen]);
-
-  const commands = [
+const COMMAND_GROUPS = [
     {
       category: "Operational Directives",
       items: [
@@ -111,14 +84,46 @@ export const CommandPalette = () => {
     }
   ];
 
-  // Fuzzy search filter
-  const filteredCommands = commands.map(group => ({
-    ...group,
-    items: group.items.filter(item => 
-      item.label.toLowerCase().includes(search.toLowerCase()) ||
-      item.desc.toLowerCase().includes(search.toLowerCase())
-    )
-  })).filter(group => group.items.length > 0);
+
+export const CommandPalette = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Toggle Command Palette on Ctrl+K / Cmd+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Autofocus input when opened
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
+
+    // Fuzzy search filter
+  const filteredCommands = React.useMemo(() => {
+    if (!search.trim()) return COMMAND_GROUPS;
+    const searchLower = search.toLowerCase();
+    return COMMAND_GROUPS.map(group => ({
+      ...group,
+      items: group.items.filter(item =>
+        item.label.toLowerCase().includes(searchLower) ||
+        item.desc.toLowerCase().includes(searchLower)
+      )
+    })).filter(group => group.items.length > 0);
+  }, [search]);
 
   const handleCommandClick = (action: () => void) => {
     action();
