@@ -9,3 +9,7 @@
 ## 2023-10-29 - Prevent 10Hz re-renders in CyberDBAWorkspace
 **Learning:** Having a fast-updating state (like a live telemetry SLA ticker using `setInterval` every 100ms) at the top-level of a large React component containing unmemoized heavy child components causes the entire subtree to re-render 10 times a second, creating massive render churn.
 **Action:** Extract the fast-changing state and its directly associated UI (e.g. `LiveMetrics`) into a separate sub-component so that state updates are isolated, preventing unnecessary re-renders of the parent and sibling components.
+
+## 2024-11-09 - Memoized command palette search
+**Learning:** Computing fuzzy search filters on every render, especially as the user types and updates a state, can cause unnecessary re-renders and slowness when the search space grows or involves multiple string computations.
+**Action:** Use `React.useMemo` to memoize derived state such as filtered lists based on a search input. Only re-compute the list when the search query or the source list changes.
