@@ -177,7 +177,7 @@ export const CyberOS = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => openWindow(app.id)}
-            className="w-20 flex flex-col items-center space-y-2 text-center focus:outline-none group z-10"
+            className="w-20 flex flex-col items-center space-y-2 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-xl group z-10"
           >
             <div className="w-12 h-12 bg-slate-900/60 border border-slate-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:border-cyan-500/40 group-hover:bg-slate-900/90 transition-all duration-200">
               <app.icon className={`${app.color} group-hover:scale-110 transition-transform`} size={22} />
@@ -221,21 +221,21 @@ export const CyberOS = () => {
                   <div className="flex items-center space-x-2.5">
                     <button
                       onClick={() => minimizeWindow(win.id)}
-                      className="text-slate-500 hover:text-slate-100 transition-colors focus:outline-none"
+                      className="text-slate-500 hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-sm"
                       aria-label="Minimize window"
                     >
                       <Minus size={12} />
                     </button>
                     <button
                       onClick={() => toggleMaximize(win.id)}
-                      className="text-slate-500 hover:text-slate-100 transition-colors focus:outline-none hidden sm:block"
+                      className="text-slate-500 hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-sm hidden sm:block"
                       aria-label="Maximize window"
                     >
                       <Square size={10} />
                     </button>
                     <button
                       onClick={() => closeWindow(win.id)}
-                      className="text-slate-500 hover:text-rose-400 transition-colors focus:outline-none"
+                      className="text-slate-500 hover:text-rose-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-sm"
                       aria-label="Close window"
                     >
                       <X size={12} />
@@ -375,6 +375,8 @@ export const CyberOS = () => {
           <Button
             size="sm"
             onClick={() => setShowStartMenu(!showStartMenu)}
+            aria-expanded={showStartMenu}
+            aria-controls="start-menu"
             className="h-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-mono text-xs px-4 rounded shadow border border-cyan-500/20"
           >
             <Shield size={14} className="mr-1.5" />
@@ -389,7 +391,7 @@ export const CyberOS = () => {
               <button
                 key={win.id}
                 onClick={() => focusWindow(win.id)}
-                className={`px-3 py-1.5 rounded text-[10px] border font-semibold flex items-center space-x-1.5 transition-all ${
+                className={`px-3 py-1.5 rounded text-[10px] border font-semibold flex items-center space-x-1.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 ${
                   win.isMinimized
                     ? 'bg-slate-950/20 border-slate-800/50 text-slate-500'
                     : 'bg-slate-950/90 border-cyan-500/25 text-cyan-400 shadow-md shadow-cyan-500/5'
@@ -419,6 +421,7 @@ export const CyberOS = () => {
         <AnimatePresence>
           {showStartMenu && (
             <motion.div
+              id="start-menu"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
@@ -436,7 +439,7 @@ export const CyberOS = () => {
                   <button
                     key={app.id}
                     onClick={() => openWindow(app.id)}
-                    className="w-full flex items-center space-x-3 px-2 py-2 hover:bg-slate-900 rounded-lg text-slate-300 hover:text-white transition-colors"
+                    className="w-full flex items-center space-x-3 px-2 py-2 hover:bg-slate-900 rounded-lg text-slate-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
                   >
                     <app.icon className={app.color} size={14} />
                     <span className="font-mono text-xs">{app.label}</span>
