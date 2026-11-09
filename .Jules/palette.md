@@ -16,3 +16,6 @@
 ## 2026-10-31 - Enhanced Contact Form Accessibility
 **Learning:** While React state handles form validation visually, screen readers rely on explicit `aria-invalid` and `aria-describedby` attributes to announce errors contextually with their associated input fields.
 **Action:** Always ensure that form inputs have their required states explicitly set and that error messages are properly linked via ARIA attributes in custom form components.
+## 2026-11-09 - Dynamic Element Keyboard Navigation
+**Learning:** Custom interactive elements that look like desktop icons or taskbar items (which use `<button>` or motion variants) need explicitly defined `focus-visible:ring` styles to enable clear keyboard navigation cues, as they do not inherit default focus boundaries automatically.
+**Action:** Always ensure that custom button-like elements have `focus-visible:outline-none focus-visible:ring-2` (or similar utilities) in Tailwind when building complex custom UI paradigms like a simulated OS.
