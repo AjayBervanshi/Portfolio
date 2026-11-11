@@ -30,10 +30,10 @@ export const Contact = () => {
 
   const validate = () => {
     const newErrors = {
-      name: name.trim().length < 2 ? 'Name must be at least 2 characters' : '',
-      email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Please enter a valid email address' : '',
-      subject: subject.trim().length < 5 ? 'Subject must be at least 5 characters' : '',
-      message: message.trim().length < 10 ? 'Message must be at least 10 characters' : ''
+      name: name.trim().length < 2 ? 'Name must be at least 2 characters' : name.trim().length > 100 ? 'Name must be less than 100 characters' : '',
+      email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Please enter a valid email address' : email.length > 254 ? 'Email must be less than 254 characters' : '',
+      subject: subject.trim().length < 5 ? 'Subject must be at least 5 characters' : subject.trim().length > 200 ? 'Subject must be less than 200 characters' : '',
+      message: message.trim().length < 10 ? 'Message must be at least 10 characters' : message.trim().length > 2000 ? 'Message must be less than 2000 characters' : ''
     };
     setErrors(newErrors);
     return !Object.values(newErrors).some(err => err !== '');
@@ -214,6 +214,7 @@ export const Contact = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
+                      maxLength={100}
                       aria-required="true"
                       aria-invalid={!!errors.name}
                       aria-describedby={errors.name ? "name-error" : undefined}
@@ -234,6 +235,7 @@ export const Contact = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      maxLength={254}
                       aria-required="true"
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? "email-error" : undefined}
@@ -254,6 +256,7 @@ export const Contact = () => {
                       placeholder="e.g. +91 99999 88888"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                      maxLength={50}
                       className="bg-slate-900 border border-slate-800 hover:border-cyan-500/40 focus:border-cyan-400 text-xs font-mono rounded-xl h-10 text-white placeholder-slate-700"
                     />
                   </div>
@@ -267,6 +270,7 @@ export const Contact = () => {
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       required
+                      maxLength={200}
                       aria-required="true"
                       aria-invalid={!!errors.subject}
                       aria-describedby={errors.subject ? "subject-error" : undefined}
@@ -287,6 +291,7 @@ export const Contact = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     required
+                    maxLength={2000}
                     aria-required="true"
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? "message-error" : undefined}
