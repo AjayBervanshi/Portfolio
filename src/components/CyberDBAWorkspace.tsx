@@ -12,6 +12,19 @@ import { SQLTerminal } from './SQLTerminal';
 import { AlwaysOnSimulator } from './AlwaysOnSimulator';
 import { DBADashboard } from './DBADashboard';
 
+const STATIC_METRICS = [
+  { label: "MANAGED DATA", value: "5.5 TB+", icon: Database, color: "text-cyan-400" },
+  { label: "QUERY TUNING EFFICIENCY", value: "20% SPEEDUP ↑", icon: Zap, color: "text-amber-400" },
+  { label: "RTO DEFENSE THRESHOLD", value: "< 30 MINS", icon: Shield, color: "text-purple-400" }
+];
+
+const SKILL_BADGES = {
+  "Core Admin": ["SQL Server 2016-2022", "DB Engine Tuning", "Backup & Restore", "Index Maintenance"],
+  "High Availability": ["AlwaysOn AG", "Failover Clustering", "Database Mirroring", "Replication", "DR Drills"],
+  "Automation": ["T-SQL Scripting", "PowerShell", "Automated Monitors", "Maintenance Plans"],
+  "Cloud & Security": ["AWS EC2", "AWS RDS", "Azure SQL", "User Access Control", "Data Encryption"]
+};
+
 const LiveMetrics = () => {
   const [liveUptime, setLiveUptime] = useState(99.999000);
 
@@ -27,11 +40,11 @@ const LiveMetrics = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Combine dynamic and static metrics
+  // We avoid useMemo because liveUptime updates rapidly, defeating the cache
   const profileMetrics = [
     { label: "AVAILABILITY SLA", value: `${liveUptime.toFixed(6)}%`, icon: Activity, color: "text-emerald-400" },
-    { label: "MANAGED DATA", value: "5.5 TB+", icon: Database, color: "text-cyan-400" },
-    { label: "QUERY TUNING EFFICIENCY", value: "20% SPEEDUP ↑", icon: Zap, color: "text-amber-400" },
-    { label: "RTO DEFENSE THRESHOLD", value: "< 30 MINS", icon: Shield, color: "text-purple-400" }
+    ...STATIC_METRICS
   ];
 
   return (
@@ -68,13 +81,6 @@ export const CyberDBAWorkspace = () => {
     window.addEventListener('switch-dba-tab', handleSwitchTab);
     return () => window.removeEventListener('switch-dba-tab', handleSwitchTab);
   }, []);
-
-  const skillBadges = {
-    "Core Admin": ["SQL Server 2016-2022", "DB Engine Tuning", "Backup & Restore", "Index Maintenance"],
-    "High Availability": ["AlwaysOn AG", "Failover Clustering", "Database Mirroring", "Replication", "DR Drills"],
-    "Automation": ["T-SQL Scripting", "PowerShell", "Automated Monitors", "Maintenance Plans"],
-    "Cloud & Security": ["AWS EC2", "AWS RDS", "Azure SQL", "User Access Control", "Data Encryption"]
-  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

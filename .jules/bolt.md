@@ -9,3 +9,7 @@
 ## 2023-10-29 - Prevent 10Hz re-renders in CyberDBAWorkspace
 **Learning:** Having a fast-updating state (like a live telemetry SLA ticker using `setInterval` every 100ms) at the top-level of a large React component containing unmemoized heavy child components causes the entire subtree to re-render 10 times a second, creating massive render churn.
 **Action:** Extract the fast-changing state and its directly associated UI (e.g. `LiveMetrics`) into a separate sub-component so that state updates are isolated, preventing unnecessary re-renders of the parent and sibling components.
+
+## 2023-10-30 - Extract static data from frequent re-render components
+**Learning:** Initializing static complex objects inside a component that re-renders extremely frequently (e.g. 100ms) will create new memory allocations on every frame which creates unnecessary overhead, and using `useMemo` doesn't help if one of its dependencies updates every render.
+**Action:** Extract large static complex objects (arrays, dicts) entirely out of the component scope to avoid allocations on rapid renders.
